@@ -1,7 +1,7 @@
-smart-studio
+smart_studio
 ============
 
 .. toctree::
    :maxdepth: 4
 
-   smart-studio
+   smart_studio
