@@ -11,8 +11,8 @@ from PyQtAds import QtAds
 import multiprocessing as mp
 
 from livenodes.node import Node
-from components.node_views import node_view_mapper
-from components.page import Page, Action, ActionKind
+from smart_studio.components.node_views import node_view_mapper
+from smart_studio.components.page import Page, Action, ActionKind
 
 # adapted from: https://stackoverflow.com/questions/39835300/python-qt-and-matplotlib-scatter-plots-with-blitting
 class Run(Page):

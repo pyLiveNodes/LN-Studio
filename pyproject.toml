@@ -9,15 +9,15 @@ authors = [
 # pip install . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple
 # pip install -e . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple
 dependencies = [
-    "livenodes",
-    "seaborn",
-    "networkx",
-    "numpy",
-    "matplotlib",
-    "vispy",
-    "PyQt5",
-    "python-dotenv",
-    "qtpynodeeditor",
+    "livenodes>=0.7.1",
+    "seaborn>=0.11.2",
+    "networkx>2.6.3",
+    "numpy>=1.22.1",
+    "matplotlib>=3.5.1",
+    "vispy>=0.10.0",
+    "PyQt5>=5.12.3",
+    "python-dotenv>=0.20.0",
+    "qtpynodeeditor>=0.2.0",
 ]
 
 [project.scripts]

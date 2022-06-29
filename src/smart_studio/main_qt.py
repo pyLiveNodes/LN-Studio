@@ -3,12 +3,12 @@ import traceback
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
 
-from home import Home
-from config import Config
-from run import Run
-from components.page_parent import Parent
+from smart_studio.pages.home import Home
+from smart_studio.pages.config import Config
+from smart_studio.pages.run import Run
+from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
-from livenodes import global_registry
+from livenodes import get_registry
 
 from livenodes.logger import logger
 
@@ -16,7 +16,7 @@ import datetime
 import time
 import os
 
-from utils.state import State
+from smart_studio.utils.state import State
 
 
 def noop(*args, **kwargs):
@@ -131,7 +131,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         pipeline = Node.load(pipeline_path)
         widget_run = Parent(child=Config(pipeline=pipeline,
-                                          node_registry=global_registry,
+                                          node_registry=get_registry(),
                                           pipeline_path=pipeline_path),
                              name=f"Configuring: {pipeline_path}",
                              back_fn=self.return_home)
@@ -183,7 +183,8 @@ def main():
     # mp.set_start_method('fork')
 
     # === Load modules ========================================================================
-    global_registry.collect_modules(env_modules)
+    # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
+    get_registry()
 
     # === Setup application ========================================================================
     app = QtWidgets.QApplication([])
@@ -200,7 +201,7 @@ def main():
     # chdir because of relative imports in style.qss ....
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     os.chdir(script_dir)
-    with open("./livenodes/gui/static/style.qss", 'r') as f:
+    with open("./static/style.qss", 'r') as f:
         app.setStyleSheet(f.read())
     os.chdir(home_dir)
 

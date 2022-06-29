@@ -1,0 +1,20 @@
+{
+  "spaces": {
+    "views": {
+      "spaces": {},
+      "values": {
+        "Home": {
+          "cur_project": "./sample_projects/calculator"
+        }
+      }
+    }
+  },
+  "values": {
+    "projects": "./sample_projects/*",
+    "modules": "[ \"livenodes.nodes\", \"livenodes.plux\"]",
+    "window_size": [
+      1400,
+      820
+    ]
+  }
+}

@@ -215,13 +215,14 @@ class Selection(QWidget):
         self.item_on_config.emit(self.text)
 
     def _associated_files(self, path):
-        return [
+        possible_files = [
             path,
             path.replace('.json', '.png'),
             path.replace('/pipelines/', '/gui/'),
             path.replace('/pipelines/', '/gui/').replace('.json', '.png'),
             path.replace('/pipelines/', '/gui/').replace('.json', '_dock.xml'),
         ]
+        return [x for x in possible_files if os.path.exists(x)]
 
     def oncopy(self):
         name = self.text.split('/')[-1].replace('.json', '')

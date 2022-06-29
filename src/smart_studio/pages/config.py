@@ -2,9 +2,9 @@ import json
 
 from PyQt5.QtWidgets import QSplitter, QHBoxLayout
 
-from components.edit_node import NodeConfigureContainer
-from components.edit_graph import QT_Graph_edit
-from components.page import ActionKind, Page, Action
+from smart_studio.components.edit_node import NodeConfigureContainer
+from smart_studio.components.edit_graph import QT_Graph_edit
+from smart_studio.components.page import ActionKind, Page, Action
 
 class Config(Page):
 

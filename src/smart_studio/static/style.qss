@@ -1,6 +1,6 @@
 
 MainWindow {
-    background-image: url('./livenodes/gui/static/connected_human.jpg');
+    background-image: url('./static/connected_human.jpg');
     background-repeat: no-repeat; 
     background-position: center top;
 }
