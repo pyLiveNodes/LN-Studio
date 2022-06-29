@@ -1,0 +1,10 @@
+{
+  "Home": {
+    "cur_project": "../projects/test_ask"
+  },
+  "packages": [
+    "livenodes.nodes",
+    "livenodes.plux",
+    "livenodes.biokit"
+  ]
+}

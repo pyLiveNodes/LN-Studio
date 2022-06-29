@@ -8,3 +8,6 @@ Any contribution is welcome! These projects take more time, than I can muster, s
 
 Have fun and good coding!
 Yale
+
+
+TODO: when installing make sure to install the pip packae into a conda environment with a working installation of PyQtAds!

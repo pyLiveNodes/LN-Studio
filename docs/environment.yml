@@ -1,0 +1,11 @@
+name: smart_studio
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8
+  - PyQtAds
+  - pip
+  # - pip:
+  #   - git+https://{access_token_name}:{access_token}@gitlab.com/{your_gitlab_username}/{repository_name}.git
+prefix: /Users/yale/miniconda3/envs/smart_studio
