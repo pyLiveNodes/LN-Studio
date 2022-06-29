@@ -1,0 +1,68 @@
+[project]
+name = "Livenodes_Basic_Nodes"
+dynamic = ['version']
+description = "LiveNodes: node based live streaming sensor/data and visualization suite."
+authors = [
+    { name = "Yale Hartmann", email = "yale.hartmann@uni-bremen.de" }
+]
+# TODO: figure out how/if to add livenodes here... for now install manually in venv via:
+# pip install . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple
+# pip install -e . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple
+dependencies = [
+    "livenodes",
+    "numpy>=1.22.1",
+    "tsfel",
+    "h5py",
+    "joblib>=1.1.0",
+    "scikit-learn>=1.0.2"
+]
+
+[project.entry-points."livenodes.nodes"]
+annotate_channel = "livenodes_basic_nodes.annotate_channel:Annotate_channel"
+buffer_stream_switch = "livenodes_basic_nodes.buffer_stream_switch:Buffer_stream_switch"
+gatter_and = "livenodes_basic_nodes.gatter_and:Gatter_and"
+gatter_not = "livenodes_basic_nodes.gatter_not:Gatter_not"
+gatter_or = "livenodes_basic_nodes.gatter_or:Gatter_or"
+in_data = "livenodes_basic_nodes.in_data:In_data"
+in_function = "livenodes_basic_nodes.in_function:In_function"
+in_playback = "livenodes_basic_nodes.in_playback:In_playback"
+in_trigger = "livenodes_basic_nodes.in_trigger:In_trigger"
+log_data =  "livenodes_basic_nodes.log_data:Log_data"
+math_floor = "livenodes_basic_nodes.math_floor:Math_floor"
+math_subtract = "livenodes_basic_nodes.math_subtract:Math_subtract"
+memory = "livenodes_basic_nodes.memory:Memory"
+mimic_last_input = "livenodes_basic_nodes.mimic_last_input:Mimic_last_input"
+mimic_variable = "livenodes_basic_nodes.mimic_variable:Mimic_variable"
+out_data = "livenodes_basic_nodes.out_data:Out_data"
+transform_add_dims = "livenodes_basic_nodes.transform_add_dims:Transform_add_dims"
+transform_delay = "livenodes_basic_nodes.transform_delay:Transform_delay"
+transform_feature = "livenodes_basic_nodes.transform_feature:Transform_feature"
+transform_filter = "livenodes_basic_nodes.transform_filter:Transform_filter"
+transform_majority_select = "livenodes_basic_nodes.transform_majority_select:Transform_majority_select"
+transform_scale = "livenodes_basic_nodes.transform_scale:Transform_scale"
+transform_window = "livenodes_basic_nodes.transform_window:Transform_window"
+transform_window_multiplier = "livenodes_basic_nodes.transform_window_multiplier:Transform_window_multiplier"
+trigger_counter = "livenodes_basic_nodes.trigger_counter:Trigger_counter"
+
+[project.optional-dependencies]
+dev = [
+    "tox",
+    "pytest>=7.0.1"
+]
+
+[build-system]
+requires = [
+    "setuptools>=48",
+    "wheel",
+    "setuptools_scm >= 2.0.0, <3",
+    "setuptools-git-versioning"
+]
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools-git-versioning]
+enabled = true
+
+[tool.black]
+line-length = 140
+target-version = ['py36']
+skip-string-normalization = true
