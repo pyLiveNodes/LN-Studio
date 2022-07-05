@@ -43,13 +43,16 @@ class Home(QWidget):
 
     def get_state(self):
         return { \
-            "cur_project": self.cur_project
+            "cur_project": self.cur_project,
+            "cur_pipeline": self.qt_selection.get_selected()
         }
 
-    def set_state(self, cur_project):
+    def set_state(self, cur_project, cur_pipeline=None):
         id = self.projects.index(cur_project)
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
+        if cur_pipeline is not None:
+            self.qt_selection.set_selected(cur_pipeline)
 
     def _on_start(self, pipeline_path):
         self.onstart(self.cur_project,
@@ -166,7 +169,6 @@ class Selection(QWidget):
         #     combobox1.addItem(itm)
 
         # combobox1.currentTextChanged.connect(self.text_changed)
-        self.text = pipelines[0]
 
         selection = Pipline_Selection(pipelines)
         selection.clicked.connect(self.text_changed)
@@ -183,7 +185,7 @@ class Selection(QWidget):
         config = QPushButton("Config")
         config.clicked.connect(self.onconfig)
 
-        self.selected = QLabel(self.text)
+        self.selected = QLabel("")
 
         buttons = QHBoxLayout()
         buttons.addWidget(delete)
@@ -192,6 +194,8 @@ class Selection(QWidget):
         buttons.addWidget(copy)
         buttons.addWidget(config)
         buttons.addWidget(start)
+
+        self.set_selected(pipelines[0])
 
         self.setProperty("cssClass", "home")
 
@@ -245,6 +249,14 @@ class Selection(QWidget):
     def text_changed(self, text):
         self.selected.setText(text)
         self.text = text
+
+    def get_selected(self):
+        return self.text
+
+    def set_selected(self, text):
+        self.selected.setText(text)
+        self.text = text
+
 
 
 def noop(*args, **kwargs):

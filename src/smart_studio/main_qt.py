@@ -1,5 +1,7 @@
 import sys
 import traceback
+import multiprocessing as mp
+import platform
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
 
@@ -96,6 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.setCurrentWidget(self.widget_home)
         self.central_widget.removeWidget(cur)
         self.widget_home.refresh_selection()
+        self._set_state(self.widget_home)
         print("Nr of views: ", self.central_widget.count())
 
     def _log_helper(self, msg):
@@ -115,30 +118,44 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_file = open(log_file, 'a')
         logger.register_cb(self._log_helper)
 
-        pipeline = Node.load(pipeline_path)
-        # TODO: make these logs project dependent as well
-        widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
-                             name=f"Running: {pipeline_path}",
-                             back_fn=self.return_home)
-        self.central_widget.addWidget(widget_run)
-        self.central_widget.setCurrentWidget(widget_run)
+        try:
+            pipeline = Node.load(pipeline_path)
+            # TODO: make these logs project dependent as well
+            widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
+                                name=f"Running: {pipeline_path}",
+                                back_fn=self.return_home)
+            self.central_widget.addWidget(widget_run)
+            self.central_widget.setCurrentWidget(widget_run)
 
-        self._set_state(widget_run)
+            self._set_state(widget_run)
+        except Exception as err:
+            print(f'Could not load pipeline. Staying home')
+            print(err)
+            print(traceback.format_exc())
+            os.chdir(self.home_dir)
+            print('CWD:', os.getcwd())
 
     def onconfig(self, project_path, pipeline_path):
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
-        pipeline = Node.load(pipeline_path)
-        widget_run = Parent(child=Config(pipeline=pipeline,
-                                          node_registry=get_registry(),
-                                          pipeline_path=pipeline_path),
-                             name=f"Configuring: {pipeline_path}",
-                             back_fn=self.return_home)
-        self.central_widget.addWidget(widget_run)
-        self.central_widget.setCurrentWidget(widget_run)
+        try:
+            pipeline = Node.load(pipeline_path)
+            widget_run = Parent(child=Config(pipeline=pipeline,
+                                            node_registry=get_registry(),
+                                            pipeline_path=pipeline_path),
+                                name=f"Configuring: {pipeline_path}",
+                                back_fn=self.return_home)
+            self.central_widget.addWidget(widget_run)
+            self.central_widget.setCurrentWidget(widget_run)
 
-        self._set_state(widget_run)
+            self._set_state(widget_run)
+        except Exception as err:
+            print(f'Could not load pipeline. Staying home')
+            print(err)
+            print(traceback.format_exc())
+            os.chdir(self.home_dir)
+            print('CWD:', os.getcwd())
 
 
 
@@ -169,18 +186,17 @@ def main():
     smart_state.val_merge(env_vars)
 
     env_projects = smart_state.val_get('projects', './projects/*')
-    env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
+    # env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
 
     print('Projects folder: ', env_projects)
-    print('Modules: ', env_modules)
+    # print('Modules: ', env_modules)
 
     # === Fix MacOS specifics ========================================================================
     # this fix is for macos (https://docs.python.org/3.8/library/multiprocessing.html#contexts-and-start-methods)
-    # TODO: test/validate this works in all cases (ie increase test cases, coverage and machines to be tested on)
-    # mp.set_start_method(
-    #     'fork',
-    #     force=True)  # force=True doesn't seem like a too good idea, but hey
-    # mp.set_start_method('fork')
+    if platform.system() == 'Darwin':
+        mp.set_start_method(
+            'fork',
+            force=True)  # force=True doesn't seem like a too good idea, but hey
 
     # === Load modules ========================================================================
     # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
