@@ -1,5 +1,7 @@
 import sys
 import traceback
+import multiprocessing as mp
+import platform
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
 
@@ -176,11 +178,10 @@ def main():
 
     # === Fix MacOS specifics ========================================================================
     # this fix is for macos (https://docs.python.org/3.8/library/multiprocessing.html#contexts-and-start-methods)
-    # TODO: test/validate this works in all cases (ie increase test cases, coverage and machines to be tested on)
-    # mp.set_start_method(
-    #     'fork',
-    #     force=True)  # force=True doesn't seem like a too good idea, but hey
-    # mp.set_start_method('fork')
+    if platform.system() == 'Darwin':
+        mp.set_start_method(
+            'fork',
+            force=True)  # force=True doesn't seem like a too good idea, but hey
 
     # === Load modules ========================================================================
     # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
