@@ -3,9 +3,11 @@ from functools import partial
 import json
 import os
 import itertools
+import traceback
 
 from PyQt5.QtWidgets import QSplitter, QHBoxLayout, QWidget
 from PyQt5.QtCore import pyqtSignal
+import graphviz
 
 from livenodes.node import Node
 
@@ -335,7 +337,12 @@ class QT_Graph_edit(QWidget):
 
         # TODO: For the moment, lets assume the start node stays the same, otherwise we'll have a problem...
         pipeline.save(self.pipeline_path)
-        pipeline.dot_graph_full(transparent_bg=True).save(
-            self.pipeline_gui_path.replace('.json', '.png'), 'PNG')
-        pipeline.dot_graph_full(transparent_bg=False).save(
-            self.pipeline_path.replace('.json', '.png'), 'PNG')
+        try:
+            pipeline.dot_graph_full(transparent_bg=True).save(
+                self.pipeline_gui_path.replace('.json', '.png'), 'PNG')
+            pipeline.dot_graph_full(transparent_bg=False).save(
+                self.pipeline_path.replace('.json', '.png'), 'PNG')
+        except graphviz.backend.execute.ExecutableNotFound as err:
+            print('Could not create dot graph. Executable not found.')
+            print(err)
+            print(traceback.format_exc())
