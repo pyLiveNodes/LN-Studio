@@ -106,7 +106,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_file.flush()
 
     def onstart(self, project_path, pipeline_path):
-        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
@@ -119,31 +118,44 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_file = open(log_file, 'a')
         logger.register_cb(self._log_helper)
 
-        pipeline = Node.load(pipeline_path)
-        # TODO: make these logs project dependent as well
-        widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
-                             name=f"Running: {pipeline_path}",
-                             back_fn=self.return_home)
-        self.central_widget.addWidget(widget_run)
-        self.central_widget.setCurrentWidget(widget_run)
+        try:
+            pipeline = Node.load(pipeline_path)
+            # TODO: make these logs project dependent as well
+            widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
+                                name=f"Running: {pipeline_path}",
+                                back_fn=self.return_home)
+            self.central_widget.addWidget(widget_run)
+            self.central_widget.setCurrentWidget(widget_run)
 
-        self._set_state(widget_run)
+            self._set_state(widget_run)
+        except Exception as err:
+            print(f'Could not load pipeline. Staying home')
+            print(err)
+            print(traceback.format_exc())
+            os.chdir(self.home_dir)
+            print('CWD:', os.getcwd())
 
     def onconfig(self, project_path, pipeline_path):
-        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
-        pipeline = Node.load(pipeline_path)
-        widget_run = Parent(child=Config(pipeline=pipeline,
-                                          node_registry=get_registry(),
-                                          pipeline_path=pipeline_path),
-                             name=f"Configuring: {pipeline_path}",
-                             back_fn=self.return_home)
-        self.central_widget.addWidget(widget_run)
-        self.central_widget.setCurrentWidget(widget_run)
+        try:
+            pipeline = Node.load(pipeline_path)
+            widget_run = Parent(child=Config(pipeline=pipeline,
+                                            node_registry=get_registry(),
+                                            pipeline_path=pipeline_path),
+                                name=f"Configuring: {pipeline_path}",
+                                back_fn=self.return_home)
+            self.central_widget.addWidget(widget_run)
+            self.central_widget.setCurrentWidget(widget_run)
 
-        self._set_state(widget_run)
+            self._set_state(widget_run)
+        except Exception as err:
+            print(f'Could not load pipeline. Staying home')
+            print(err)
+            print(traceback.format_exc())
+            os.chdir(self.home_dir)
+            print('CWD:', os.getcwd())
 
 
 
