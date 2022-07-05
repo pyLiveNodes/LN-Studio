@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLab
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
 from smart_studio.pages.run import Run
+from smart_studio.pages.debug import Debug
 from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry
@@ -41,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.widget_home = Home(onconfig=self.onconfig,
                                 onstart=self.onstart,
+                                ondebug=self.ondebug,
                                 projects=projects)
         self.central_widget.addWidget(self.widget_home)
         # self.resized.connect(self.widget_home.refresh_selection)
@@ -134,6 +136,37 @@ class MainWindow(QtWidgets.QMainWindow):
             print(traceback.format_exc())
             os.chdir(self.home_dir)
             print('CWD:', os.getcwd())
+
+    def ondebug(self, project_path, pipeline_path):
+        os.chdir(project_path)
+        print('CWD:', os.getcwd())
+
+        log_folder = './logs'
+        log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
+
+        if not os.path.exists(log_folder):
+            os.mkdir(log_folder)
+
+        self.log_file = open(log_file, 'a')
+        logger.register_cb(self._log_helper)
+
+        try:
+            pipeline = Node.load(pipeline_path, should_time=True)
+            # TODO: make these logs project dependent as well
+            widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path),
+                                name=f"Debuging: {pipeline_path}",
+                                back_fn=self.return_home)
+            self.central_widget.addWidget(widget_run)
+            self.central_widget.setCurrentWidget(widget_run)
+
+            self._set_state(widget_run)
+        except Exception as err:
+            print(f'Could not load pipeline. Staying home')
+            print(err)
+            print(traceback.format_exc())
+            os.chdir(self.home_dir)
+            print('CWD:', os.getcwd())
+
 
     def onconfig(self, project_path, pipeline_path):
         os.chdir(project_path)

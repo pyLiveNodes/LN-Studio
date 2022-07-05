@@ -1,4 +1,6 @@
+import queue
 import traceback
+import multiprocessing as mp
 from livenodes import viewer
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
@@ -13,6 +15,8 @@ from vispy import app as vp_app
 import vispy.plot as vp
 from vispy import scene
 vp_app.use_app('pyqt5')
+
+from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
 
 import seaborn as sns
 
@@ -31,6 +35,50 @@ def node_view_mapper(parent, node):
         return QT_View(node, parent=parent)
     else:
         raise ValueError(f'Unkown Node type {str(node)}')
+
+class Debug_View(QWidget):
+    def __init__(self, node, view=None, parent=None):
+        super().__init__(parent=parent)
+
+        layout_latency = QVBoxLayout()
+        processing_duration = QLabel('')
+        layout_latency.addWidget(processing_duration)
+        invocation_duration = QLabel('')
+        layout_latency.addWidget(invocation_duration)
+
+        self.layout = QVBoxLayout(self)
+        if view is not None:
+            self.layout.addWidget(view)
+        self.layout.addLayout(layout_latency)
+
+        val_queue = mp.Queue(maxsize=2)
+
+        def hook_in_perf(self):
+            nonlocal val_queue
+            processing_avg = self._perf_user_fn.average()
+            invocation_avg = self._perf_framework.average()
+            val_queue.put({
+                'processing_avg': processing_avg,
+                'invocation_avg': invocation_avg
+            })
+        node.register_reporter(hook_in_perf)
+
+        def update():
+            nonlocal val_queue, processing_duration, invocation_duration
+            try:
+                cur_state = val_queue.get_nowait()
+                processing_duration.setText(f'Processing: {cur_state["processing_avg"] * 1000:.5f}ms')
+                invocation_duration.setText(f'Time between invocations: {cur_state["invocation_avg"] * 1000:.5f}ms')
+            except queue.Empty:
+                pass
+
+        self.timer = QTimer(self)
+        self.timer.setInterval(10) # max 100fps
+        self.timer.timeout.connect(update)
+        self.timer.start()
+
+    def stop(self):
+        pass
 
 
 class QT_View(QWidget):
