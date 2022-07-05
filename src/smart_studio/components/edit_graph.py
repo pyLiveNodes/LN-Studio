@@ -35,42 +35,44 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
     def _get_port_infos(self, connection):
         # TODO: yes, the naming here is confusing, as qtpynode is the other way round that livenodes
         in_port, out_port = connection.ports
-        emitting_channel = out_port.model.data_type[out_port.port_type][
+        emit_port = out_port.model.data_type[out_port.port_type][
             out_port.index].id
-        receiving_channel = in_port.model.data_type[in_port.port_type][
+        recv_port = in_port.model.data_type[in_port.port_type][
             in_port.index].id
 
         smart_receicing_node = in_port.model.association_to_node
-        smart_emitting_node = out_port.model.association_to_node
+        smart_emit_node = out_port.model.association_to_node
 
-        return smart_emitting_node, smart_receicing_node, emitting_channel, receiving_channel
+        return smart_emit_node, smart_receicing_node, emit_port, recv_port
 
     def output_connection_created(self, connection):
         # HACK: this currently works because of the three passes below (ie create node, create conneciton, associate pl node)
         # TODO: fix this by checking if the connection already exists and if so ignore the call
         if self.association_to_node is not None:
-            smart_emitting_node, smart_receicing_node, emitting_channel, receiving_channel = self._get_port_infos(
+            smart_emit_node, smart_receicing_node, emit_port, recv_port = self._get_port_infos(
                 connection)
 
-            if smart_emitting_node is not None and smart_receicing_node is not None:
+            if smart_emit_node is not None and smart_receicing_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
                 smart_receicing_node.add_input(
-                    smart_emitting_node,
-                    emitting_channel=emitting_channel,
-                    receiving_channel=receiving_channel)
+                    smart_emit_node,
+                    emit_port=smart_emit_node.get_port_out_by_key(emit_port),
+                    recv_port=smart_receicing_node.get_port_in_by_key(recv_port)
+                )
 
     def output_connection_deleted(self, connection):
         if self.association_to_node is not None:
-            smart_emitting_node, smart_receicing_node, emitting_channel, receiving_channel = self._get_port_infos(
+            smart_emit_node, smart_receicing_node, emit_port, recv_port = self._get_port_infos(
                 connection)
 
-            if smart_emitting_node is not None and smart_receicing_node is not None:
+            if smart_emit_node is not None and smart_receicing_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
                 try:
                     smart_receicing_node.remove_input(
-                        smart_emitting_node,
-                        emitting_channel=emitting_channel,
-                        receiving_channel=receiving_channel)
+                        smart_emit_node,
+                        emit_port=smart_emit_node.get_port_out_by_key(emit_port),
+                        recv_port=smart_receicing_node.get_port_in_by_key(recv_port)
+                    )
                 except ValueError as err:
                     print(err)
                     # TODO: see nodes above on created...
@@ -96,7 +98,7 @@ class QT_Graph_edit(QWidget):
         self._create_paths(pipeline_path)
 
         self.known_classes = {}
-        self.known_streams = set()
+        self.known_streams = {}
         self.known_dtypes = {}
 
         self._create_known_classes(node_registry)
@@ -185,12 +187,12 @@ class QT_Graph_edit(QWidget):
             return 
 
         # .values() returns a generator
-        nodes = list(node_registry.packages.values())
+        nodes = list(node_registry.nodes.reg.values())
 
         # Collect and create Datatypes
         for node in nodes:
-            for val in node.channels_in + node.channels_out:
-                self.known_dtypes[val] = NodeDataType(id=val, name=val)
+            for val in node.ports_in + node.ports_out:
+                self.known_dtypes[val.key] = NodeDataType(id=val.key, name=val.label)
 
         # Collect and create Node-Classes
         for node in nodes:
@@ -201,35 +203,40 @@ class QT_Graph_edit(QWidget):
                 'caption': cls_name,
                 'caption_visible': True,
                 'num_ports': {
-                    PortType.input: len(node.channels_in),
-                    PortType.output: len(node.channels_out)
+                    PortType.input: len(node.ports_in),
+                    PortType.output: len(node.ports_out)
                 },
                 'data_type': {
-                    PortType.input: {i: self.known_dtypes[val] for i, val in enumerate(node.channels_in)},
-                    PortType.output: {i: self.known_dtypes[val] for i, val in enumerate(node.channels_out)}
+                    PortType.input: {i: self.known_dtypes[val.key] for i, val in enumerate(node.ports_in)},
+                    PortType.output: {i: self.known_dtypes[val.key] for i, val in enumerate(node.ports_out)}
                 }
                 , 'constructor': node
                 })
-            self.known_streams.update(
-                set(node.channels_in + node.channels_out))
+            self.known_streams = {**self.known_streams, **{x.key: x for x in node.ports_in + node.ports_out}}
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
         # Create Converters
         # Allow any stream to map onto any other stream:
         # TODO: this could be used properly for type checking, on build (in the gui only) but is not furhter integrated into the node system itself
-        for a, b in itertools.combinations(self.known_streams, 2):
-            converter = TypeConverter(self.known_dtypes[a],
-                                      self.known_dtypes[b], noop)
-            self.registry.register_type_converter(self.known_dtypes[a],
-                                                  self.known_dtypes[b],
-                                                  converter)
+        for a, b in itertools.combinations(self.known_streams.keys(), 2):
+            print('----')
+            print(self.known_streams[a].__class__)
+            print(self.known_streams[b].__class__)
+            print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
+            
+            if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
+                converter = TypeConverter(self.known_dtypes[a],
+                                        self.known_dtypes[b], noop)
+                self.registry.register_type_converter(self.known_dtypes[a],
+                                                    self.known_dtypes[b],
+                                                    converter)
 
-            converter = TypeConverter(self.known_dtypes[b],
-                                      self.known_dtypes[a], noop)
-            self.registry.register_type_converter(self.known_dtypes[b],
-                                                  self.known_dtypes[a],
-                                                  converter)
+                converter = TypeConverter(self.known_dtypes[b],
+                                        self.known_dtypes[a], noop)
+                self.registry.register_type_converter(self.known_dtypes[b],
+                                                    self.known_dtypes[a],
+                                                    converter)
 
     def _add_pipeline(self, layout, pipeline):
         ### Reformat Layout for easier use
@@ -270,16 +277,16 @@ class QT_Graph_edit(QWidget):
             # second pass: create all connectins
             for name, n in p_nodes.items():
                 # node_output refers to the node in which n is inputing data, ie n's output
-                # for node_output, output_id, emitting_channel, receiving_channel in n.output_classes:
+                # for node_output, output_id, emit_port, recv_port in n.output_classes:
                 for con in n.output_connections:
                     # print('=====')
-                    out_idx = n.channels_out.index(con._emitting_channel)
-                    in_idx = con._receiving_node.channels_in.index(
-                        con._receiving_channel)
+                    out_idx = n.ports_out.index(con._emit_port)
+                    in_idx = con._recv_node.ports_in.index(
+                        con._recv_port)
                     # print(out_idx, in_idx)
                     n_out = s_nodes[name][PortType.output][out_idx]
                     n_in = s_nodes[str(
-                        con._receiving_node)][PortType.input][in_idx]
+                        con._recv_node)][PortType.input][in_idx]
                     self.scene.create_connection(n_out, n_in)
 
             # third pass: connect gui nodes to pipeline nodes
@@ -299,7 +306,7 @@ class QT_Graph_edit(QWidget):
         # maybe also consider adding a warning if there are graphs that are not connected ie and which one will be saved...
         initial_pl_nodes = [
             n for n in pl_nodes
-            if len(n.channels_in) == 0 and len(n.output_connections) > 0
+            if len(n.ports_in) == 0 and len(n.output_connections) > 0
         ]
 
         # if we cannot find a node without inputs, take the first that hase outputs

@@ -49,17 +49,17 @@
     "inputs": [],
     "outputs": [
       {
-        "emitting_node": "Playback [In_playback]",
-        "receiving_node": "Raw Filter [Transform_filter]",
-        "emitting_channel": "Data",
-        "receiving_channel": "Data",
+        "emit_node": "Playback [In_playback]",
+        "recv_node": "Raw Filter [Transform_filter]",
+        "emit_port": "Data",
+        "recv_port": "Data",
         "connection_counter": 0
       },
       {
-        "emitting_node": "Playback [In_playback]",
-        "receiving_node": "Raw Filter [Transform_filter]",
-        "emitting_channel": "Channel Names",
-        "receiving_channel": "Channel Names",
+        "emit_node": "Playback [In_playback]",
+        "recv_node": "Raw Filter [Transform_filter]",
+        "emit_port": "Channel Names",
+        "recv_port": "Channel Names",
         "connection_counter": 0
       }
     ]
@@ -80,33 +80,33 @@
     },
     "inputs": [
       {
-        "emitting_node": "Playback [In_playback]",
-        "receiving_node": "Raw Filter [Transform_filter]",
-        "emitting_channel": "Data",
-        "receiving_channel": "Data",
+        "emit_node": "Playback [In_playback]",
+        "recv_node": "Raw Filter [Transform_filter]",
+        "emit_port": "Data",
+        "recv_port": "Data",
         "connection_counter": 0
       },
       {
-        "emitting_node": "Playback [In_playback]",
-        "receiving_node": "Raw Filter [Transform_filter]",
-        "emitting_channel": "Channel Names",
-        "receiving_channel": "Channel Names",
+        "emit_node": "Playback [In_playback]",
+        "recv_node": "Raw Filter [Transform_filter]",
+        "emit_port": "Channel Names",
+        "recv_port": "Channel Names",
         "connection_counter": 0
       }
     ],
     "outputs": [
       {
-        "emitting_node": "Raw Filter [Transform_filter]",
-        "receiving_node": "Raw Data [Draw_lines]",
-        "emitting_channel": "Data",
-        "receiving_channel": "Data",
+        "emit_node": "Raw Filter [Transform_filter]",
+        "recv_node": "Raw Data [Draw_lines]",
+        "emit_port": "Data",
+        "recv_port": "Data",
         "connection_counter": 0
       },
       {
-        "emitting_node": "Raw Filter [Transform_filter]",
-        "receiving_node": "Raw Data [Draw_lines]",
-        "emitting_channel": "Channel Names",
-        "receiving_channel": "Channel Names",
+        "emit_node": "Raw Filter [Transform_filter]",
+        "recv_node": "Raw Data [Draw_lines]",
+        "emit_port": "Channel Names",
+        "recv_port": "Channel Names",
         "connection_counter": 0
       }
     ]
@@ -126,17 +126,17 @@
     },
     "inputs": [
       {
-        "emitting_node": "Raw Filter [Transform_filter]",
-        "receiving_node": "Raw Data [Draw_lines]",
-        "emitting_channel": "Data",
-        "receiving_channel": "Data",
+        "emit_node": "Raw Filter [Transform_filter]",
+        "recv_node": "Raw Data [Draw_lines]",
+        "emit_port": "Data",
+        "recv_port": "Data",
         "connection_counter": 0
       },
       {
-        "emitting_node": "Raw Filter [Transform_filter]",
-        "receiving_node": "Raw Data [Draw_lines]",
-        "emitting_channel": "Channel Names",
-        "receiving_channel": "Channel Names",
+        "emit_node": "Raw Filter [Transform_filter]",
+        "recv_node": "Raw Data [Draw_lines]",
+        "emit_port": "Channel Names",
+        "recv_port": "Channel Names",
         "connection_counter": 0
       }
     ],
