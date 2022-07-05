@@ -53,13 +53,16 @@ class Debug_View(QWidget):
 
         val_queue = mp.Queue(maxsize=2)
 
-        def hook_in_perf(self):
+        def hook_in_perf(self, current_data):
             nonlocal val_queue
             processing_avg = self._perf_user_fn.average()
             invocation_avg = self._perf_framework.average()
             val_queue.put({
                 'processing_avg': processing_avg,
-                'invocation_avg': invocation_avg
+                'invocation_avg': invocation_avg,
+                '_ctr': self._ctr,
+                'current_data': current_data,
+                'log': ''
             })
         node.register_reporter(hook_in_perf)
 
