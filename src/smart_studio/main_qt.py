@@ -98,6 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.setCurrentWidget(self.widget_home)
         self.central_widget.removeWidget(cur)
         self.widget_home.refresh_selection()
+        self._set_state(self.widget_home)
         print("Nr of views: ", self.central_widget.count())
 
     def _log_helper(self, msg):
@@ -105,6 +106,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_file.flush()
 
     def onstart(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
@@ -128,6 +130,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._set_state(widget_run)
 
     def onconfig(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
@@ -171,10 +174,10 @@ def main():
     smart_state.val_merge(env_vars)
 
     env_projects = smart_state.val_get('projects', './projects/*')
-    env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
+    # env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
 
     print('Projects folder: ', env_projects)
-    print('Modules: ', env_modules)
+    # print('Modules: ', env_modules)
 
     # === Fix MacOS specifics ========================================================================
     # this fix is for macos (https://docs.python.org/3.8/library/multiprocessing.html#contexts-and-start-methods)
