@@ -98,7 +98,7 @@ class QT_Graph_edit(QWidget):
         self._create_paths(pipeline_path)
 
         self.known_classes = {}
-        self.known_streams = set()
+        self.known_streams = {}
         self.known_dtypes = {}
 
         self._create_known_classes(node_registry)
@@ -212,26 +212,31 @@ class QT_Graph_edit(QWidget):
                 }
                 , 'constructor': node
                 })
-            self.known_streams.update(
-                set([x.key for x in node.ports_in + node.ports_out]))
+            self.known_streams = {**self.known_streams, **{x.key: x for x in node.ports_in + node.ports_out}}
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
         # Create Converters
         # Allow any stream to map onto any other stream:
         # TODO: this could be used properly for type checking, on build (in the gui only) but is not furhter integrated into the node system itself
-        for a, b in itertools.combinations(self.known_streams, 2):
-            converter = TypeConverter(self.known_dtypes[a],
-                                      self.known_dtypes[b], noop)
-            self.registry.register_type_converter(self.known_dtypes[a],
-                                                  self.known_dtypes[b],
-                                                  converter)
+        for a, b in itertools.combinations(self.known_streams.keys(), 2):
+            print('----')
+            print(self.known_streams[a].__class__)
+            print(self.known_streams[b].__class__)
+            print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
+            
+            if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
+                converter = TypeConverter(self.known_dtypes[a],
+                                        self.known_dtypes[b], noop)
+                self.registry.register_type_converter(self.known_dtypes[a],
+                                                    self.known_dtypes[b],
+                                                    converter)
 
-            converter = TypeConverter(self.known_dtypes[b],
-                                      self.known_dtypes[a], noop)
-            self.registry.register_type_converter(self.known_dtypes[b],
-                                                  self.known_dtypes[a],
-                                                  converter)
+                converter = TypeConverter(self.known_dtypes[b],
+                                        self.known_dtypes[a], noop)
+                self.registry.register_type_converter(self.known_dtypes[b],
+                                                    self.known_dtypes[a],
+                                                    converter)
 
     def _add_pipeline(self, layout, pipeline):
         ### Reformat Layout for easier use
