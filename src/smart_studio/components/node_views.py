@@ -1,7 +1,9 @@
+import json
 import queue
 import traceback
 import multiprocessing as mp
 from livenodes import viewer
+from livenodes.utils import NumpyEncoder
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
 from matplotlib.figure import Figure
@@ -40,7 +42,7 @@ def node_view_mapper(parent, node):
 # from: https://www.geeksforgeeks.org/pyqt5-scrollable-label/
 class ScrollLabel(QScrollArea):
     # constructor
-    def __init__(self, *args, **kwargs):
+    def __init__(self, keep_bottom=False, *args, **kwargs):
         QScrollArea.__init__(self, *args, **kwargs)
  
         # making widget resizable
@@ -65,9 +67,10 @@ class ScrollLabel(QScrollArea):
         # adding label to the layout
         lay.addWidget(self.label)
  
-        self.verticalScrollBar().rangeChanged.connect(
-            self.scrollToBottom,
-        )
+        if keep_bottom:
+            self.verticalScrollBar().rangeChanged.connect(
+                self.scrollToBottom,
+            )
 
     # new function in same class
     def scrollToBottom (self, minVal=None, maxVal=None):
@@ -95,15 +98,18 @@ class Debug_View(QWidget):
         self.latency = QLabel('')
         layout_metrics.addWidget(self.latency)
 
-        self.log = ScrollLabel()
+        self.log = ScrollLabel(keep_bottom=True)
         self.log_list = ['--- Log --------–-------']
         self.log.setText('\n'.join(self.log_list))
+
+        self.state = ScrollLabel()
 
         self.layout = QVBoxLayout(self)
         if view is not None:
             self.layout.addWidget(view)
         self.layout.addLayout(layout_metrics)
         self.layout.addWidget(self.log)
+        self.layout.addWidget(self.state)
 
         val_queue = mp.Queue()
 
@@ -126,17 +132,23 @@ class Debug_View(QWidget):
         def update():
             nonlocal val_queue, self
             while not val_queue.empty():
-                infos = val_queue.get_nowait()
-                if 'fps' in infos:
-                    fps = infos['fps']
-                    self.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']})")
-                if 'latency' in infos:
-                    latency = infos['latency']
-                    self.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}m')
-                if 'log' in infos:
-                    self.log_list.append(infos['log'])
-                    self.log_list = self.log_list[-100:]
-                    self.log.setText('\n'.join(self.log_list))
+                try:
+                    infos = val_queue.get_nowait()
+                    if 'fps' in infos:
+                        fps = infos['fps']
+                        self.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']})")
+                    if 'latency' in infos:
+                        latency = infos['latency']
+                        self.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}m')
+                    if 'log' in infos:
+                        self.log_list.append(infos['log'])
+                        self.log_list = self.log_list[-100:]
+                        self.log.setText('\n'.join(self.log_list))
+                    if 'current_state' in infos:
+                        self.state.setText(json.dumps(infos['current_state'], cls=NumpyEncoder, indent=2))
+                except Exception as err:
+                    print(err)
+                    print(traceback.format_exc())
 
         self.timer = QTimer(self)
         self.timer.setInterval(10) # max 100fps
