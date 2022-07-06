@@ -40,7 +40,7 @@ class Debug(Page):
             dock_widget.setWidget(widget)
             dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
-            self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock_widget)
+            self.dock_manager.addDockWidget(QtAds.BottomDockWidgetArea, dock_widget)
 
         if os.path.exists(self.pipeline_gui_path):
             with open(self.pipeline_gui_path, 'r') as f:

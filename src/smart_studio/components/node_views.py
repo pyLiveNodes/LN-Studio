@@ -36,44 +36,107 @@ def node_view_mapper(parent, node):
     else:
         raise ValueError(f'Unkown Node type {str(node)}')
 
+# class for scrollable label
+# from: https://www.geeksforgeeks.org/pyqt5-scrollable-label/
+class ScrollLabel(QScrollArea):
+    # constructor
+    def __init__(self, *args, **kwargs):
+        QScrollArea.__init__(self, *args, **kwargs)
+ 
+        # making widget resizable
+        self.setWidgetResizable(True)
+ 
+        # making qwidget object
+        content = QWidget(self)
+        self.setWidget(content)
+ 
+        # vertical box layout
+        lay = QVBoxLayout(content)
+ 
+        # creating label
+        self.label = QLabel(content)
+ 
+        # setting alignment to the text
+        # self.label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+ 
+        # making label multi-line
+        self.label.setWordWrap(True)
+ 
+        # adding label to the layout
+        lay.addWidget(self.label)
+ 
+        self.verticalScrollBar().rangeChanged.connect(
+            self.scrollToBottom,
+        )
+
+    # new function in same class
+    def scrollToBottom (self, minVal=None, maxVal=None):
+        # Additional params 'minVal' and 'maxVal' are declared because
+        # rangeChanged signal sends them, but we set it to optional
+        # because we may need to call it separately (if you need).
+        
+        self.verticalScrollBar().setValue(
+            self.verticalScrollBar().maximum()
+        )
+
+    # the setText method
+    def setText(self, text):
+        # setting text to the label
+        self.label.setText(text)
+
 class Debug_View(QWidget):
     def __init__(self, node, view=None, parent=None):
         super().__init__(parent=parent)
 
-        layout_latency = QVBoxLayout()
-        processing_duration = QLabel('')
-        layout_latency.addWidget(processing_duration)
-        invocation_duration = QLabel('')
-        layout_latency.addWidget(invocation_duration)
+        layout_metrics = QVBoxLayout()
+        if view is not None:
+            self.fps = QLabel('FPS: xxx')
+            layout_metrics.addWidget(self.fps)
+        self.latency = QLabel('')
+        layout_metrics.addWidget(self.latency)
+
+        self.log = ScrollLabel()
+        self.log_list = ['--- Log --------–-------']
+        self.log.setText('\n'.join(self.log_list))
 
         self.layout = QVBoxLayout(self)
         if view is not None:
             self.layout.addWidget(view)
-        self.layout.addLayout(layout_latency)
+        self.layout.addLayout(layout_metrics)
+        self.layout.addWidget(self.log)
 
-        val_queue = mp.Queue(maxsize=2)
+        val_queue = mp.Queue()
 
-        def hook_in_perf(self, current_data):
+        def reporter(**kwargs):
             nonlocal val_queue
-            processing_avg = self._perf_user_fn.average()
-            invocation_avg = self._perf_framework.average()
-            val_queue.put({
-                'processing_avg': processing_avg,
-                'invocation_avg': invocation_avg,
-                '_ctr': self._ctr,
-                'current_data': current_data,
-                'log': ''
-            })
-        node.register_reporter(hook_in_perf)
+            # TODO: clean this up and move it into the Time_per_call etc reporters
+            if 'node' in kwargs and 'latency' not in kwargs:
+                processing_duration = node._perf_user_fn.average()
+                invocation_duration = node._perf_framework.average()
+                kwargs['latency'] = {
+                    "process": processing_duration,
+                    "invocation": invocation_duration,
+                    "time_between_calls": (invocation_duration - processing_duration) * 1000
+                }
+                del kwargs['node']
+            val_queue.put(kwargs)
+
+        node.register_reporter(reporter)
 
         def update():
-            nonlocal val_queue, processing_duration, invocation_duration
-            try:
-                cur_state = val_queue.get_nowait()
-                processing_duration.setText(f'Processing: {cur_state["processing_avg"] * 1000:.5f}ms')
-                invocation_duration.setText(f'Time between invocations: {cur_state["invocation_avg"] * 1000:.5f}ms')
-            except queue.Empty:
-                pass
+            nonlocal val_queue, self
+            while not val_queue.empty():
+                infos = val_queue.get_nowait()
+                if 'fps' in infos:
+                    fps = infos['fps']
+                    self.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']})")
+                if 'latency' in infos:
+                    latency = infos['latency']
+                    self.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}m')
+                if 'log' in infos:
+                    self.log_list.append(infos['log'])
+                    self.log_list = self.log_list[-100:]
+                    self.log.setText('\n'.join(self.log_list))
 
         self.timer = QTimer(self)
         self.timer.setInterval(10) # max 100fps
