@@ -18,7 +18,9 @@ import vispy.plot as vp
 from vispy import scene
 vp_app.use_app('pyqt5')
 
-from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from PyQt5.QtWidgets import QSplitter, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+
+from .scroll_label import ScrollLabel
 
 import seaborn as sns
 
@@ -38,65 +40,23 @@ def node_view_mapper(parent, node):
     else:
         raise ValueError(f'Unkown Node type {str(node)}')
 
-# class for scrollable label
-# from: https://www.geeksforgeeks.org/pyqt5-scrollable-label/
-class ScrollLabel(QScrollArea):
-    # constructor
-    def __init__(self, keep_bottom=False, *args, **kwargs):
-        QScrollArea.__init__(self, *args, **kwargs)
- 
-        # making widget resizable
-        self.setWidgetResizable(True)
- 
-        # making qwidget object
-        content = QWidget(self)
-        self.setWidget(content)
- 
-        # vertical box layout
-        lay = QVBoxLayout(content)
- 
-        # creating label
-        self.label = QLabel(content)
- 
-        # setting alignment to the text
-        # self.label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
- 
-        # making label multi-line
-        self.label.setWordWrap(True)
- 
-        # adding label to the layout
-        lay.addWidget(self.label)
- 
-        if keep_bottom:
-            self.verticalScrollBar().rangeChanged.connect(
-                self.scrollToBottom,
-            )
-
-    # new function in same class
-    def scrollToBottom (self, minVal=None, maxVal=None):
-        # Additional params 'minVal' and 'maxVal' are declared because
-        # rangeChanged signal sends them, but we set it to optional
-        # because we may need to call it separately (if you need).
-        
-        self.verticalScrollBar().setValue(
-            self.verticalScrollBar().maximum()
-        )
-
-    # the setText method
-    def setText(self, text):
-        # setting text to the label
-        self.label.setText(text)
-
-class Debug_View(QWidget):
-    def __init__(self, node, view=None, parent=None):
+class Debug_Metrics(QWidget):
+    def __init__(self, view=None, parent=None):
         super().__init__(parent=parent)
 
-        layout_metrics = QVBoxLayout()
+        layout_metrics = QVBoxLayout(self)
         if view is not None:
             self.fps = QLabel('FPS: xxx')
             layout_metrics.addWidget(self.fps)
         self.latency = QLabel('')
         layout_metrics.addWidget(self.latency)
+
+class Debug_View(QWidget):
+    def __init__(self, node, view=None, parent=None):
+        super().__init__(parent=parent)
+
+        
+        self.metrics = Debug_Metrics(view)
 
         self.log = ScrollLabel(keep_bottom=True)
         self.log_list = ['--- Log --------–-------']
@@ -104,12 +64,21 @@ class Debug_View(QWidget):
 
         self.state = ScrollLabel()
 
-        self.layout = QVBoxLayout(self)
+        self.layout = QSplitter(QtCore.Qt.Vertical)
+        i = 0
+        self.layout.addWidget(self.metrics)
+        self.layout.setStretchFactor(i, 0)
         if view is not None:
+            i = 1
             self.layout.addWidget(view)
-        self.layout.addLayout(layout_metrics)
+            self.layout.setStretchFactor(i, 1)
         self.layout.addWidget(self.log)
+        self.layout.setStretchFactor(i + 1, 1)
         self.layout.addWidget(self.state)
+        self.layout.setStretchFactor(i + 2, 0)
+        
+        l = QHBoxLayout(self)
+        l.addWidget(self.layout)
 
         val_queue = mp.Queue()
 
@@ -136,10 +105,10 @@ class Debug_View(QWidget):
                     infos = val_queue.get_nowait()
                     if 'fps' in infos:
                         fps = infos['fps']
-                        self.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']})")
+                        self.metrics.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']})")
                     if 'latency' in infos:
                         latency = infos['latency']
-                        self.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}m')
+                        self.metrics.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}m')
                     if 'log' in infos:
                         self.log_list.append(infos['log'])
                         self.log_list = self.log_list[-100:]

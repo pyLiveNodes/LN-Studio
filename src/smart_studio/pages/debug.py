@@ -5,6 +5,7 @@ import json
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
 
 from PyQtAds import QtAds
 
@@ -22,15 +23,33 @@ class Debug(Page):
         self.pipeline = pipeline
         self._create_paths(pipeline_path)
 
+        # === Setup buttons =================================================
+        def toggle():
+            nonlocal self
+            if self.worker is None:
+                self._start_pipeline()
+                self.toggle.setText("Stop")
+            else:
+                self._stop_pipeline()
+                self.toggle.setText("Start")
+
+        self.toggle = QPushButton("Start")
+        self.toggle.clicked.connect(toggle)
+
+        buttons = QHBoxLayout()
+        buttons.addWidget(self.toggle)
+
+
         # === Setup draw canvases =================================================
         self.nodes = Node.discover_graph(pipeline)
         self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None) for n in self.nodes]
         
         QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
         
-        self.layout = QHBoxLayout(self)
+        self.layout = QVBoxLayout(self)
         self.dock_manager = QtAds.CDockManager(self)
         self.layout.addWidget(self.dock_manager)
+        self.layout.addLayout(buttons)
         self.widgets = []
 
         for widget, node in zip(self.draw_widgets, self.nodes):
@@ -56,12 +75,26 @@ class Debug(Page):
 
         # === Start pipeline =================================================
         self.worker_term_lock = mp.Lock()
+        self.worker = None
+
+    def _start_pipeline(self):
         self.worker_term_lock.acquire()
         self.worker = mp.Process(target=self.worker_start)
         # self.worker.daemon = True
         self.worker.start()
 
+    def _stop_pipeline(self):
+        self.worker_term_lock.release()
+        self.worker.join(2)
 
+        # yes, sometimes the program will then not return, but only if we also really need to kill the subprocesses!
+        self.worker_term_lock.acquire()
+        # self.pipeline.stop()
+        
+        print('Termination time in view!')
+        self.worker.terminate()
+        self.worker = None
+        
     def worker_start(self):
         self.pipeline.start()
         self.worker_term_lock.acquire()
@@ -73,16 +106,7 @@ class Debug(Page):
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
     def stop(self, *args, **kwargs):
-        # Tell the process to terminate, then wait until it returns
-        self.worker_term_lock.release()
-        self.worker.join(2)
-
-        # yes, sometimes the program will then not return, but only if we also really need to kill the subprocesses!
-        self.worker_term_lock.acquire()
-        # self.pipeline.stop()
-        
-        print('Termination time in view!')
-        self.worker.terminate()
+        self._stop_pipeline()
 
         print('Terminating draw widgets')
         for widget in self.draw_widgets:
