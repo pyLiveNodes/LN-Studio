@@ -212,18 +212,19 @@ class QT_Graph_edit(QWidget):
                 }
                 , 'constructor': node
                 })
+            print('-----')
+            print(node)
+            print(node.ports_in, node.ports_out)
             self.known_streams = {**self.known_streams, **{x.key: x for x in node.ports_in + node.ports_out}}
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
         # Create Converters
-        # Allow any stream to map onto any other stream:
-        # TODO: this could be used properly for type checking, on build (in the gui only) but is not furhter integrated into the node system itself
         for a, b in itertools.combinations(self.known_streams.keys(), 2):
-            # print('----')
-            # print(self.known_streams[a].__class__)
-            # print(self.known_streams[b].__class__)
-            # print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
+            print('----', a, b)
+            print(self.known_streams[a].__class__)
+            print(self.known_streams[b].__class__)
+            print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
             
             if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
                 converter = TypeConverter(self.known_dtypes[a],

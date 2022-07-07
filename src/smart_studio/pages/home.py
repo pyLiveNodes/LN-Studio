@@ -50,7 +50,10 @@ class Home(QWidget):
         }
 
     def set_state(self, cur_project, cur_pipeline=None):
-        id = self.projects.index(cur_project)
+        if cur_project in self.projects:
+            id = self.projects.index(cur_project)
+        else:
+            id = 0
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
         if cur_pipeline is not None:

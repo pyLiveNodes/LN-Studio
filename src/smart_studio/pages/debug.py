@@ -84,16 +84,13 @@ class Debug(Page):
         self.worker.start()
 
     def _stop_pipeline(self):
-        self.worker_term_lock.release()
-        self.worker.join(2)
-
-        # yes, sometimes the program will then not return, but only if we also really need to kill the subprocesses!
-        self.worker_term_lock.acquire()
-        # self.pipeline.stop()
-        
-        print('Termination time in view!')
-        self.worker.terminate()
-        self.worker = None
+        if self.worker is not None:
+            self.worker_term_lock.release()
+            self.worker.join(2)
+            
+            print('Termination time in view!')
+            self.worker.terminate()
+            self.worker = None
         
     def worker_start(self):
         self.pipeline.start()
