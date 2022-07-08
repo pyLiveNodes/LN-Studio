@@ -192,7 +192,7 @@ class QT_Graph_edit(QWidget):
         # Collect and create Datatypes
         for node in nodes:
             for val in node.ports_in + node.ports_out:
-                self.known_dtypes[val.key] = NodeDataType(id=val.key, name=val.label)
+                self.known_dtypes[str(val)] = NodeDataType(id=val.key, name=val.label)
 
         # Collect and create Node-Classes
         for node in nodes:
@@ -207,32 +207,36 @@ class QT_Graph_edit(QWidget):
                     PortType.output: len(node.ports_out)
                 },
                 'data_type': {
-                    PortType.input: {i: self.known_dtypes[val.key] for i, val in enumerate(node.ports_in)},
-                    PortType.output: {i: self.known_dtypes[val.key] for i, val in enumerate(node.ports_out)}
+                    PortType.input: {i: self.known_dtypes[str(val)] for i, val in enumerate(node.ports_in)},
+                    PortType.output: {i: self.known_dtypes[str(val)] for i, val in enumerate(node.ports_out)}
                 }
                 , 'constructor': node
                 })
-            print('-----')
-            print(node)
-            print(node.ports_in, node.ports_out)
-            self.known_streams = {**self.known_streams, **{x.key: x for x in node.ports_in + node.ports_out}}
+            # print('-----')
+            # print(node)
+            # print(node.ports_in, node.ports_out)
+            self.known_streams = {**self.known_streams, **{str(x): x for x in node.ports_in + node.ports_out}}
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
         # Create Converters
         for a, b in itertools.combinations(self.known_streams.keys(), 2):
-            print('----', a, b)
-            print(self.known_streams[a].__class__)
-            print(self.known_streams[b].__class__)
-            print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
+            print(a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
+            if self.known_streams[a].key == 'biokit':
+                print(self.known_streams[b].__class__, self.known_streams[b].example_values)
+            # print('----', a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
+            # print(self.known_streams[a].__class__)
+            # print(self.known_streams[b].__class__)
+            # print(self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__))
             
-            if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
+            if self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__):
                 converter = TypeConverter(self.known_dtypes[a],
                                         self.known_dtypes[b], noop)
                 self.registry.register_type_converter(self.known_dtypes[a],
                                                     self.known_dtypes[b],
                                                     converter)
 
+            if self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__):
                 converter = TypeConverter(self.known_dtypes[b],
                                         self.known_dtypes[a], noop)
                 self.registry.register_type_converter(self.known_dtypes[b],
@@ -346,7 +350,7 @@ class QT_Graph_edit(QWidget):
         # TODO: For the moment, lets assume the start node stays the same, otherwise we'll have a problem...
         pipeline.save(self.pipeline_path)
         try:
-            pipeline.dot_graph_full(transparent_bg=True).save(
+            pipeline.dot_graph_full(transparent_bg=True, edge_labels=False).save(
                 self.pipeline_gui_path.replace('.json', '.png'), 'PNG')
             pipeline.dot_graph_full(transparent_bg=False).save(
                 self.pipeline_path.replace('.json', '.png'), 'PNG')
