@@ -76,14 +76,11 @@ class Run(Page):
     def stop(self, *args, **kwargs):
         # Tell the process to terminate, then wait until it returns
         self.worker_term_lock.release()
-        self.worker.join(2)
-
-        # yes, sometimes the program will then not return, but only if we also really need to kill the subprocesses!
-        self.worker_term_lock.acquire()
-        # self.pipeline.stop()
         
         print('Termination time in view!')
-        self.worker.terminate()
+        self.worker_term_lock.acquire()
+        self.worker_term_lock.release()
+        print('View terminated')
 
         print('Terminating draw widgets')
         for widget in self.draw_widgets:

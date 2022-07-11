@@ -5,7 +5,7 @@ import json
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from PyQt5.QtWidgets import QCheckBox, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
 
 from PyQtAds import QtAds
 
@@ -39,38 +39,56 @@ class Debug(Page):
         buttons = QHBoxLayout()
         buttons.addWidget(self.toggle)
 
+        # === Setup item list =================================================
+        sidebar_items = QVBoxLayout()
+        sidebar_items.addLayout(buttons)
+        sidebar_items.spacerItem()
 
-        # === Setup draw canvases =================================================
+
+        # === Create overall layout =================================================
+        self.dock_manager = QtAds.CDockManager(self)
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addLayout(sidebar_items, stretch=0)
+        self.layout.addWidget(self.dock_manager, stretch=1)
+
+
+        # === Setup draw canvases and add items to views =================================================
         self.nodes = Node.discover_graph(pipeline)
         self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None) for n in self.nodes]
         
         QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
-        
-        self.layout = QVBoxLayout(self)
-        self.dock_manager = QtAds.CDockManager(self)
-        self.layout.addWidget(self.dock_manager)
-        self.layout.addLayout(buttons)
         self.widgets = []
+
+        def toggle(dock_widget, state):
+            dock_widget.toggleView(state == QtCore.Qt.Checked)
 
         for widget, node in zip(self.draw_widgets, self.nodes):
             dock_widget = QtAds.CDockWidget(node.name)
             self.widgets.append(dock_widget)
             dock_widget.viewToggled.connect(partial(print, '=======', str(node), "qt emitted signal"))
             dock_widget.setWidget(widget)
-            dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
+            # dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
-            self.dock_manager.addDockWidget(QtAds.BottomDockWidgetArea, dock_widget)
+            self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock_widget)
 
         if os.path.exists(self.pipeline_gui_path):
             with open(self.pipeline_gui_path, 'r') as f:
                 self.dock_manager.restoreState(QtCore.QByteArray(f.read().encode()))
 
-        # restore might remove some of the newly added widgets -> add it back in here
-        for widget, node in zip(self.widgets, self.nodes):
-            if widget.isClosed():
-                # print('----', str(node))
-                widget.setClosedState(False)
-                self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
+        # # restore might remove some of the newly added widgets -> add it back in here
+        for dock_widget, node in zip(self.widgets, self.nodes):
+            # sidebar_items.addWidget(dock_widget.toggleViewAction())
+            box = QCheckBox(str(node))
+            box.setChecked(not dock_widget.isClosed())
+            sidebar_items.addWidget(box, stretch=0)
+            # dock_widget.closed.connect()
+            box.stateChanged.connect(partial(toggle, dock_widget))
+
+            # if widget.isClosed():
+            #     # print('----', str(node))
+            #     widget.setClosedState(False)
+            #     self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
 
 
         # === Start pipeline =================================================
@@ -86,10 +104,10 @@ class Debug(Page):
     def _stop_pipeline(self):
         if self.worker is not None:
             self.worker_term_lock.release()
-            self.worker.join(2)
-            
             print('Termination time in view!')
-            self.worker.terminate()
+            self.worker_term_lock.acquire()
+            self.worker_term_lock.release()
+            print('View terminated')
             self.worker = None
         
     def worker_start(self):

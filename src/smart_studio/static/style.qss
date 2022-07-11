@@ -5,7 +5,7 @@ MainWindow {
     background-position: center top;
 }
 
-QLabel {
+QLabel, QCheckBox {
     background-color: white;
 }
 

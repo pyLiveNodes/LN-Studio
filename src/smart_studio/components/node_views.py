@@ -55,7 +55,9 @@ class Debug_View(QWidget):
     def __init__(self, node, view=None, parent=None):
         super().__init__(parent=parent)
 
-        
+        self.node = node
+        self.view = view 
+
         self.metrics = Debug_Metrics(view)
 
         self.log = ScrollLabel(keep_bottom=True)
@@ -117,7 +119,7 @@ class Debug_View(QWidget):
                         self.state.setText(json.dumps(infos['current_state'], cls=NumpyEncoder, indent=2))
                 except Exception as err:
                     print(err)
-                    print(traceback.format_exc())
+                    # print(traceback.format_exc())
 
         self.timer = QTimer(self)
         self.timer.setInterval(10) # max 100fps
