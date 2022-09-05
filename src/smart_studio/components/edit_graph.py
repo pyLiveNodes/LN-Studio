@@ -194,6 +194,8 @@ class QT_Graph_edit(QWidget):
             for val in node.ports_in + node.ports_out:
                 self.known_dtypes[val.key] = NodeDataType(id=val.key, name=val.label)
 
+        tmp_port_to_class = {}
+
         # Collect and create Node-Classes
         for node in nodes:
             cls_name = getattr(node, '__name__', 'Unknown Class')
@@ -213,6 +215,7 @@ class QT_Graph_edit(QWidget):
                 , 'constructor': node
                 })
             self.known_streams = {**self.known_streams, **{x.key: x for x in node.ports_in + node.ports_out}}
+            tmp_port_to_class = {**tmp_port_to_class, **{x.key: node for x in node.ports_in + node.ports_out}}
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
@@ -221,9 +224,10 @@ class QT_Graph_edit(QWidget):
         # TODO: this could be used properly for type checking, on build (in the gui only) but is not furhter integrated into the node system itself
         for a, b in itertools.combinations(self.known_streams.keys(), 2):
             print('----')
-            print(self.known_streams[a].__class__)
-            print(self.known_streams[b].__class__)
+            print(self.known_streams[a].__class__.__name__, self.known_streams[a].__class__, tmp_port_to_class[a].__class__)
+            print(self.known_streams[b].__class__.__name__, self.known_streams[b].__class__, tmp_port_to_class[b].__class__)
             print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
+            print(self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__))
             
             if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
                 converter = TypeConverter(self.known_dtypes[a],
@@ -232,6 +236,7 @@ class QT_Graph_edit(QWidget):
                                                     self.known_dtypes[b],
                                                     converter)
 
+            if self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__):
                 converter = TypeConverter(self.known_dtypes[b],
                                         self.known_dtypes[a], noop)
                 self.registry.register_type_converter(self.known_dtypes[b],
@@ -287,7 +292,14 @@ class QT_Graph_edit(QWidget):
                     n_out = s_nodes[name][PortType.output][out_idx]
                     n_in = s_nodes[str(
                         con._recv_node)][PortType.input][in_idx]
-                    self.scene.create_connection(n_out, n_in)
+                    try:
+                        self.scene.create_connection(n_out, n_in)
+                    except Exception as err:
+                        print('-------')
+                        print(err)
+                        print('Tried connecting node', s_nodes[name], 'to', s_nodes[str(con._recv_node)])
+                        print('Tried connecting port', con._emit_port, 'to', con._recv_port)
+                        raise err
 
             # third pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
