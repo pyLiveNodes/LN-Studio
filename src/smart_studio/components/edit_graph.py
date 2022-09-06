@@ -99,7 +99,7 @@ class QT_Graph_edit(QWidget):
 
         self.known_classes = {}
         self.known_streams = {}
-        self.known_dtypes = {}
+        self.known_ports = {}
 
         self._create_known_classes(node_registry)
 
@@ -192,7 +192,7 @@ class QT_Graph_edit(QWidget):
         # Collect and create Datatypes
         for node in nodes:
             for val in node.ports_in + node.ports_out:
-                self.known_dtypes[val.key] = NodeDataType(id=val.key, name=val.label)
+                self.known_ports[str(val)] = NodeDataType(id=str(val), name=val.label)
 
         tmp_port_to_class = {}
 
@@ -209,13 +209,13 @@ class QT_Graph_edit(QWidget):
                     PortType.output: len(node.ports_out)
                 },
                 'data_type': {
-                    PortType.input: {i: self.known_dtypes[val.key] for i, val in enumerate(node.ports_in)},
-                    PortType.output: {i: self.known_dtypes[val.key] for i, val in enumerate(node.ports_out)}
+                    PortType.input: {i: self.known_ports[str(val)] for i, val in enumerate(node.ports_in)},
+                    PortType.output: {i: self.known_ports[str(val)] for i, val in enumerate(node.ports_out)}
                 }
                 , 'constructor': node
                 })
-            self.known_streams = {**self.known_streams, **{x.key: x for x in node.ports_in + node.ports_out}}
-            tmp_port_to_class = {**tmp_port_to_class, **{x.key: node for x in node.ports_in + node.ports_out}}
+            self.known_streams = {**self.known_streams, **{str(val): val for val in node.ports_in + node.ports_out}}
+            tmp_port_to_class = {**tmp_port_to_class, **{str(val): node for val in node.ports_in + node.ports_out}}
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
@@ -223,24 +223,27 @@ class QT_Graph_edit(QWidget):
         # Allow any stream to map onto any other stream:
         # TODO: this could be used properly for type checking, on build (in the gui only) but is not furhter integrated into the node system itself
         for a, b in itertools.combinations(self.known_streams.keys(), 2):
-            print('----')
-            print(self.known_streams[a].__class__.__name__, self.known_streams[a].__class__, tmp_port_to_class[a].__class__)
-            print(self.known_streams[b].__class__.__name__, self.known_streams[b].__class__, tmp_port_to_class[b].__class__)
-            print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
-            print(self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__))
+            # print('----')
+            # print(self.known_streams[a].__class__.__name__, self.known_streams[a].__class__, tmp_port_to_class[a].__class__)
+            # print(self.known_streams[b].__class__.__name__, self.known_streams[b].__class__, tmp_port_to_class[b].__class__)
+            # print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
+            # print(self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__))
             
             if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
-                converter = TypeConverter(self.known_dtypes[a],
-                                        self.known_dtypes[b], noop)
-                self.registry.register_type_converter(self.known_dtypes[a],
-                                                    self.known_dtypes[b],
+                # print(f'Adding converter from {self.known_streams[a].__class__.__name__} to {self.known_streams[b].__class__.__name__}')
+                converter = TypeConverter(self.known_ports[a],
+                                        self.known_ports[b], noop)
+                self.registry.register_type_converter(self.known_ports[a],
+                                                    self.known_ports[b],
                                                     converter)
 
             if self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__):
-                converter = TypeConverter(self.known_dtypes[b],
-                                        self.known_dtypes[a], noop)
-                self.registry.register_type_converter(self.known_dtypes[b],
-                                                    self.known_dtypes[a],
+                # print(f'Adding converter from {self.known_streams[b].__class__.__name__} to {self.known_streams[a].__class__.__name__}')
+
+                converter = TypeConverter(self.known_ports[b],
+                                        self.known_ports[a], noop)
+                self.registry.register_type_converter(self.known_ports[b],
+                                                    self.known_ports[a],
                                                     converter)
 
     def _add_pipeline(self, layout, pipeline):
