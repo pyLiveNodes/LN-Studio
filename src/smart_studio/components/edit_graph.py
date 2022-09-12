@@ -5,7 +5,7 @@ import os
 import itertools
 import traceback
 
-from PyQt5.QtWidgets import QSplitter, QHBoxLayout, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QWidget
 from PyQt5.QtCore import pyqtSignal
 import graphviz
 

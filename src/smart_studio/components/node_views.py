@@ -3,7 +3,7 @@ import queue
 import traceback
 import multiprocessing as mp
 from livenodes import viewer
-from livenodes.utils import NumpyEncoder
+from livenodes.components.utils.utils import NumpyEncoder
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
 from matplotlib.figure import Figure

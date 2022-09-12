@@ -3,7 +3,6 @@ import traceback
 import multiprocessing as mp
 import platform
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
 
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
@@ -13,7 +12,7 @@ from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry
 
-from livenodes.logger import logger
+from livenodes.components.utils.logger import logger
 
 import datetime
 import time

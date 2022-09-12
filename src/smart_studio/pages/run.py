@@ -10,7 +10,8 @@ from PyQtAds import QtAds
 
 import multiprocessing as mp
 
-from livenodes.node import Node
+from livenodes import Node, Graph
+
 from smart_studio.components.node_views import node_view_mapper
 from smart_studio.components.page import Page, Action, ActionKind
 
@@ -21,6 +22,7 @@ class Run(Page):
         super().__init__(parent=parent)
 
         self.pipeline = pipeline
+        self.graph = Graph(start_node=pipeline)
         self._create_paths(pipeline_path)
 
         # === Setup draw canvases =================================================
@@ -64,11 +66,11 @@ class Run(Page):
 
 
     def worker_start(self):
-        self.pipeline.start()
+        self.graph.start_all()
         self.worker_term_lock.acquire()
 
         print('Termination time in pipeline!')
-        self.pipeline.stop()
+        self.graph.stop_all()
         self.worker_term_lock.release()
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
