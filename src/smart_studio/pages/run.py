@@ -70,7 +70,7 @@ class Run(Page):
         self.worker_term_lock.acquire()
 
         print('Termination time in pipeline!')
-        self.graph.stop_all()
+        self.graph.stop_all(timeout=1)
         self.worker_term_lock.release()
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
