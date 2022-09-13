@@ -70,7 +70,7 @@ class Run(Page):
         self.worker_term_lock.acquire()
 
         print('Termination time in pipeline!')
-        self.graph.stop_all(timeout=1)
+        self.graph.stop_all(stop_timeout=0.1, close_timeout=0.1)
         self.worker_term_lock.release()
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
@@ -87,6 +87,8 @@ class Run(Page):
         print('Terminating draw widgets')
         for widget in self.draw_widgets:
             widget.stop()
+
+        self.worker.terminate()
 
     def get_actions(self):
         return [ \
