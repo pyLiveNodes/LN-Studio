@@ -61,7 +61,7 @@ class Run(Page):
         self.worker_term_lock = mp.Lock()
         self.worker_term_lock.acquire()
         self.worker = mp.Process(target=self.worker_start)
-        # self.worker.daemon = True
+        # self.worker.daemon = True -> would not be able to start further subprocesses inside of graph...
         self.worker.start()
 
 
