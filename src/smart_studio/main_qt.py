@@ -107,6 +107,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_file.flush()
 
     def onstart(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
@@ -133,10 +134,12 @@ class MainWindow(QtWidgets.QMainWindow):
             print(f'Could not load pipeline. Staying home')
             print(err)
             print(traceback.format_exc())
+            self.stop()
             os.chdir(self.home_dir)
             print('CWD:', os.getcwd())
 
     def ondebug(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
@@ -163,11 +166,13 @@ class MainWindow(QtWidgets.QMainWindow):
             print(f'Could not load pipeline. Staying home')
             print(err)
             print(traceback.format_exc())
+            self.stop()
             os.chdir(self.home_dir)
             print('CWD:', os.getcwd())
 
 
     def onconfig(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
         print('CWD:', os.getcwd())
 
@@ -186,6 +191,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print(f'Could not load pipeline. Staying home')
             print(err)
             print(traceback.format_exc())
+            self.stop()
             os.chdir(self.home_dir)
             print('CWD:', os.getcwd())
 
