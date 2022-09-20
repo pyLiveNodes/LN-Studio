@@ -11,6 +11,7 @@ from PyQtAds import QtAds
 import multiprocessing as mp
 
 from livenodes import Node, Graph
+from livenodes.components.utils.logger import logger
 
 from smart_studio.components.node_views import node_view_mapper
 from smart_studio.components.page import Page, Action, ActionKind
@@ -66,12 +67,16 @@ class Run(Page):
 
 
     def worker_start(self):
+        logger.info(f"Smart-Studio | Starting Worker")
         self.graph.start_all()
         self.worker_term_lock.acquire()
 
-        print('Termination time in pipeline!')
-        self.graph.stop_all(stop_timeout=0.5, close_timeout=0.5)
+        logger.info(f"Smart-Studio | Stopping Worker")
+        # timeout to make sure potential non-returning nodes do not block until eternity
+        self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
         self.worker_term_lock.release()
+        logger.info(f"Smart-Studio | Worker Stopped")
+
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
@@ -79,15 +84,18 @@ class Run(Page):
         # Tell the process to terminate, then wait until it returns
         self.worker_term_lock.release()
         
-        print('Termination time in view!')
+        logger.info(f"Smart-Studio | Stopping Worker")
+        # Block until graph finished all it's nodes
         self.worker_term_lock.acquire()
         self.worker_term_lock.release()
         print('View terminated')
 
         print('Terminating draw widgets')
+        logger.info(f"Smart-Studio | Stopping Widgets")
         for widget in self.draw_widgets:
             widget.stop()
 
+        logger.info(f"Smart-Studio | Killing Worker")
         self.worker.terminate()
 
     def get_actions(self):
