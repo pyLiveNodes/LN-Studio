@@ -107,10 +107,10 @@ class Debug_View(QWidget):
                     infos = val_queue.get_nowait()
                     if 'fps' in infos:
                         fps = infos['fps']
-                        self.metrics.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']})")
+                        self.metrics.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']}")
                     if 'latency' in infos:
                         latency = infos['latency']
-                        self.metrics.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}m')
+                        self.metrics.latency.setText(f'Processing Duration: {latency["process"] * 1000:.5f}ms\nInvocation Interval: {latency["invocation"] * 1000:.5f}ms')
                     if 'log' in infos:
                         self.log_list.append(infos['log'])
                         self.log_list = self.log_list[-100:]

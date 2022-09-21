@@ -1,17 +1,16 @@
 from functools import partial
-from livenodes import viewer
 import os
-import json
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QCheckBox, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from PyQt5.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
 
 from PyQtAds import QtAds
 
 import multiprocessing as mp
 
-from livenodes.node import Node
+from livenodes import Node, Graph, viewer
+from livenodes.components.utils.logger import logger
 from smart_studio.components.node_views import node_view_mapper, Debug_View
 from smart_studio.components.page import Page, Action, ActionKind
 
@@ -21,6 +20,7 @@ class Debug(Page):
         super().__init__(parent=parent)
 
         self.pipeline = pipeline
+        self.graph = Graph(start_node=pipeline)
         self._create_paths(pipeline_path)
 
         # === Setup buttons =================================================
@@ -111,12 +111,15 @@ class Debug(Page):
             self.worker = None
         
     def worker_start(self):
-        self.pipeline.start()
+        logger.info(f"Smart-Studio | Starting Worker")
+        self.graph.start_all()
         self.worker_term_lock.acquire()
 
-        print('Termination time in pipeline!')
-        self.pipeline.stop()
+        logger.info(f"Smart-Studio | Stopping Worker")
+        # timeout to make sure potential non-returning nodes do not block until eternity
+        self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
         self.worker_term_lock.release()
+        logger.info(f"Smart-Studio | Worker Stopped")
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
