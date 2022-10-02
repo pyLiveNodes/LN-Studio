@@ -235,6 +235,9 @@ def main():
         mp.set_start_method(
             'fork',
             force=True)  # force=True doesn't seem like a too good idea, but hey
+    # IMPORTANT TODO: 'spawn' fails due to objects not being picklable (which makes sense)
+    # -> however, fork is not present on windows and more generally the python community seems to shift towards making spawn the default/expected behaviour
+    # -> resulting in the TODO: check and then separate qt views from the actuall running pipeline such that we can safely switch to spawn for all subprocesses.
 
     # === Load modules ========================================================================
     # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
