@@ -184,7 +184,7 @@ class QT_Graph_edit(QWidget):
         # Not relevant yet, but will be when there are sync nodes (ie sync 1-x sensor nodes) etc
 
         if node_registry is None:
-            return 
+            raise Exception('Registry is Required') 
 
         # .values() returns a generator
         nodes = list(node_registry.nodes.reg.values())
