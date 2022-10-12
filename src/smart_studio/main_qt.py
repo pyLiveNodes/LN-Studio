@@ -100,6 +100,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.removeWidget(cur)
         self.widget_home.refresh_selection()
         self._set_state(self.widget_home)
+        print('Ref count old view (Home)', sys.getrefcount(cur))
         print("Nr of views: ", self.central_widget.count())
 
     def _log_helper(self, msg):

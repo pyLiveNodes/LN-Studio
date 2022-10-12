@@ -31,6 +31,7 @@ class Parent(QWidget):
         l1.addWidget(child, stretch=2)
 
         self.child = child
+        self.child.setParent(self)
     
     def _back(self, fn):
         fn()

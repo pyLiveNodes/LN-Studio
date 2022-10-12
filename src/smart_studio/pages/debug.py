@@ -1,5 +1,6 @@
 from functools import partial
 import os
+import sys
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
@@ -55,7 +56,7 @@ class Debug(Page):
 
         # === Setup draw canvases and add items to views =================================================
         self.nodes = Node.discover_graph(pipeline)
-        self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None) for n in self.nodes]
+        self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None, parent=self) for n in self.nodes]
         
         QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
         self.widgets = []
@@ -129,6 +130,11 @@ class Debug(Page):
         print('Terminating draw widgets')
         for widget in self.draw_widgets:
             widget.stop()
+
+        # self.nodes = None
+        # self.graph = None
+        # print('Ref count debug during stoppage', sys.getrefcount(self))
+        
 
     def get_actions(self):
         return [ \

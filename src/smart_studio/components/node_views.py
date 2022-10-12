@@ -1,5 +1,6 @@
 import json
 import queue
+import time
 import traceback
 import multiprocessing as mp
 from livenodes import viewer
@@ -55,7 +56,6 @@ class Debug_View(QWidget):
     def __init__(self, node, view=None, parent=None):
         super().__init__(parent=parent)
 
-        self.node = node
         self.view = view 
 
         self.metrics = Debug_Metrics(view)
@@ -82,10 +82,10 @@ class Debug_View(QWidget):
         l = QHBoxLayout(self)
         l.addWidget(self.layout)
 
-        val_queue = mp.Queue()
+        self.val_queue = mp.Queue()
 
         def reporter(**kwargs):
-            nonlocal val_queue
+            nonlocal self, node
             # TODO: clean this up and move it into the Time_per_call etc reporters
             if 'node' in kwargs and 'latency' not in kwargs:
                 processing_duration = node._perf_user_fn.average()
@@ -96,15 +96,16 @@ class Debug_View(QWidget):
                     "time_between_calls": (invocation_duration - processing_duration) * 1000
                 }
                 del kwargs['node']
-            val_queue.put(kwargs)
+            if self.val_queue is not None: 
+                self.val_queue.put(kwargs)
 
         node.register_reporter(reporter)
 
         def update():
-            nonlocal val_queue, self
-            while not val_queue.empty():
+            nonlocal self
+            while not self.val_queue.empty():
                 try:
-                    infos = val_queue.get_nowait()
+                    infos = self.val_queue.get_nowait()
                     if 'fps' in infos:
                         fps = infos['fps']
                         self.metrics.fps.setText(f"FPS: {fps['fps']:.2f} \nTotal frames: {fps['total_frames']}")
@@ -127,7 +128,12 @@ class Debug_View(QWidget):
         self.timer.start()
 
     def stop(self):
-        pass
+        if self.view is not None:
+            self.view.stop()
+        self.timer.stop()
+        self.val_queue.close()
+        self.val_queue = None
+
 
 
 class QT_View(QWidget):
@@ -153,7 +159,7 @@ class QT_View(QWidget):
         # self.setPalette(p)
     
     def stop(self):
-        pass
+        self.timer.stop()
 
 class Vispy_View(QWidget):
     def __init__(self, node, interval=0, parent=None):
