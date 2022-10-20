@@ -14,6 +14,7 @@ from livenodes.node import Node
 import qtpynodeeditor
 from qtpynodeeditor import (NodeDataModel, NodeDataType, PortType)
 from qtpynodeeditor.type_converter import TypeConverter
+from qtpynodeeditor.exceptions import ConnectionDataTypeFailure
 
 from .edit_node import CreateNodeDialog
 from .utils import noop
@@ -130,12 +131,15 @@ class QT_Graph_edit(QWidget):
 
         if layout is None:
             try:
+                print('Trying planar layout')
                 self.scene.auto_arrange('planar_layout')
+                print('Trying spring layout')
+                self.scene.auto_arrange('spring_layout')
             except Exception:
-                try:
-                    self.scene.auto_arrange('spring_layout')
-                except Exception:
-                    pass
+                # try:
+                # except Exception:
+                print('Could not apply layout. Collapsing.')
+                pass
         # self.scene.auto_arrange('graphviz_layout', prog='dot', scale=1)
         # self.scene.auto_arrange('graphviz_layout', scale=3)
 
@@ -293,7 +297,10 @@ class QT_Graph_edit(QWidget):
                     n_out = s_nodes[name][PortType.output][out_idx]
                     n_in = s_nodes[str(
                         con._recv_node.identify())][PortType.input][in_idx]
-                    self.scene.create_connection(n_out, n_in)
+                    try:
+                        self.scene.create_connection(n_out, n_in)
+                    except ConnectionDataTypeFailure:
+                        print("ERROR ConnectionDataTypeFailure: Could not connect nodes, please check.", n_out, n_in, con)
 
             # third pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
@@ -347,8 +354,10 @@ class QT_Graph_edit(QWidget):
 
         with open(self.pipeline_gui_path, 'w') as f:
             json.dump(vis_state, f, indent=2)
+        
+        # TODO: try to clone / save and load the whole thing to check if the gui allowed configs, that we cannot load afterwards...
+        # Node.load(self.pipeline_path)
 
-        # TODO: For the moment, lets assume the start node stays the same, otherwise we'll have a problem...
         pipeline.save(self.pipeline_path)
         try:
             pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=self.pipeline_gui_path.replace('.json', '.png'), file_type='PNG')
