@@ -221,9 +221,9 @@ class QT_Graph_edit(QWidget):
 
         # Create Converters
         for a, b in itertools.combinations(self.known_streams.keys(), 2):
-            print(a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
-            if self.known_streams[a].key == 'biokit':
-                print(self.known_streams[b].__class__, self.known_streams[b].example_values)
+            # print(a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
+            # if self.known_streams[a].key == 'biokit':
+                # print(self.known_streams[b].__class__, self.known_streams[b].example_values)
             # print('----', a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
             # print(self.known_streams[a].__class__)
             # print(self.known_streams[b].__class__)
@@ -265,22 +265,23 @@ class QT_Graph_edit(QWidget):
         ### Add nodes
         if pipeline is not None:
             # only keep uniques
-            p_nodes = {str(n): n for n in pipeline.discover_graph(pipeline)}
+            p_nodes = [(str(n.identify()), n) for n in pipeline.discover_graph(pipeline)]
+            # p_nodes = pipeline.discover_graph(pipeline)
 
             # first pass: create all nodes
             s_nodes = {}
             # print([str(n) for n in p_nodes])
-            for name, n in p_nodes.items():
+            for name, n in p_nodes:
                 if name in layout_nodes:
                     # lets' hope the interface hasn't changed in between
                     # TODO: actually check if it has
-                    s_nodes[name] = self.scene.restore_node(layout_nodes[name])
+                    s_nodes[name] = self.scene.restore_node(layout_nodes[str(n.identify())])
                 else:
                     s_nodes[name] = self.scene.create_node(
                         self.known_classes[n.__class__.__name__])
 
             # second pass: create all connectins
-            for name, n in p_nodes.items():
+            for name, n in p_nodes:
                 # node_output refers to the node in which n is inputing data, ie n's output
                 # for node_output, output_id, emit_port, recv_port in n.output_classes:
                 for con in n.output_connections:
@@ -291,12 +292,12 @@ class QT_Graph_edit(QWidget):
                     # print(out_idx, in_idx)
                     n_out = s_nodes[name][PortType.output][out_idx]
                     n_in = s_nodes[str(
-                        con._recv_node)][PortType.input][in_idx]
+                        con._recv_node.identify())][PortType.input][in_idx]
                     self.scene.create_connection(n_out, n_in)
 
             # third pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
-            for name, n in p_nodes.items():
+            for name, n in p_nodes:
                 s_nodes[name]._model.set_node_association(n)
                 # COMMENT: ouch, this feels very wrong...
                 s_nodes[name]._graphics_obj = attatch_click_cb(
@@ -335,7 +336,7 @@ class QT_Graph_edit(QWidget):
             if 'association_to_node' in val['model']:
                 pl_nodes.append(val['model']['association_to_node'])
                 val['model']['association_to_node'] = str(
-                    val['model']['association_to_node'])
+                    val['model']['association_to_node'].identify())
             vis_state['nodes'].append(val)
 
         return vis_state, self._find_initial_pl(pl_nodes)
