@@ -130,9 +130,12 @@ class Debug_View(QWidget):
     def stop(self):
         if self.view is not None:
             self.view.stop()
-        self.timer.stop()
-        self.val_queue.close()
-        self.val_queue = None
+        if self.timer is not None:
+            self.timer.stop()
+            self.timer = None
+        if self.val_queue is not None:
+            self.val_queue.close()
+            self.val_queue = None
 
 
 
