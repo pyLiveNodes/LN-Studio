@@ -31,11 +31,14 @@ class Parent(QWidget):
         l1.addWidget(child, stretch=2)
 
         self.child = child
-        self.child.setParent(self)
+        # self.child.setParent(self)
     
     def _back(self, fn):
         fn()
         self.back_fn()
+
+    # def closeEvent(self, event):
+    #     self.stop()
 
     def stop(self):
         if hasattr(self.child, 'stop'):

@@ -269,7 +269,7 @@ class QT_Graph_edit(QWidget):
         ### Add nodes
         if pipeline is not None:
             # only keep uniques
-            p_nodes = [(str(n.identify()), n) for n in pipeline.discover_graph(pipeline)]
+            p_nodes = [(str(n), n) for n in pipeline.discover_graph(pipeline)]
             # p_nodes = pipeline.discover_graph(pipeline)
 
             # first pass: create all nodes
@@ -279,7 +279,7 @@ class QT_Graph_edit(QWidget):
                 if name in layout_nodes:
                     # lets' hope the interface hasn't changed in between
                     # TODO: actually check if it has
-                    s_nodes[name] = self.scene.restore_node(layout_nodes[str(n.identify())])
+                    s_nodes[name] = self.scene.restore_node(layout_nodes[str(n)])
                 else:
                     s_nodes[name] = self.scene.create_node(
                         self.known_classes[n.__class__.__name__])
@@ -296,7 +296,7 @@ class QT_Graph_edit(QWidget):
                     # print(out_idx, in_idx)
                     n_out = s_nodes[name][PortType.output][out_idx]
                     n_in = s_nodes[str(
-                        con._recv_node.identify())][PortType.input][in_idx]
+                        con._recv_node)][PortType.input][in_idx]
                     try:
                         self.scene.create_connection(n_out, n_in)
                     except ConnectionDataTypeFailure:
@@ -343,7 +343,7 @@ class QT_Graph_edit(QWidget):
             if 'association_to_node' in val['model']:
                 pl_nodes.append(val['model']['association_to_node'])
                 val['model']['association_to_node'] = str(
-                    val['model']['association_to_node'].identify())
+                    val['model']['association_to_node'])
             vis_state['nodes'].append(val)
 
         return vis_state, self._find_initial_pl(pl_nodes)

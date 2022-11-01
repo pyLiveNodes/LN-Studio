@@ -162,7 +162,8 @@ class QT_View(QWidget):
         # self.setPalette(p)
     
     def stop(self):
-        self.timer.stop()
+        # self.timer.stop()
+        pass
 
 class Vispy_View(QWidget):
     def __init__(self, node, interval=0, parent=None):
@@ -192,7 +193,7 @@ class Vispy_View(QWidget):
 
 class MPL_View(FigureCanvasQTAgg):
 
-    def __init__(self, node, figsize=(4, 4), font = {'size': 10}, interval=0):
+    def __init__(self, node, figsize=(4, 4), font = {'size': 10}, interval=10):
         super().__init__(Figure(figsize=figsize))
 
         if not isinstance(node, viewer.View_MPL):
