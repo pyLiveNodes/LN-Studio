@@ -130,18 +130,23 @@ class QT_Graph_edit(QWidget):
         self._add_pipeline(layout, pipeline)
 
         if layout is None:
-            try:
-                print('Trying planar layout')
-                self.scene.auto_arrange('planar_layout')
-                print('Trying spring layout')
-                self.scene.auto_arrange('spring_layout')
-            except Exception:
-                # try:
-                # except Exception:
-                print('Could not apply layout. Collapsing.')
-                pass
+            self.auto_layout()
         # self.scene.auto_arrange('graphviz_layout', prog='dot', scale=1)
         # self.scene.auto_arrange('graphviz_layout', scale=3)
+
+    def auto_layout(self):
+        # bipartite', 'circular', 'kamada_kawai', 'random',
+        #                  'shell', 'spring', 'spectral'
+        
+        for l in ['planar_layout', 'spring_layout']:
+            try:
+                print(f'Trying {l}')
+                self.scene.auto_arrange(l, scale=1400, align='horizontal')
+                return
+            except Exception as err:
+                print(err)
+                pass
+        print('Could not apply layout. Collapsing.')
 
     def _remove_pl_node(self, node):
         smart_node = node.model.association_to_node

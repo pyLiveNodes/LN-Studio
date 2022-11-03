@@ -6,6 +6,7 @@ from .utils import noop
 
 class ActionKind(IntEnum):
     BACK = 1
+    OTHER = 2
 
 class Action():
     def __init__(self, label, kind, fn=noop):
