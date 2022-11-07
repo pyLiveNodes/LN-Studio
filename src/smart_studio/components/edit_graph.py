@@ -5,7 +5,7 @@ import os
 import itertools
 import traceback
 
-from PyQt5.QtWidgets import QHBoxLayout, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QWidget, QLabel
 from PyQt5.QtCore import pyqtSignal
 import graphviz
 
@@ -25,6 +25,8 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         super().__init__(style, parent)
         self.association_to_node = None
 
+        # self._info = QLabel("Info")
+
     def set_node_association(self, pl_node):
         self.association_to_node = pl_node
 
@@ -32,6 +34,17 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         res = super().__getstate__()
         res['association_to_node'] = self.association_to_node
         return res
+
+    # def embedded_widget(self) -> QWidget:
+    #     'The number source has a line edit widget for the user to type in'
+    #     return self._info
+
+    # @property
+    # def caption(self):
+    #     if self.association_to_node is not None:
+    #         return str(self.association_to_node.name)
+    #     else:
+    #         return self.name
 
     def _get_port_infos(self, connection):
         # TODO: yes, the naming here is confusing, as qtpynode is the other way round that livenodes
