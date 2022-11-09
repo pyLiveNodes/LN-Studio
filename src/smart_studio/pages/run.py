@@ -115,7 +115,7 @@ class Run(Page):
         # Deprecation and renaming notice here
         old_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '_dock.xml')
         if os.path.exists(old_path):
-            self.warn('_dock.xml is old format. renaming to just .xml')
+            logger.warn('_dock.xml is old format. renaming to just .xml')
             os.rename(old_path, self.pipeline_gui_path)
 
 
