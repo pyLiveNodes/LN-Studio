@@ -1,6 +1,7 @@
 from functools import partial
+import logging
+from logging.handlers import QueueHandler
 import os
-import sys
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
@@ -9,9 +10,10 @@ from PyQt5.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
 from PyQtAds import QtAds
 
 import multiprocessing as mp
+import threading as th
 
 from livenodes import Node, Graph, viewer
-from livenodes.components.utils.logger import logger
+from livenodes.components.utils.log import drain_log_queue
 from smart_studio.components.node_views import node_view_mapper, Debug_View
 from smart_studio.components.page import Page, Action, ActionKind
 
@@ -98,7 +100,17 @@ class Debug(Page):
 
     def _start_pipeline(self):
         self.worker_term_lock.acquire()
-        self.worker = mp.Process(target=self.worker_start)
+
+        parent_log_queue = mp.Queue()
+        logger_name = 'smart-studio'
+        
+        self.worker_log_handler_termi_sig = th.Event()
+
+        self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
+        self.worker_log_handler.deamon = True
+        self.worker_log_handler.start()
+
+        self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,))
         # self.worker.daemon = True
         self.worker.start()
 
@@ -110,17 +122,23 @@ class Debug(Page):
             self.worker_term_lock.release()
             print('View terminated')
             self.worker = None
+            
+            self.worker_log_handler_termi_sig.set()
         
-    def worker_start(self):
-        logger.info(f"Smart-Studio | Starting Worker")
+    def worker_start(self, subprocess_log_queue, logger_name):
+        logger = logging.getLogger(logger_name)
+        logger.addHandler(QueueHandler(subprocess_log_queue))
+        # logger = logging.getLogger('smart-studio')
+
+        logger.warn(f"Starting Worker")
         self.graph.start_all()
         self.worker_term_lock.acquire()
 
-        logger.info(f"Smart-Studio | Stopping Worker")
+        logger.warn(f"Stopping Worker")
         # timeout to make sure potential non-returning nodes do not block until eternity
         self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
         self.worker_term_lock.release()
-        logger.info(f"Smart-Studio | Worker Stopped")
+        logger.warn(f"Worker Stopped")
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas

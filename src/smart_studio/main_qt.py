@@ -12,11 +12,12 @@ from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry
 
-from livenodes.components.utils.logger import logger
 
 import datetime
 import time
 import os
+
+import logging
 
 from smart_studio.utils.state import State
 
@@ -46,7 +47,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(self.widget_home)
         # self.resized.connect(self.widget_home.refresh_selection)
 
-        self.log_file = None
+        self.logging_handler = None
 
         self.home_dir = home_dir
         print('Home Dir:', home_dir)
@@ -65,10 +66,11 @@ class MainWindow(QtWidgets.QMainWindow):
         if hasattr(cur, 'stop'):
             cur.stop()
 
-        if self.log_file is not None:
-            logger.remove_cb(self._log_helper)
-            self.log_file.close()
-            self.log_file = None
+        if self.logging_handler is not None:
+            logger = logging.getLogger('livenodes')
+            logger.removeHandler(self.logging_handler)
+            self.logging_handler.close()
+            self.logging_handler = None
 
     def closeEvent(self, event):
         self.stop()
@@ -103,10 +105,6 @@ class MainWindow(QtWidgets.QMainWindow):
         print('Ref count old view (Home)', sys.getrefcount(cur))
         print("Nr of views: ", self.central_widget.count())
 
-    def _log_helper(self, msg):
-        self.log_file.write(msg + '\n')
-        self.log_file.flush()
-
     def onstart(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
@@ -118,8 +116,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if not os.path.exists(log_folder):
             os.mkdir(log_folder)
 
-        self.log_file = open(log_file, 'a')
-        logger.register_cb(self._log_helper)
+        logger = logging.getLogger('livenodes')
+        self.logging_handler = logging.FileHandler(log_file)
+        logger.addHandler(self.logging_handler)
 
         try:
             pipeline = Node.load(pipeline_path)
@@ -150,9 +149,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if not os.path.exists(log_folder):
             os.mkdir(log_folder)
 
-        self.log_file = open(log_file, 'a')
-        logger.register_cb(self._log_helper)
-
+        logger = logging.getLogger('livenodes')
+        self.logging_handler = logging.FileHandler(log_file)
+        logger.addHandler(self.logging_handler)
+        
         try:
             pipeline = Node.load(pipeline_path, should_time=True)
             # TODO: make these logs project dependent as well
@@ -205,6 +205,22 @@ def main():
     from dotenv import dotenv_values
     import json
 
+    logger_root = logging.getLogger()
+    logger_root.setLevel(logging.DEBUG)
+    
+    logger_stdout_handler = logging.StreamHandler(sys.stdout)
+    logger_stdout_handler.setLevel(logging.WARN)
+    logger_root.addHandler(logger_stdout_handler)
+
+    logger_file_handler = logging.FileHandler('smart_studio.full.log', mode='w')
+    logger_file_handler.setLevel(logging.DEBUG)
+    logger_root.addHandler(logger_file_handler) 
+
+    logger_smart = logging.getLogger("smart-studio")
+    logger_smart_file_handler = logging.FileHandler('smart_studio.log', mode='w')
+    logger_smart_file_handler.setLevel(logging.DEBUG)
+    logger_smart.addHandler(logger_smart_file_handler) 
+    
     home_dir = os.getcwd()
 
     path_to_state = os.path.join(home_dir, 'smart-state.json')

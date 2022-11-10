@@ -2,6 +2,9 @@ from functools import partial
 from livenodes import viewer
 import os
 import json
+import logging
+import threading as th
+from logging.handlers import QueueHandler
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
@@ -11,7 +14,7 @@ from PyQtAds import QtAds
 import multiprocessing as mp
 
 from livenodes import Node, Graph
-from livenodes.components.utils.logger import logger
+from livenodes.components.utils.log import drain_log_queue
 
 from smart_studio.components.node_views import node_view_mapper
 from smart_studio.components.page import Page, Action, ActionKind
@@ -59,14 +62,31 @@ class Run(Page):
 
 
         # === Start pipeline =================================================
+        self.logger = logging.getLogger("smart-studio")
         self.worker_term_lock = mp.Lock()
+        self._start_pipeline()
+
+    def _start_pipeline(self):
         self.worker_term_lock.acquire()
-        self.worker = mp.Process(target=self.worker_start)
-        # self.worker.daemon = True -> would not be able to start further subprocesses inside of graph...
+
+        parent_log_queue = mp.Queue()
+        logger_name = 'smart-studio'
+        
+        self.worker_log_handler_termi_sig = th.Event()
+
+        self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
+        self.worker_log_handler.deamon = True
+        self.worker_log_handler.start()
+
+        self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,))
+        # self.worker.daemon = True
         self.worker.start()
 
 
-    def worker_start(self):
+    def worker_start(self, subprocess_log_queue, logger_name):
+        logger = logging.getLogger(logger_name)
+        logger.addHandler(QueueHandler(subprocess_log_queue))
+
         logger.info(f"Smart-Studio | Starting Worker")
         self.graph.start_all()
         self.worker_term_lock.acquire()
@@ -77,26 +97,30 @@ class Run(Page):
         self.worker_term_lock.release()
         logger.info(f"Smart-Studio | Worker Stopped")
 
+    def stop(self, *args, **kwargs):
+        self._stop_pipeline()
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
-    def stop(self, *args, **kwargs):
+    def _stop_pipeline(self):
         # Tell the process to terminate, then wait until it returns
         self.worker_term_lock.release()
         
-        logger.info(f"Smart-Studio | Stopping Worker")
+        self.logger.info(f"Smart-Studio | Stopping Worker")
         # Block until graph finished all it's nodes
         self.worker_term_lock.acquire()
         self.worker_term_lock.release()
         print('View terminated')
 
         print('Terminating draw widgets')
-        logger.info(f"Smart-Studio | Stopping Widgets")
+        self.logger.info(f"Smart-Studio | Stopping Widgets")
         for widget in self.draw_widgets:
             widget.stop()
 
-        logger.info(f"Smart-Studio | Killing Worker")
+        self.logger.info(f"Smart-Studio | Killing Worker")
         self.worker.terminate()
+
+        self.worker_log_handler_termi_sig.set()
 
     def get_actions(self):
         return [ \
@@ -115,7 +139,7 @@ class Run(Page):
         # Deprecation and renaming notice here
         old_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '_dock.xml')
         if os.path.exists(old_path):
-            logger.warn('_dock.xml is old format. renaming to just .xml')
+            self.logger.warn('_dock.xml is old format. renaming to just .xml')
             os.rename(old_path, self.pipeline_gui_path)
 
 
