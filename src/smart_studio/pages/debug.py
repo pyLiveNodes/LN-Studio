@@ -69,7 +69,7 @@ class Debug(Page):
         for widget, node in zip(self.draw_widgets, self.nodes):
             dock_widget = QtAds.CDockWidget(node.name)
             self.widgets.append(dock_widget)
-            dock_widget.viewToggled.connect(partial(print, '=======', str(node), "qt emitted signal"))
+            dock_widget.viewToggled.connect(partial(self.logger.debug, '=======', str(node), "qt emitted signal"))
             dock_widget.setWidget(widget)
             # dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
@@ -131,15 +131,15 @@ class Debug(Page):
         logger.addHandler(QueueHandler(subprocess_log_queue))
         # logger = logging.getLogger('smart-studio')
 
-        logger.warn(f"Starting Worker")
+        logger.info(f"Starting Worker")
         self.graph.start_all()
         self.worker_term_lock.acquire()
 
-        logger.warn(f"Stopping Worker")
+        logger.info(f"Stopping Worker")
         # timeout to make sure potential non-returning nodes do not block until eternity
         self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
         self.worker_term_lock.release()
-        logger.warn(f"Worker Stopped")
+        logger.info(f"Worker Stopped")
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas

@@ -30,6 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, state_handler, parent=None, projects='./projects/*', home_dir=os.getcwd(), _on_close_cb=noop):
         super(MainWindow, self).__init__(parent)
 
+        self.logger = logging.getLogger('smart-studio')
         # frm = QFrame()
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
@@ -50,8 +51,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logging_handler = None
 
         self.home_dir = home_dir
-        print('Home Dir:', home_dir)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Home Dir: {home_dir}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         self._on_close_cb = _on_close_cb
         self.state_handler = state_handler
@@ -76,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stop()
 
         os.chdir(self.home_dir)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         self._save_state(self.widget_home)
         self._on_close_cb()
@@ -97,18 +98,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self._save_state(cur)
         self.stop()
         os.chdir(self.home_dir)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Back to Home Screen')
+        self.logger.info(f'CWD: {os.getcwd()}')
         self.central_widget.setCurrentWidget(self.widget_home)
         self.central_widget.removeWidget(cur)
         self.widget_home.refresh_selection()
         self._set_state(self.widget_home)
-        print('Ref count old view (Home)', sys.getrefcount(cur))
-        print("Nr of views: ", self.central_widget.count())
+        self.logger.info(f'Ref count old view (Home) {sys.getrefcount(cur)}')
+        self.logger.info(f'Nr of views: {self.central_widget.count()}')
 
     def onstart(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Running: {project_path}/{pipeline_path}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         log_folder = './logs'
         log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
@@ -116,9 +119,14 @@ class MainWindow(QtWidgets.QMainWindow):
         if not os.path.exists(log_folder):
             os.mkdir(log_folder)
 
-        logger = logging.getLogger('livenodes')
+        logger_ln = logging.getLogger('livenodes')
         self.logging_handler = logging.FileHandler(log_file)
-        logger.addHandler(self.logging_handler)
+        # The time here is actually correct, as record creation time is used (not time of formatting)
+        # see: https://docs.python.org/3/library/logging.html#logging.Formatter.formatTime
+        formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+        self.logging_handler.setFormatter(formatter)
+        self.logging_handler.setLevel(logging.INFO)
+        logger_ln.addHandler(self.logging_handler)
 
         try:
             pipeline = Node.load(pipeline_path)
@@ -131,17 +139,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            print(f'Could not load pipeline. Staying home')
-            print(err)
-            print(traceback.format_exc())
+            logger_ln.exception('Could not load pipeline. Staying home')
             self.stop()
             os.chdir(self.home_dir)
-            print('CWD:', os.getcwd())
+            logger_ln.info(f'CWD: {os.getcwd()}')
 
     def ondebug(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Debugging: {project_path}/{pipeline_path}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         log_folder = './logs'
         log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
@@ -149,9 +156,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if not os.path.exists(log_folder):
             os.mkdir(log_folder)
 
-        logger = logging.getLogger('livenodes')
+        logger_ln = logging.getLogger('livenodes')
         self.logging_handler = logging.FileHandler(log_file)
-        logger.addHandler(self.logging_handler)
+        logger_ln.addHandler(self.logging_handler)
         
         try:
             pipeline = Node.load(pipeline_path, should_time=True)
@@ -164,18 +171,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            print(f'Could not load pipeline. Staying home')
-            print(err)
-            print(traceback.format_exc())
+            logger_ln.exception('Could not load pipeline. Staying home')
             self.stop()
             os.chdir(self.home_dir)
-            print('CWD:', os.getcwd())
+            logger_ln.info(f'CWD: {os.getcwd()}')
 
 
     def onconfig(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Configuring: {project_path}/{pipeline_path}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
             pipeline = Node.load(pipeline_path)
@@ -189,12 +195,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            print(f'Could not load pipeline. Staying home')
-            print(err)
-            print(traceback.format_exc())
+            self.logger.exception('Could not load pipeline. Staying home')
             self.stop()
             os.chdir(self.home_dir)
-            print('CWD:', os.getcwd())
+            self.logger.info(f'CWD: {os.getcwd()}')
 
 
 
@@ -203,33 +207,37 @@ def main():
     import os
     import shutil
     from dotenv import dotenv_values
-    import json
 
     logger_root = logging.getLogger()
     logger_root.setLevel(logging.DEBUG)
     
     logger_stdout_handler = logging.StreamHandler(sys.stdout)
-    logger_stdout_handler.setLevel(logging.WARN)
+    logger_stdout_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(name)s | %(levelname)s | %(message)s')
+    logger_stdout_handler.setFormatter(formatter)
     logger_root.addHandler(logger_stdout_handler)
 
     logger_file_handler = logging.FileHandler('smart_studio.full.log', mode='w')
     logger_file_handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(name)s | %(asctime)s | %(levelname)s | %(message)s')
+    logger_file_handler.setFormatter(formatter)
     logger_root.addHandler(logger_file_handler) 
 
     logger_smart = logging.getLogger("smart-studio")
     logger_smart_file_handler = logging.FileHandler('smart_studio.log', mode='w')
     logger_smart_file_handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
+    logger_smart_file_handler.setFormatter(formatter)
     logger_smart.addHandler(logger_smart_file_handler) 
     
+    logger = logging.getLogger('smart-studio')
     home_dir = os.getcwd()
 
     path_to_state = os.path.join(home_dir, 'smart-state.json')
     try:
         smart_state = State.load(path_to_state)
     except Exception as err:
-        print(f'Could not open state, saving file and creating new ({path_to_state}.backup)')
-        print(err)
-        print(traceback.format_exc())
+        logger.exception(f'Could not open state, saving file and creating new ({path_to_state}.backup)')
         shutil.copyfile(path_to_state, f"{path_to_state}.backup")
         smart_state = State({})
         
@@ -243,8 +251,7 @@ def main():
     env_projects = smart_state.val_get('projects', './projects/*')
     # env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
 
-    print('Projects folder: ', env_projects)
-    # print('Modules: ', env_modules)
+    logger.info(f'Projects folder: {env_projects}')
 
     # === Fix MacOS specifics ========================================================================
     # this fix is for macos (https://docs.python.org/3.8/library/multiprocessing.html#contexts-and-start-methods)

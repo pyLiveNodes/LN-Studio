@@ -2,7 +2,7 @@ from enum import IntEnum
 
 from PyQt5.QtWidgets import QWidget
 from .utils import noop
-
+import logging
 
 class ActionKind(IntEnum):
     BACK = 1
@@ -19,6 +19,7 @@ class Page(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.logger = logging.getLogger('smart-studio')
 
     def get_actions(self):
         return [ \

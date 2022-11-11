@@ -1,4 +1,5 @@
 import json
+import logging
 import queue
 import time
 import traceback
@@ -27,6 +28,8 @@ import seaborn as sns
 
 sns.set_style("darkgrid")
 sns.set_context("paper")
+
+logger = logging.getLogger('smart-studio')
 
 # TODO: make each subplot their own animation and use user customizable panels
 # TODO: allow nodes to use qt directly -> also consider how to make this understandable to user (ie some nodes will not run everywhere then)
@@ -119,8 +122,7 @@ class Debug_View(QWidget):
                     if 'current_state' in infos:
                         self.state.setText(json.dumps(infos['current_state'], cls=NumpyEncoder, indent=2))
                 except Exception as err:
-                    print(err)
-                    # print(traceback.format_exc())
+                    logger.exception('Exception updating debug info')
 
         self.timer = QTimer(self)
         self.timer.setInterval(10) # max 100fps
@@ -200,7 +202,7 @@ class MPL_View(FigureCanvasQTAgg):
             raise ValueError('Node must be of Type (MPL) View')
 
         plt.rc('font', **font)
-
+        
         # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subfigures.html
         # subfigs = self.figure.subfigures(rows, cols)  #, wspace=1, hspace=0.07)
         # we might create subfigs, but if each node has it's own qwidget, we do not need to and can instead just pass the entire figure
@@ -210,8 +212,7 @@ class MPL_View(FigureCanvasQTAgg):
             try:
                 return artist_update_fn(i, **kwargs)
             except Exception as err:
-                print(err)
-                print(traceback.format_exc())
+                logger.exception('Exception in drawing on canvas')
             return []
 
         self.animation = animation.FuncAnimation(fig=self.figure,

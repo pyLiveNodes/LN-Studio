@@ -18,7 +18,6 @@ def auto_arrange(self,
     '''
     import networkx
     dig = self.to_digraph()
-    print(dig)
 
     try:
         if hasattr(networkx.layout, layout):

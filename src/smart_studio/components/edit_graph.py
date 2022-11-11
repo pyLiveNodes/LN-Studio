@@ -19,6 +19,9 @@ from qtpynodeeditor.exceptions import ConnectionDataTypeFailure
 from .edit_node import CreateNodeDialog
 from .utils import noop
 
+import logging
+logger = logging.getLogger('smart-studio')
+
 class CustomNodeDataModel(NodeDataModel, verify=False):
 
     def __init__(self, style=None, parent=None):
@@ -88,7 +91,7 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
                         recv_port=smart_receicing_node.get_port_in_by_key(recv_port)
                     )
                 except ValueError as err:
-                    print(err)
+                    logger.exception('Error in removing connection.')
                     # TODO: see nodes above on created...
 
 
@@ -139,7 +142,7 @@ class QT_Graph_edit(QWidget):
         if os.path.exists(self.pipeline_gui_path):
             with open(self.pipeline_gui_path, 'r') as f:
                 layout = json.load(f)
-        print(self.pipeline_gui_path)
+        # print(self.pipeline_gui_path)
         self._add_pipeline(layout, pipeline)
 
         if layout is None:
@@ -153,13 +156,14 @@ class QT_Graph_edit(QWidget):
         
         for l in ['planar_layout', 'spring_layout']:
             try:
-                print(f'Trying {l}')
+                logger.info(f'Autolayout: trying {l}')
                 self.scene.auto_arrange(l, scale=1400, align='horizontal')
                 return
             except Exception as err:
+                # TODO: specify exact exception and just pass
                 print(err)
                 pass
-        print('Could not apply layout. Collapsing.')
+        logger.info(f'Autolayout: Could not apply layout. Collapsing.')
 
     def _remove_pl_node(self, node):
         smart_node = node.model.association_to_node
@@ -181,8 +185,7 @@ class QT_Graph_edit(QWidget):
                     # partial(self.view_configure.set_pl_node, pl_node))
             except Exception as err:
                 # Failed
-                print('Could not instantiate Node')
-                print(err)
+                logger.exception('Could not instantiate Node')
                 self.scene.remove_node(node)
         else:
             # Canceled
@@ -318,7 +321,7 @@ class QT_Graph_edit(QWidget):
                     try:
                         self.scene.create_connection(n_out, n_in)
                     except ConnectionDataTypeFailure:
-                        print("ERROR ConnectionDataTypeFailure: Could not connect nodes, please check.", n_out, n_in, con)
+                        logger.exception("ERROR ConnectionDataTypeFailure: Could not connect nodes, please check.", n_out, n_in, con)
 
             # third pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
@@ -368,7 +371,7 @@ class QT_Graph_edit(QWidget):
 
     def save(self):
         vis_state, pipeline = self.get_state()
-        print('initial node used for saving: ', str(pipeline))
+        logger.debug('initial node used for saving: ', str(pipeline))
 
         with open(self.pipeline_gui_path, 'w') as f:
             json.dump(vis_state, f, indent=2)
@@ -381,6 +384,4 @@ class QT_Graph_edit(QWidget):
             pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=self.pipeline_gui_path.replace('.json', ''), file_type='png')
             pipeline.dot_graph_full(transparent_bg=False, filename=self.pipeline_path.replace('.json', ''), file_type='pdf')
         except graphviz.backend.execute.ExecutableNotFound as err:
-            print('Could not create dot graph. Executable not found.')
-            print(err)
-            print(traceback.format_exc())
+            logger.exception('Could not create dot graph. Executable not found.')

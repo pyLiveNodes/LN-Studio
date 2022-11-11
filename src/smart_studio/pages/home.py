@@ -279,7 +279,8 @@ class Selection(QWidget):
 
 
 def noop(*args, **kwargs):
-    print(args, kwargs)
+    # print(args, kwargs)
+    pass
 
 
 if __name__ == "__main__":

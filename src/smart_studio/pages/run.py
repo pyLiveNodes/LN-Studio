@@ -43,7 +43,7 @@ class Run(Page):
         for widget, node in zip(self.draw_widgets, self.nodes):
             dock_widget = QtAds.CDockWidget(node.name)
             self.widgets.append(dock_widget)
-            dock_widget.viewToggled.connect(partial(print, '=======', str(node), "qt emitted signal"))
+            dock_widget.viewToggled.connect(partial(self.logger.debug, '=======', str(node), "qt emitted signal"))
             dock_widget.setWidget(widget)
             dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
@@ -88,15 +88,15 @@ class Run(Page):
         logger = logging.getLogger(logger_name)
         logger.addHandler(QueueHandler(subprocess_log_queue))
 
-        logger.info(f"Smart-Studio | Starting Worker")
+        logger.info(f"Starting Worker")
         self.graph.start_all()
         self.worker_term_lock.acquire()
 
-        logger.info(f"Smart-Studio | Stopping Worker")
+        logger.info(f"Stopping Worker")
         # timeout to make sure potential non-returning nodes do not block until eternity
         self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
         self.worker_term_lock.release()
-        logger.info(f"Smart-Studio | Worker Stopped")
+        logger.info(f"Worker Stopped")
 
     def stop(self, *args, **kwargs):
         self._stop_pipeline()
@@ -107,18 +107,18 @@ class Run(Page):
         # Tell the process to terminate, then wait until it returns
         self.worker_term_lock.release()
         
-        self.logger.info(f"Smart-Studio | Stopping Worker")
+        self.logger.info(f"Stopping Worker")
         # Block until graph finished all it's nodes
         self.worker_term_lock.acquire()
         self.worker_term_lock.release()
-        print('View terminated')
+        self.logger.info('View terminated')
 
-        print('Terminating draw widgets')
-        self.logger.info(f"Smart-Studio | Stopping Widgets")
+        self.logger.info('Terminating draw widgets')
+        self.logger.info(f"Stopping Widgets")
         for widget in self.draw_widgets:
             widget.stop()
 
-        self.logger.info(f"Smart-Studio | Killing Worker")
+        self.logger.info(f"Killing Worker")
         self.worker.terminate()
 
         self.worker_log_handler_termi_sig.set()
