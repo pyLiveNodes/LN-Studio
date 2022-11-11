@@ -76,9 +76,10 @@ class Run(Page):
 
         self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
         self.worker_log_handler.deamon = True
+        self.worker_log_handler.name = f"LogDrain-{self.worker_log_handler.name.split('-')[-1]}"
         self.worker_log_handler.start()
 
-        self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,))
+        self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,), name="LN-Executor")
         # self.worker.daemon = True
         self.worker.start()
 
