@@ -371,7 +371,7 @@ class QT_Graph_edit(QWidget):
 
     def save(self):
         vis_state, pipeline = self.get_state()
-        logger.debug('initial node used for saving: ', str(pipeline))
+        logger.debug(f'initial node used for saving: {str(pipeline)}')
 
         with open(self.pipeline_gui_path, 'w') as f:
             json.dump(vis_state, f, indent=2)
