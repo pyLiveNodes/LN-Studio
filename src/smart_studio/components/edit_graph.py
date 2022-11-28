@@ -63,6 +63,10 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
 
         return smart_emit_node, smart_receicing_node, emit_port_label, recv_port_label
 
+    # TODO: do the same for the input connections!
+    # input_connection_created
+    # input_connection_deleted
+
     def output_connection_created(self, connection):
         # HACK: this currently works because of the three passes below (ie create node, create conneciton, associate pl node)
         # TODO: fix this by checking if the connection already exists and if so ignore the call
@@ -393,7 +397,11 @@ class QT_Graph_edit(QWidget):
         # TODO: try to clone / save and load the whole thing to check if the gui allowed configs, that we cannot load afterwards...
         # Node.load(self.pipeline_path)
 
+        # loadable file format
         pipeline.save(self.pipeline_path)
+        # human readable file format
+        pipeline.save(self.pipeline_path, compact=True, extension='yml')
+
         try:
             pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=self.pipeline_gui_path.replace('.json', ''), file_type='png')
             pipeline.dot_graph_full(transparent_bg=False, filename=self.pipeline_path.replace('.json', ''), file_type='pdf')
