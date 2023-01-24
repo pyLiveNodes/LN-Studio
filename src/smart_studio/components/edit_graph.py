@@ -265,7 +265,7 @@ class QT_Graph_edit(QWidget):
             
             log_dir_allowed = ''
             
-            if self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__):
+            if self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__):
                 # The input/output stuff on the TypeConverter class is reversed to ours
                 # https://klauer.github.io/qtpynodeeditor/api.html?highlight=typeconverter
                 converter = TypeConverter(self.known_dtypes[b],
@@ -275,7 +275,7 @@ class QT_Graph_edit(QWidget):
                                                     converter)
                 log_dir_allowed += '<-'
 
-            if self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__):
+            if self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__):
                 converter = TypeConverter(self.known_dtypes[a],
                                         self.known_dtypes[b], noop)
                 self.registry.register_type_converter(self.known_dtypes[a],
