@@ -21,16 +21,17 @@ import logging
 
 from smart_studio.utils.state import State
 
-from logging.handlers import QueueHandler, QueueListener
+from logging.handlers import QueueHandler
 from PyQt5 import QtCore
 import queue
 import multiprocessing as mp
 import threading as th
+from PyQt5.QtCore import Qt
 
 def noop(*args, **kwargs):
     pass
 
-class QToast_Logger(QtCore.QObject):
+class QToast_Logger(QtWidgets.QWidget):
     """
     Slightly complicated. 
     Basically: 
@@ -44,7 +45,13 @@ class QToast_Logger(QtCore.QObject):
     notify = QtCore.pyqtSignal(str,str,int, bool)
     
     def __init__(self, parent=None) -> None:
-        super().__init__(parent)       
+        super().__init__(parent)    
+
+        # self.setWindowFlags(Qt.FramelessWindowHint | Qt.SubWindow)
+        # self.setAttribute(Qt.WA_TransparentForMouseEvents, True)   
+
+        # self.setMinimumWidth(400)
+        # self.setMinimumHeight(250)
         
         qna_queue = mp.Queue()
         logger_toast_handler_mp_queue = QueueHandler(qna_queue)
@@ -57,6 +64,13 @@ class QToast_Logger(QtCore.QObject):
         logger_toast.addHandler(logger_toast_handler_mp_queue)
 
         qna = QNotificationArea(parent)
+
+        # TODO: fix me to the upper right corner and make me relative to the window size!
+        # Alternaively: figure out, why repeated errors do not show
+        # reprocude: create a graph with incompatible connection; edit -> error shows; cancel (!); edit again -> error doesn't show
+        # something very fishy is going on here: the error is shown when the log is double, but not on the second time, where it is single...
+        # self.setGeometry(50, 50, 400, 250)
+
         # doesn't work, as the processing happens in the sub-thread...
         # queue_listener = QueueListener(qna_queue, logger_toast_handler)
         # queue_listener.start()
@@ -102,7 +116,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
         # self.setLayout(QHBoxLayout())
-
+    
         # iniatlize toasts
         self.toast_logger = QToast_Logger(parent=self)
 
