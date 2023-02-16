@@ -40,10 +40,13 @@ class Run(Page):
         self.layout.addWidget(self.dock_manager)
         self.widgets = []
 
+        def debug_partial(logger, *text):
+            logger.debug(' '.join(map(str, text)))
+
         for widget, node in zip(self.draw_widgets, self.nodes):
             dock_widget = QtAds.CDockWidget(node.name)
             self.widgets.append(dock_widget)
-            dock_widget.viewToggled.connect(partial(self.logger.debug, '=======', str(node), "qt emitted signal"))
+            dock_widget.viewToggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
             dock_widget.setWidget(widget)
             dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
