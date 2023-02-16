@@ -3,6 +3,8 @@ import traceback
 import multiprocessing as mp
 import platform
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+from QNotifications import QNotificationArea
 
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
@@ -25,6 +27,22 @@ from smart_studio.utils.state import State
 def noop(*args, **kwargs):
     pass
 
+class LoggingToastHandler(logging.Handler):
+    def __init__(self, qna_handler, level = 0) -> None:
+        super().__init__(level)
+        self.qna_handler = qna_handler
+    
+    def level_map(self, level):
+        if level >= 40:
+            return 'danger', None
+        elif level >=30:
+            return 'warning', 10000
+        else:
+            return 'info', 3000
+
+    def emit(self, record):
+        self.qna_handler.display(self.format(record), *self.level_map(record.levelno))
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, state_handler, parent=None, projects='./projects/*', home_dir=os.getcwd(), _on_close_cb=noop):
@@ -35,6 +53,25 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
         # self.setLayout(QHBoxLayout())
+
+        # iniatlize toasts
+        qna = QNotificationArea(self)
+        logger_toast_handler = LoggingToastHandler(qna_handler=qna)
+        formatter = logging.Formatter('%(name)s | %(message)s')
+        logger_toast_handler.setFormatter(formatter)
+        logger_toast_handler.setLevel(logging.WARNING)
+        logger_toast = logging.getLogger('smart-studio')
+        logger_toast.addHandler(logger_toast_handler)
+        logger_toast = logging.getLogger('livenodes')
+        logger_toast.addHandler(logger_toast_handler)
+
+        # # Show a 'primary' styled notification for 1 second.
+        # qna.display('This is a primary notification', 'primary', 3000)
+        # # Show an 'info' styled notification for 2 seconds.
+        # qna.display('This is an info notification', 'info', 5000)
+        # # Show a 'danger' styled notification until the user closes it manually.
+        # qna.display('This is an error notification', 'danger', None)
+
 
         self.central_widget = QtWidgets.QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -129,7 +166,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger_ln.addHandler(self.logging_handler)
 
         try:
-            pipeline = Node.load(pipeline_path)
+            pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
             # TODO: make these logs project dependent as well
             widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
                                 name=f"Running: {pipeline_path}",
@@ -161,7 +198,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger_ln.addHandler(self.logging_handler)
         
         try:
-            pipeline = Node.load(pipeline_path, should_time=True)
+            pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
             # TODO: make these logs project dependent as well
             widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path),
                                 name=f"Debuging: {pipeline_path}",
@@ -184,7 +221,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            pipeline = Node.load(pipeline_path)
+            pipeline = Node.load(pipeline_path, ignore_connection_errors=True)
             widget_run = Parent(child=Config(pipeline=pipeline,
                                             node_registry=get_registry(),
                                             pipeline_path=pipeline_path),

@@ -18,6 +18,7 @@ dependencies = [
     "PyQt5>=5.12.3",
     "python-dotenv>=0.20.0",
     "qtpynodeeditor>=0.2.0",
+    "python_qnotifications>=2.0.6",
 ]
 
 [project.scripts]
