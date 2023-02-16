@@ -1,9 +1,7 @@
 import sys
-import traceback
 import multiprocessing as mp
 import platform
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
 from QNotifications import QNotificationArea
 
 from smart_studio.pages.home import Home
@@ -23,15 +21,54 @@ import logging
 
 from smart_studio.utils.state import State
 
+from logging.handlers import QueueHandler, QueueListener
+from PyQt5 import QtCore
+import queue
+import multiprocessing as mp
+import threading as th
 
 def noop(*args, **kwargs):
     pass
 
-class LoggingToastHandler(logging.Handler):
-    def __init__(self, qna_handler, level = 0) -> None:
-        super().__init__(level)
-        self.qna_handler = qna_handler
+class QToast_Logger(QtCore.QObject):
+    """
+    Slightly complicated. 
+    Basically: 
+    - qna needs to run in main thread of qt to display toasts via the qna.display method
+    - some logs are from sub-threads of sub-processes tho -> we collect those in a mp.queue
+        -> the queue must be drained without blocking the main thread
+        -> we create a subthread that forwards all items from the queue to the pyqt signal which in turn connects to the main threads qna.display method
+
+    Note: if you have a better way of doing this, please create a PR! This feels rather hacky  
+    """
+    notify = QtCore.pyqtSignal(str,str,int, bool)
     
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)       
+        
+        qna_queue = mp.Queue()
+        logger_toast_handler_mp_queue = QueueHandler(qna_queue)
+        logger_toast_handler_mp_queue.setLevel(logging.WARNING)
+        formatter = logging.Formatter('%(name)s | %(message)s')
+        logger_toast_handler_mp_queue.setFormatter(formatter)
+        logger_toast = logging.getLogger('smart-studio')
+        logger_toast.addHandler(logger_toast_handler_mp_queue)
+        logger_toast = logging.getLogger('livenodes')
+        logger_toast.addHandler(logger_toast_handler_mp_queue)
+
+        qna = QNotificationArea(parent)
+        # doesn't work, as the processing happens in the sub-thread...
+        # queue_listener = QueueListener(qna_queue, logger_toast_handler)
+        # queue_listener.start()
+
+        self.worker_log_handler_termi_sig = th.Event()
+        self.worker_log_handler = th.Thread(target=self.qna_drain_log_queue, args=(qna_queue, self.worker_log_handler_termi_sig))
+        self.worker_log_handler.deamon = True
+        self.worker_log_handler.name = f"QTToastLogDrain-{self.worker_log_handler.name.split('-')[-1]}"
+        self.worker_log_handler.start()
+
+        self.notify.connect(qna.display)
+
     def level_map(self, level):
         if level >= 40:
             return 'danger', None
@@ -40,8 +77,20 @@ class LoggingToastHandler(logging.Handler):
         else:
             return 'info', 3000
 
-    def emit(self, record):
-        self.qna_handler.display(self.format(record), *self.level_map(record.levelno))
+    def qna_drain_log_queue(self, parent_log_queue, stop_log_event):
+        while not stop_log_event.is_set():
+            try:
+                record = parent_log_queue.get(timeout=0.1)
+                self.notify.emit(record.msg, *self.level_map(record.levelno), False)
+            except queue.Empty:
+                pass
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except EOFError:
+                break
+
+    def close(self):
+        self.worker_log_handler_termi_sig.set()
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -55,23 +104,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setLayout(QHBoxLayout())
 
         # iniatlize toasts
-        qna = QNotificationArea(self)
-        logger_toast_handler = LoggingToastHandler(qna_handler=qna)
-        formatter = logging.Formatter('%(name)s | %(message)s')
-        logger_toast_handler.setFormatter(formatter)
-        logger_toast_handler.setLevel(logging.WARNING)
-        logger_toast = logging.getLogger('smart-studio')
-        logger_toast.addHandler(logger_toast_handler)
-        logger_toast = logging.getLogger('livenodes')
-        logger_toast.addHandler(logger_toast_handler)
-
-        # # Show a 'primary' styled notification for 1 second.
-        # qna.display('This is a primary notification', 'primary', 3000)
-        # # Show an 'info' styled notification for 2 seconds.
-        # qna.display('This is an info notification', 'info', 5000)
-        # # Show a 'danger' styled notification until the user closes it manually.
-        # qna.display('This is an error notification', 'danger', None)
-
+        self.toast_logger = QToast_Logger(parent=self)
 
         self.central_widget = QtWidgets.QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -103,6 +136,8 @@ class MainWindow(QtWidgets.QMainWindow):
         cur = self.central_widget.currentWidget()
         if hasattr(cur, 'stop'):
             cur.stop()
+
+        self.toast_logger.close()
 
         if self.logging_handler is not None:
             logger = logging.getLogger('livenodes')
