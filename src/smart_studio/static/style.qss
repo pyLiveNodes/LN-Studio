@@ -5,10 +5,6 @@ MainWindow {
     background-position: center top;
 }
 
-QLabel {
-    background-color: white;
-}
-
 QTView {
     background-color: white;
 }

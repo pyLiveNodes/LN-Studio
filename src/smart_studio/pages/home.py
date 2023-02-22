@@ -15,6 +15,7 @@ class Home(QWidget):
     def __init__(self,
                  onstart,
                  onconfig,
+                 ondebug,
                  projects='./projects/*',
                  parent=None):
         super().__init__(parent)
@@ -26,6 +27,7 @@ class Home(QWidget):
 
         self.onstart = onstart
         self.onconfig = onconfig
+        self.ondebug = ondebug
 
         self.qt_selection = None
 
@@ -48,7 +50,10 @@ class Home(QWidget):
         }
 
     def set_state(self, cur_project, cur_pipeline=None):
-        id = self.projects.index(cur_project)
+        if cur_project in self.projects:
+            id = self.projects.index(cur_project)
+        else:
+            id = 0
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
         if cur_pipeline is not None:
@@ -62,6 +67,10 @@ class Home(QWidget):
         self.onconfig(self.cur_project,
                       pipeline_path.replace(self.cur_project, '.'))
 
+    def _on_debug(self, pipeline_path):
+        self.ondebug(self.cur_project,
+                      pipeline_path.replace(self.cur_project, '.'))
+
     def refresh_selection(self):
         self.select_project(self.cur_project)
 
@@ -73,6 +82,7 @@ class Home(QWidget):
         qt_selection.items_changed.connect(self.refresh_selection)
         qt_selection.item_on_start.connect(self._on_start)
         qt_selection.item_on_config.connect(self._on_config)
+        qt_selection.item_on_debug.connect(self._on_debug)
 
         if self.qt_selection is not None:
             self.qt_grid.removeWidget(self.qt_selection)
@@ -156,6 +166,7 @@ class Pipline_Selection(QWidget):
 class Selection(QWidget):
     items_changed = pyqtSignal()
     item_on_config = pyqtSignal(str)
+    item_on_debug = pyqtSignal(str)
     item_on_start = pyqtSignal(str)
 
     def __init__(self, pipelines="./pipelines/*.json"):
@@ -185,6 +196,9 @@ class Selection(QWidget):
         config = QPushButton("Config")
         config.clicked.connect(self.onconfig)
 
+        debug = QPushButton("Debug")
+        debug.clicked.connect(self.ondebug)
+
         self.selected = QLabel("")
 
         buttons = QHBoxLayout()
@@ -192,6 +206,7 @@ class Selection(QWidget):
         buttons.addStretch(1)
         buttons.addWidget(self.selected)
         buttons.addWidget(copy)
+        buttons.addWidget(debug)
         buttons.addWidget(config)
         buttons.addWidget(start)
 
@@ -217,6 +232,10 @@ class Selection(QWidget):
 
     def onconfig(self):
         self.item_on_config.emit(self.text)
+
+    def ondebug(self):
+        self.item_on_debug.emit(self.text)
+
 
     def _associated_files(self, path):
         possible_files = [
@@ -260,7 +279,8 @@ class Selection(QWidget):
 
 
 def noop(*args, **kwargs):
-    print(args, kwargs)
+    # print(args, kwargs)
+    pass
 
 
 if __name__ == "__main__":

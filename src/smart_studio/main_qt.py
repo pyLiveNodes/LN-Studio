@@ -1,38 +1,124 @@
 import sys
-import traceback
 import multiprocessing as mp
 import platform
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
+from QNotifications import QNotificationArea
 
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
 from smart_studio.pages.run import Run
+from smart_studio.pages.debug import Debug
 from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry
 
-from livenodes.logger import logger
 
 import datetime
 import time
 import os
 
+import logging
+
 from smart_studio.utils.state import State
 
+from logging.handlers import QueueHandler
+from PyQt5 import QtCore
+import queue
+import multiprocessing as mp
+import threading as th
+from PyQt5.QtCore import Qt
 
 def noop(*args, **kwargs):
     pass
+
+class QToast_Logger(QtWidgets.QWidget):
+    """
+    Slightly complicated. 
+    Basically: 
+    - qna needs to run in main thread of qt to display toasts via the qna.display method
+    - some logs are from sub-threads of sub-processes tho -> we collect those in a mp.queue
+        -> the queue must be drained without blocking the main thread
+        -> we create a subthread that forwards all items from the queue to the pyqt signal which in turn connects to the main threads qna.display method
+
+    Note: if you have a better way of doing this, please create a PR! This feels rather hacky  
+    """
+    notify = QtCore.pyqtSignal(str,str,int, bool)
+    
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)    
+
+        # self.setWindowFlags(Qt.FramelessWindowHint | Qt.SubWindow)
+        # self.setAttribute(Qt.WA_TransparentForMouseEvents, True)   
+
+        # self.setMinimumWidth(400)
+        # self.setMinimumHeight(250)
+        
+        qna_queue = mp.Queue()
+        logger_toast_handler_mp_queue = QueueHandler(qna_queue)
+        logger_toast_handler_mp_queue.setLevel(logging.WARNING)
+        formatter = logging.Formatter('%(name)s | %(message)s')
+        logger_toast_handler_mp_queue.setFormatter(formatter)
+        logger_toast = logging.getLogger('smart-studio')
+        logger_toast.addHandler(logger_toast_handler_mp_queue)
+        logger_toast = logging.getLogger('livenodes')
+        logger_toast.addHandler(logger_toast_handler_mp_queue)
+
+        qna = QNotificationArea(parent)
+
+        # TODO: fix me to the upper right corner and make me relative to the window size!
+        # Alternaively: figure out, why repeated errors do not show
+        # reprocude: create a graph with incompatible connection; edit -> error shows; cancel (!); edit again -> error doesn't show
+        # something very fishy is going on here: the error is shown when the log is double, but not on the second time, where it is single...
+        # self.setGeometry(50, 50, 400, 250)
+
+        # doesn't work, as the processing happens in the sub-thread...
+        # queue_listener = QueueListener(qna_queue, logger_toast_handler)
+        # queue_listener.start()
+
+        self.worker_log_handler_termi_sig = th.Event()
+        self.worker_log_handler = th.Thread(target=self.qna_drain_log_queue, args=(qna_queue, self.worker_log_handler_termi_sig))
+        self.worker_log_handler.deamon = True
+        self.worker_log_handler.name = f"QTToastLogDrain-{self.worker_log_handler.name.split('-')[-1]}"
+        self.worker_log_handler.start()
+
+        self.notify.connect(qna.display)
+
+    def level_map(self, level):
+        if level >= 40:
+            return 'danger', None
+        elif level >=30:
+            return 'warning', 10000
+        else:
+            return 'info', 3000
+
+    def qna_drain_log_queue(self, parent_log_queue, stop_log_event):
+        while not stop_log_event.is_set():
+            try:
+                record = parent_log_queue.get(timeout=0.1)
+                self.notify.emit(record.msg, *self.level_map(record.levelno), False)
+            except queue.Empty:
+                pass
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except EOFError:
+                break
+
+    def close(self):
+        self.worker_log_handler_termi_sig.set()
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, state_handler, parent=None, projects='./projects/*', home_dir=os.getcwd(), _on_close_cb=noop):
         super(MainWindow, self).__init__(parent)
 
+        self.logger = logging.getLogger('smart-studio')
         # frm = QFrame()
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
         # self.setLayout(QHBoxLayout())
+    
+        # iniatlize toasts
+        self.toast_logger = QToast_Logger(parent=self)
 
         self.central_widget = QtWidgets.QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -41,15 +127,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.widget_home = Home(onconfig=self.onconfig,
                                 onstart=self.onstart,
+                                ondebug=self.ondebug,
                                 projects=projects)
         self.central_widget.addWidget(self.widget_home)
         # self.resized.connect(self.widget_home.refresh_selection)
 
-        self.log_file = None
+        self.logging_handler = None
 
         self.home_dir = home_dir
-        print('Home Dir:', home_dir)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Home Dir: {home_dir}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         self._on_close_cb = _on_close_cb
         self.state_handler = state_handler
@@ -64,16 +151,19 @@ class MainWindow(QtWidgets.QMainWindow):
         if hasattr(cur, 'stop'):
             cur.stop()
 
-        if self.log_file is not None:
-            logger.remove_cb(self._log_helper)
-            self.log_file.close()
-            self.log_file = None
+        self.toast_logger.close()
+
+        if self.logging_handler is not None:
+            logger = logging.getLogger('livenodes')
+            logger.removeHandler(self.logging_handler)
+            self.logging_handler.close()
+            self.logging_handler = None
 
     def closeEvent(self, event):
         self.stop()
 
         os.chdir(self.home_dir)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         self._save_state(self.widget_home)
         self._on_close_cb()
@@ -94,20 +184,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self._save_state(cur)
         self.stop()
         os.chdir(self.home_dir)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Back to Home Screen')
+        self.logger.info(f'CWD: {os.getcwd()}')
         self.central_widget.setCurrentWidget(self.widget_home)
         self.central_widget.removeWidget(cur)
         self.widget_home.refresh_selection()
         self._set_state(self.widget_home)
-        print("Nr of views: ", self.central_widget.count())
-
-    def _log_helper(self, msg):
-        self.log_file.write(msg + '\n')
-        self.log_file.flush()
+        self.logger.info(f'Ref count old view (Home) {sys.getrefcount(cur)}')
+        self.logger.info(f'Nr of views: {self.central_widget.count()}')
 
     def onstart(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Running: {project_path}/{pipeline_path}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         log_folder = './logs'
         log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
@@ -115,11 +205,17 @@ class MainWindow(QtWidgets.QMainWindow):
         if not os.path.exists(log_folder):
             os.mkdir(log_folder)
 
-        self.log_file = open(log_file, 'a')
-        logger.register_cb(self._log_helper)
+        logger_ln = logging.getLogger('livenodes')
+        self.logging_handler = logging.FileHandler(log_file)
+        # The time here is actually correct, as record creation time is used (not time of formatting)
+        # see: https://docs.python.org/3/library/logging.html#logging.Formatter.formatTime
+        formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+        self.logging_handler.setFormatter(formatter)
+        self.logging_handler.setLevel(logging.INFO)
+        logger_ln.addHandler(self.logging_handler)
 
         try:
-            pipeline = Node.load(pipeline_path)
+            pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
             # TODO: make these logs project dependent as well
             widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
                                 name=f"Running: {pipeline_path}",
@@ -129,18 +225,52 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            print(f'Could not load pipeline. Staying home')
-            print(err)
-            print(traceback.format_exc())
+            logger_ln.exception('Could not load pipeline. Staying home')
+            self.stop()
             os.chdir(self.home_dir)
-            print('CWD:', os.getcwd())
+            logger_ln.info(f'CWD: {os.getcwd()}')
+
+    def ondebug(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
+        os.chdir(project_path)
+        self.logger.info(f'Debugging: {project_path}/{pipeline_path}')
+        self.logger.info(f'CWD: {os.getcwd()}')
+
+        log_folder = './logs'
+        log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
+
+        if not os.path.exists(log_folder):
+            os.mkdir(log_folder)
+
+        logger_ln = logging.getLogger('livenodes')
+        self.logging_handler = logging.FileHandler(log_file)
+        logger_ln.addHandler(self.logging_handler)
+        
+        try:
+            pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
+            # TODO: make these logs project dependent as well
+            widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path),
+                                name=f"Debuging: {pipeline_path}",
+                                back_fn=self.return_home)
+            self.central_widget.addWidget(widget_run)
+            self.central_widget.setCurrentWidget(widget_run)
+
+            self._set_state(widget_run)
+        except Exception as err:
+            logger_ln.exception('Could not load pipeline. Staying home')
+            self.stop()
+            os.chdir(self.home_dir)
+            logger_ln.info(f'CWD: {os.getcwd()}')
+
 
     def onconfig(self, project_path, pipeline_path):
+        self._save_state(self.widget_home)
         os.chdir(project_path)
-        print('CWD:', os.getcwd())
+        self.logger.info(f'Configuring: {project_path}/{pipeline_path}')
+        self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            pipeline = Node.load(pipeline_path)
+            pipeline = Node.load(pipeline_path, ignore_connection_errors=True)
             widget_run = Parent(child=Config(pipeline=pipeline,
                                             node_registry=get_registry(),
                                             pipeline_path=pipeline_path),
@@ -151,11 +281,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            print(f'Could not load pipeline. Staying home')
-            print(err)
-            print(traceback.format_exc())
+            self.logger.exception('Could not load pipeline. Staying home')
+            self.stop()
             os.chdir(self.home_dir)
-            print('CWD:', os.getcwd())
+            self.logger.info(f'CWD: {os.getcwd()}')
 
 
 
@@ -164,17 +293,37 @@ def main():
     import os
     import shutil
     from dotenv import dotenv_values
-    import json
 
+    logger_root = logging.getLogger()
+    logger_root.setLevel(logging.DEBUG)
+    
+    logger_stdout_handler = logging.StreamHandler(sys.stdout)
+    logger_stdout_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(name)s | %(levelname)s | %(message)s')
+    logger_stdout_handler.setFormatter(formatter)
+    logger_root.addHandler(logger_stdout_handler)
+
+    logger_file_handler = logging.FileHandler('smart_studio.full.log', mode='w')
+    logger_file_handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(name)s | %(asctime)s | %(levelname)s | %(message)s')
+    logger_file_handler.setFormatter(formatter)
+    logger_root.addHandler(logger_file_handler) 
+
+    logger_smart = logging.getLogger("smart-studio")
+    logger_smart_file_handler = logging.FileHandler('smart_studio.log', mode='w')
+    logger_smart_file_handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
+    logger_smart_file_handler.setFormatter(formatter)
+    logger_smart.addHandler(logger_smart_file_handler) 
+    
+    logger = logging.getLogger('smart-studio')
     home_dir = os.getcwd()
 
     path_to_state = os.path.join(home_dir, 'smart-state.json')
     try:
         smart_state = State.load(path_to_state)
     except Exception as err:
-        print(f'Could not open state, saving file and creating new ({path_to_state}.backup)')
-        print(err)
-        print(traceback.format_exc())
+        logger.exception(f'Could not open state, saving file and creating new ({path_to_state}.backup)')
         shutil.copyfile(path_to_state, f"{path_to_state}.backup")
         smart_state = State({})
         
@@ -188,8 +337,7 @@ def main():
     env_projects = smart_state.val_get('projects', './projects/*')
     # env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
 
-    print('Projects folder: ', env_projects)
-    # print('Modules: ', env_modules)
+    logger.info(f'Projects folder: {env_projects}')
 
     # === Fix MacOS specifics ========================================================================
     # this fix is for macos (https://docs.python.org/3.8/library/multiprocessing.html#contexts-and-start-methods)
@@ -197,6 +345,9 @@ def main():
         mp.set_start_method(
             'fork',
             force=True)  # force=True doesn't seem like a too good idea, but hey
+    # IMPORTANT TODO: 'spawn' fails due to objects not being picklable (which makes sense)
+    # -> however, fork is not present on windows and more generally the python community seems to shift towards making spawn the default/expected behaviour
+    # -> resulting in the TODO: check and then separate qt views from the actuall running pipeline such that we can safely switch to spawn for all subprocesses.
 
     # === Load modules ========================================================================
     # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here

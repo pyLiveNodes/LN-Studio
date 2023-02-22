@@ -4,8 +4,9 @@ import json
 import os
 import itertools
 import traceback
+import numpy as np
 
-from PyQt5.QtWidgets import QSplitter, QHBoxLayout, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QWidget, QLabel
 from PyQt5.QtCore import pyqtSignal
 import graphviz
 
@@ -14,15 +15,21 @@ from livenodes.node import Node
 import qtpynodeeditor
 from qtpynodeeditor import (NodeDataModel, NodeDataType, PortType)
 from qtpynodeeditor.type_converter import TypeConverter
+from qtpynodeeditor.exceptions import ConnectionDataTypeFailure
 
 from .edit_node import CreateNodeDialog
 from .utils import noop
+
+import logging
+logger = logging.getLogger('smart-studio')
 
 class CustomNodeDataModel(NodeDataModel, verify=False):
 
     def __init__(self, style=None, parent=None):
         super().__init__(style, parent)
         self.association_to_node = None
+
+        # self._info = QLabel("Info")
 
     def set_node_association(self, pl_node):
         self.association_to_node = pl_node
@@ -32,37 +39,52 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         res['association_to_node'] = self.association_to_node
         return res
 
+    # def embedded_widget(self) -> QWidget:
+    #     'The number source has a line edit widget for the user to type in'
+    #     return self._info
+
+    # @property
+    # def caption(self):
+    #     if self.association_to_node is not None:
+    #         return str(self.association_to_node.name)
+    #     else:
+    #         return self.name
+
     def _get_port_infos(self, connection):
         # TODO: yes, the naming here is confusing, as qtpynode is the other way round that livenodes
         in_port, out_port = connection.ports
-        emit_port = out_port.model.data_type[out_port.port_type][
-            out_port.index].id
-        recv_port = in_port.model.data_type[in_port.port_type][
-            in_port.index].id
+        emit_port_label = out_port.model.data_type[out_port.port_type][
+            out_port.index].name
+        recv_port_label = in_port.model.data_type[in_port.port_type][
+            in_port.index].name
 
         smart_receicing_node = in_port.model.association_to_node
         smart_emit_node = out_port.model.association_to_node
 
-        return smart_emit_node, smart_receicing_node, emit_port, recv_port
+        return smart_emit_node, smart_receicing_node, emit_port_label, recv_port_label
+
+    # TODO: do the same for the input connections!
+    # input_connection_created
+    # input_connection_deleted
 
     def output_connection_created(self, connection):
         # HACK: this currently works because of the three passes below (ie create node, create conneciton, associate pl node)
         # TODO: fix this by checking if the connection already exists and if so ignore the call
         if self.association_to_node is not None:
-            smart_emit_node, smart_receicing_node, emit_port, recv_port = self._get_port_infos(
+            smart_emit_node, smart_receicing_node, emit_port_label, recv_port_label = self._get_port_infos(
                 connection)
 
             if smart_emit_node is not None and smart_receicing_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
                 smart_receicing_node.add_input(
                     smart_emit_node,
-                    emit_port=smart_emit_node.get_port_out_by_key(emit_port),
-                    recv_port=smart_receicing_node.get_port_in_by_key(recv_port)
+                    emit_port=smart_emit_node.get_port_out_by_label(emit_port_label),
+                    recv_port=smart_receicing_node.get_port_in_by_label(recv_port_label)
                 )
 
     def output_connection_deleted(self, connection):
         if self.association_to_node is not None:
-            smart_emit_node, smart_receicing_node, emit_port, recv_port = self._get_port_infos(
+            smart_emit_node, smart_receicing_node, emit_port_label, recv_port_label = self._get_port_infos(
                 connection)
 
             if smart_emit_node is not None and smart_receicing_node is not None:
@@ -70,11 +92,11 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
                 try:
                     smart_receicing_node.remove_input(
                         smart_emit_node,
-                        emit_port=smart_emit_node.get_port_out_by_key(emit_port),
-                        recv_port=smart_receicing_node.get_port_in_by_key(recv_port)
+                        emit_port=smart_emit_node.get_port_out_by_label(emit_port_label),
+                        recv_port=smart_receicing_node.get_port_in_by_label(recv_port_label)
                     )
                 except ValueError as err:
-                    print(err)
+                    logger.exception('Error in removing connection.')
                     # TODO: see nodes above on created...
 
 
@@ -125,19 +147,28 @@ class QT_Graph_edit(QWidget):
         if os.path.exists(self.pipeline_gui_path):
             with open(self.pipeline_gui_path, 'r') as f:
                 layout = json.load(f)
-        print(self.pipeline_gui_path)
+        # print(self.pipeline_gui_path)
         self._add_pipeline(layout, pipeline)
 
         if layout is None:
-            try:
-                self.scene.auto_arrange('planar_layout')
-            except Exception:
-                try:
-                    self.scene.auto_arrange('spring_layout')
-                except Exception:
-                    pass
+            self.auto_layout()
         # self.scene.auto_arrange('graphviz_layout', prog='dot', scale=1)
         # self.scene.auto_arrange('graphviz_layout', scale=3)
+
+    def auto_layout(self):
+        # bipartite', 'circular', 'kamada_kawai', 'random',
+        #                  'shell', 'spring', 'spectral'
+        
+        for l in ['planar_layout', 'spring_layout']:
+            try:
+                logger.info(f'Autolayout: trying {l}')
+                self.scene.auto_arrange(l, scale=1400, align='horizontal')
+                return
+            except Exception as err:
+                # TODO: specify exact exception and just pass
+                print(err)
+                pass
+        logger.info(f'Autolayout: Could not apply layout. Collapsing.')
 
     def _remove_pl_node(self, node):
         smart_node = node.model.association_to_node
@@ -159,8 +190,7 @@ class QT_Graph_edit(QWidget):
                     # partial(self.view_configure.set_pl_node, pl_node))
             except Exception as err:
                 # Failed
-                print('Could not instantiate Node')
-                print(err)
+                logger.exception('Could not instantiate Node')
                 self.scene.remove_node(node)
         else:
             # Canceled
@@ -184,17 +214,20 @@ class QT_Graph_edit(QWidget):
         # Not relevant yet, but will be when there are sync nodes (ie sync 1-x sensor nodes) etc
 
         if node_registry is None:
-            return 
+            raise Exception('Registry is Required') 
 
         # .values() returns a generator
         nodes = list(node_registry.nodes.reg.values())
 
-        # Collect and create Datatypes
-        for node in nodes:
-            for val in node.ports_in + node.ports_out:
-                self.known_ports[str(val)] = NodeDataType(id=str(val), name=val.label)
 
-        tmp_port_to_class = {}
+        # Collect and create Datatypes
+        def port_to_key(port):
+            return f"<{port.__class__.__name__}: {port.label}>"
+
+        port_list = list(np.concatenate([list(node.ports_in) + list(node.ports_out) for node in nodes]))
+        self.known_dtypes = {port_to_key(port): NodeDataType(id=port_to_key(port), name=port.label) for port in port_list}
+        self.known_streams = {port_to_key(port): port for port in port_list}
+
 
         # Collect and create Node-Classes
         for node in nodes:
@@ -209,42 +242,49 @@ class QT_Graph_edit(QWidget):
                     PortType.output: len(node.ports_out)
                 },
                 'data_type': {
-                    PortType.input: {i: self.known_ports[str(val)] for i, val in enumerate(node.ports_in)},
-                    PortType.output: {i: self.known_ports[str(val)] for i, val in enumerate(node.ports_out)}
+                    PortType.input: {i: self.known_dtypes[port_to_key(port)] for i, port in enumerate(node.ports_in)},
+                    PortType.output: {i: self.known_dtypes[port_to_key(port)] for i, port in enumerate(node.ports_out)}
                 }
                 , 'constructor': node
                 })
-            self.known_streams = {**self.known_streams, **{str(val): val for val in node.ports_in + node.ports_out}}
-            tmp_port_to_class = {**tmp_port_to_class, **{str(val): node for val in node.ports_in + node.ports_out}}
+            # print('-----')
+            # print(node)
+            # print(node.ports_in, node.ports_out)
             self.known_classes[cls_name] = cls
             self.registry.register_model(cls, category=getattr(node, "category", "Unknown"))
 
         # Create Converters
-        # Allow any stream to map onto any other stream:
-        # TODO: this could be used properly for type checking, on build (in the gui only) but is not furhter integrated into the node system itself
         for a, b in itertools.combinations(self.known_streams.keys(), 2):
-            # print('----')
-            # print(self.known_streams[a].__class__.__name__, self.known_streams[a].__class__, tmp_port_to_class[a].__class__)
-            # print(self.known_streams[b].__class__.__name__, self.known_streams[b].__class__, tmp_port_to_class[b].__class__)
-            # print(self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__))
-            # print(self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__))
+            # print(a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
+            # if self.known_streams[a].key == 'biokit':
+            #     print(self.known_streams[b].__class__, self.known_streams[b].example_values)
+            # print('----', a, b, self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__), self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__))
+            # print(self.known_streams[a].__class__)
+            # print(self.known_streams[b].__class__)
+            # print(self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__))
             
-            if self.known_streams[a].__class__.can_connect_to(self.known_streams[b].__class__):
-                # print(f'Adding converter from {self.known_streams[a].__class__.__name__} to {self.known_streams[b].__class__.__name__}')
-                converter = TypeConverter(self.known_ports[a],
-                                        self.known_ports[b], noop)
-                self.registry.register_type_converter(self.known_ports[a],
-                                                    self.known_ports[b],
+            log_dir_allowed = ''
+            
+            if self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__):
+                # The input/output stuff on the TypeConverter class is reversed to ours
+                # https://klauer.github.io/qtpynodeeditor/api.html?highlight=typeconverter
+                converter = TypeConverter(self.known_dtypes[b],
+                                        self.known_dtypes[a], noop)
+                self.registry.register_type_converter(self.known_dtypes[b],
+                                                    self.known_dtypes[a],
                                                     converter)
+                log_dir_allowed += '<-'
 
-            if self.known_streams[b].__class__.can_connect_to(self.known_streams[a].__class__):
-                # print(f'Adding converter from {self.known_streams[b].__class__.__name__} to {self.known_streams[a].__class__.__name__}')
-
-                converter = TypeConverter(self.known_ports[b],
-                                        self.known_ports[a], noop)
-                self.registry.register_type_converter(self.known_ports[b],
-                                                    self.known_ports[a],
+            if self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__):
+                converter = TypeConverter(self.known_dtypes[a],
+                                        self.known_dtypes[b], noop)
+                self.registry.register_type_converter(self.known_dtypes[a],
+                                                    self.known_dtypes[b],
                                                     converter)
+                log_dir_allowed += '->'
+
+            logger.info(f"Allowed directions: {str(a)} {log_dir_allowed} {str(b)}")
+
 
     def _add_pipeline(self, layout, pipeline):
         ### Reformat Layout for easier use
@@ -268,22 +308,23 @@ class QT_Graph_edit(QWidget):
         ### Add nodes
         if pipeline is not None:
             # only keep uniques
-            p_nodes = {str(n): n for n in pipeline.discover_graph(pipeline)}
+            p_nodes = [(str(n), n) for n in pipeline.discover_graph(pipeline)]
+            # p_nodes = pipeline.discover_graph(pipeline)
 
             # first pass: create all nodes
             s_nodes = {}
             # print([str(n) for n in p_nodes])
-            for name, n in p_nodes.items():
+            for name, n in p_nodes:
                 if name in layout_nodes:
                     # lets' hope the interface hasn't changed in between
                     # TODO: actually check if it has
-                    s_nodes[name] = self.scene.restore_node(layout_nodes[name])
+                    s_nodes[name] = self.scene.restore_node(layout_nodes[str(n)])
                 else:
                     s_nodes[name] = self.scene.create_node(
                         self.known_classes[n.__class__.__name__])
 
             # second pass: create all connectins
-            for name, n in p_nodes.items():
+            for name, n in p_nodes:
                 # node_output refers to the node in which n is inputing data, ie n's output
                 # for node_output, output_id, emit_port, recv_port in n.output_classes:
                 for con in n.output_connections:
@@ -297,16 +338,12 @@ class QT_Graph_edit(QWidget):
                         con._recv_node)][PortType.input][in_idx]
                     try:
                         self.scene.create_connection(n_out, n_in)
-                    except Exception as err:
-                        print('-------')
-                        print(err)
-                        print('Tried connecting node', s_nodes[name], 'to', s_nodes[str(con._recv_node)])
-                        print('Tried connecting port', con._emit_port, 'to', con._recv_port)
-                        raise err
+                    except ConnectionDataTypeFailure:
+                        logger.exception("ERROR ConnectionDataTypeFailure: Could not connect nodes, please check.", n_out, n_in, con)
 
             # third pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
-            for name, n in p_nodes.items():
+            for name, n in p_nodes:
                 s_nodes[name]._model.set_node_association(n)
                 # COMMENT: ouch, this feels very wrong...
                 s_nodes[name]._graphics_obj = attatch_click_cb(
@@ -352,19 +389,21 @@ class QT_Graph_edit(QWidget):
 
     def save(self):
         vis_state, pipeline = self.get_state()
-        print('initial node used for saving: ', str(pipeline))
+        logger.debug(f'initial node used for saving: {str(pipeline)}')
 
         with open(self.pipeline_gui_path, 'w') as f:
             json.dump(vis_state, f, indent=2)
+        
+        # TODO: try to clone / save and load the whole thing to check if the gui allowed configs, that we cannot load afterwards...
+        # Node.load(self.pipeline_path)
 
-        # TODO: For the moment, lets assume the start node stays the same, otherwise we'll have a problem...
+        # loadable file format
         pipeline.save(self.pipeline_path)
+        # human readable file format
+        pipeline.save(self.pipeline_path, compact=True, extension='yml')
+
         try:
-            pipeline.dot_graph_full(transparent_bg=True).save(
-                self.pipeline_gui_path.replace('.json', '.png'), 'PNG')
-            pipeline.dot_graph_full(transparent_bg=False).save(
-                self.pipeline_path.replace('.json', '.png'), 'PNG')
+            pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=self.pipeline_gui_path.replace('.json', ''), file_type='png')
+            pipeline.dot_graph_full(transparent_bg=False, filename=self.pipeline_path.replace('.json', ''), file_type='pdf')
         except graphviz.backend.execute.ExecutableNotFound as err:
-            print('Could not create dot graph. Executable not found.')
-            print(err)
-            print(traceback.format_exc())
+            logger.exception('Could not create dot graph. Executable not found.')
