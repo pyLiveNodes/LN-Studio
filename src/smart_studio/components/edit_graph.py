@@ -121,7 +121,7 @@ class QT_Graph_edit(QWidget):
 
         self.known_classes = {}
         self.known_streams = {}
-        self.known_dtypes = {}
+        self.known_ports = {}
 
         self._create_known_classes(node_registry)
 
