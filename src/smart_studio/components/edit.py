@@ -137,6 +137,14 @@ class EditDict(EditList):
     def _add_layout(self, layout):
         self.layout.addRow(layout)
 
+    def _add_itm(self, key):
+        # print('Added item', key, self.in_items[key])
+        self.in_items[key] = None
+        self.changed.emit(self.in_items)
+        self._rm_gui_items()
+        self._add_gui_items()
+
+
 class EditTuple(EditList):
     changed = pyqtSignal(tuple)
 

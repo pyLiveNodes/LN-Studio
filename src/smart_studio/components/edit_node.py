@@ -1,34 +1,45 @@
+import json
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5.QtWidgets import QDialogButtonBox, QDialog, QVBoxLayout, QWidget, QHBoxLayout, QScrollArea, QLabel
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal
 
 from .edit import EditDict
 
 
 class NodeParameterSetter(QWidget):
+    changed = pyqtSignal(bool)
 
     def __init__(self, node=None, parent=None):
         super().__init__(parent)
 
+        self.node = node
+
         # let's assume we only have class instances here and no classes
         # for classes we would need a combination of info() and something else...
-        if node is not None:
-            self.edit = EditDict(in_items=node._node_settings(), extendable=False)
+        if self.node is not None:
+            self.edit = EditDict(in_items=self.node._node_settings(), extendable=False)
             # let's assume the edit interfaces do not overwrite any of the references
             # otherwise we would need to do a recursive set_attr here....
 
             # TODO: remove _set_attr in node, this is no good design
-            self.edit.changed.connect(lambda attrs: node._set_attr(**attrs))
+            self.edit.changed.connect(self.edit_changed_handler)
         else:
             self.edit = EditDict(in_items={})
 
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(self.edit, stretch=1)
-        if node.__doc__ is not None:
-            label = QLabel(node.__doc__)
+        if self.node.__doc__ is not None:
+            label = QLabel(self.node.__doc__)
             label.setWordWrap(True)
             self.layout.addWidget(label, stretch=0)
 
+    def edit_changed_handler(self, attrs):
+        # TODO: remove _set_attr in node, this is no good design
+        attrs_new = self.node._set_attr(**attrs)
+        if json.dumps(attrs) != json.dumps(attrs_new):
+            # print('set_attr diff from received attrs, will re-build ui')
+            self.changed.emit(True)
 
 class NodeConfigureContainer(QWidget):
 
@@ -46,7 +57,7 @@ class NodeConfigureContainer(QWidget):
         #     Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_panel)
 
-        self._title = QLabel("Click node to configure.")
+        self._title = QLabel("")
         self._category = QLabel("")
 
         self.l1 = QVBoxLayout(self)
@@ -55,18 +66,27 @@ class NodeConfigureContainer(QWidget):
         self.l1.addWidget(self._category)
         self.l1.addWidget(self.scroll_area, stretch=1)
 
-        self.params = NodeParameterSetter()
-        self.scroll_panel_layout.addWidget(self.params)
+        self.params = None
+        self.set_pl_node()
 
-    def set_pl_node(self, node, *args):
-        self._title.setText(str(node))
-        self._category.setText(node.category)
+    def set_pl_node(self, node=None, **kwargs):
+        if node is None:
+            self._title.setText("Click node to configure.")
+            self._category.setText("")
+            new_params = NodeParameterSetter()
+        else:
+            self._title.setText(str(node))
+            self._category.setText(node.category)
+            new_params = NodeParameterSetter(node)
 
-        new_params = NodeParameterSetter(node)
+        if self.params is None:
+            self.scroll_panel_layout.addWidget(new_params)
+        else:
+            self.scroll_panel_layout.replaceWidget(self.params, new_params)
+            self.params.deleteLater()
 
-        self.scroll_panel_layout.replaceWidget(self.params, new_params)
-        self.params.deleteLater()
         self.params = new_params
+        self.params.changed.connect(lambda _: self.set_pl_node(node))
 
 
 class CreateNodeDialog(QDialog):

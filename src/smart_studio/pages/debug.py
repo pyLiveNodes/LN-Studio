@@ -1,26 +1,23 @@
 from functools import partial
-from livenodes import viewer
-import os
-import json
 import logging
-import threading as th
 from logging.handlers import QueueHandler
+import os
 
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
 
 from PyQtAds import QtAds
 
 import multiprocessing as mp
+import threading as th
 
-from livenodes import Node, Graph
+from livenodes import Node, Graph, viewer
 from livenodes.components.utils.log import drain_log_queue
-
-from smart_studio.components.node_views import node_view_mapper
+from smart_studio.components.node_views import node_view_mapper, Debug_View
 from smart_studio.components.page import Page, Action, ActionKind
 
-# adapted from: https://stackoverflow.com/questions/39835300/python-qt-and-matplotlib-scatter-plots-with-blitting
-class Run(Page):
+class Debug(Page):
 
     def __init__(self, pipeline_path, pipeline, parent=None):
         super().__init__(parent=parent)
@@ -29,16 +26,45 @@ class Run(Page):
         self.graph = Graph(start_node=pipeline)
         self._create_paths(pipeline_path)
 
-        # === Setup draw canvases =================================================
-        self.nodes = [n for n in Node.discover_graph(pipeline) if isinstance(n, viewer.View)]
-        self.draw_widgets = list(map(partial(node_view_mapper, self), self.nodes))
+        # === Setup buttons =================================================
+        def toggle():
+            nonlocal self
+            if self.worker is None:
+                self._start_pipeline()
+                self.toggle.setText("Stop")
+            else:
+                self._stop_pipeline()
+                self.toggle.setText("Start")
+
+        self.toggle = QPushButton("Start")
+        self.toggle.clicked.connect(toggle)
+
+        buttons = QHBoxLayout()
+        buttons.addWidget(self.toggle)
+
+        # === Setup item list =================================================
+        sidebar_items = QVBoxLayout()
+        sidebar_items.addLayout(buttons)
+        sidebar_items.spacerItem()
+
+
+        # === Create overall layout =================================================
+        self.dock_manager = QtAds.CDockManager(self)
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addLayout(sidebar_items, stretch=0)
+        self.layout.addWidget(self.dock_manager, stretch=1)
+
+
+        # === Setup draw canvases and add items to views =================================================
+        self.nodes = Node.discover_graph(pipeline)
+        self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None, parent=self) for n in self.nodes]
         
         QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
-        
-        self.layout = QHBoxLayout(self)
-        self.dock_manager = QtAds.CDockManager(self)
-        self.layout.addWidget(self.dock_manager)
         self.widgets = []
+
+        def toggle(dock_widget, state):
+            dock_widget.toggleView(state == QtCore.Qt.Checked)
 
         def debug_partial(logger, *text):
             logger.debug(' '.join(map(str, text)))
@@ -48,7 +74,7 @@ class Run(Page):
             self.widgets.append(dock_widget)
             dock_widget.viewToggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
             dock_widget.setWidget(widget)
-            dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
+            # dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
             self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock_widget)
 
@@ -56,18 +82,24 @@ class Run(Page):
             with open(self.pipeline_gui_path, 'r') as f:
                 self.dock_manager.restoreState(QtCore.QByteArray(f.read().encode()))
 
-        # restore might remove some of the newly added widgets -> add it back in here
-        for widget, node in zip(self.widgets, self.nodes):
-            if widget.isClosed():
-                # print('----', str(node))
-                widget.setClosedState(False)
-                self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
+        # # restore might remove some of the newly added widgets -> add it back in here
+        for dock_widget, node in zip(self.widgets, self.nodes):
+            # sidebar_items.addWidget(dock_widget.toggleViewAction())
+            box = QCheckBox(str(node))
+            box.setChecked(not dock_widget.isClosed())
+            sidebar_items.addWidget(box, stretch=0)
+            # dock_widget.closed.connect()
+            box.stateChanged.connect(partial(toggle, dock_widget))
+
+            # if widget.isClosed():
+            #     # print('----', str(node))
+            #     widget.setClosedState(False)
+            #     self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
 
 
         # === Start pipeline =================================================
-        self.logger = logging.getLogger("smart-studio")
         self.worker_term_lock = mp.Lock()
-        self._start_pipeline()
+        self.worker = None
 
     def _start_pipeline(self):
         self.worker_term_lock.acquire()
@@ -86,10 +118,21 @@ class Run(Page):
         # self.worker.daemon = True
         self.worker.start()
 
-
+    def _stop_pipeline(self):
+        if self.worker is not None:
+            self.worker_term_lock.release()
+            print('Termination time in view!')
+            self.worker_term_lock.acquire()
+            self.worker_term_lock.release()
+            print('View terminated')
+            self.worker = None
+            
+            self.worker_log_handler_termi_sig.set()
+        
     def worker_start(self, subprocess_log_queue, logger_name):
         logger = logging.getLogger(logger_name)
         logger.addHandler(QueueHandler(subprocess_log_queue))
+        # logger = logging.getLogger('smart-studio')
 
         logger.info(f"Starting Worker")
         self.graph.start_all()
@@ -101,30 +144,19 @@ class Run(Page):
         self.worker_term_lock.release()
         logger.info(f"Worker Stopped")
 
+    # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
+    # will be called in parent view, but also called on exiting the canvas
     def stop(self, *args, **kwargs):
         self._stop_pipeline()
 
-    # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
-    # will be called in parent view, but also called on exiting the canvas
-    def _stop_pipeline(self):
-        # Tell the process to terminate, then wait until it returns
-        self.worker_term_lock.release()
-        
-        self.logger.info(f"Stopping Worker")
-        # Block until graph finished all it's nodes
-        self.worker_term_lock.acquire()
-        self.worker_term_lock.release()
-        self.logger.info('View terminated')
-
-        self.logger.info('Terminating draw widgets')
-        self.logger.info(f"Stopping Widgets")
+        print('Terminating draw widgets')
         for widget in self.draw_widgets:
             widget.stop()
 
-        self.logger.info(f"Killing Worker")
-        self.worker.terminate()
-
-        self.worker_log_handler_termi_sig.set()
+        # self.nodes = None
+        # self.graph = None
+        # print('Ref count debug during stoppage', sys.getrefcount(self))
+        
 
     def get_actions(self):
         return [ \
@@ -138,14 +170,7 @@ class Run(Page):
 
     def _create_paths(self, pipeline_path):
         self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '.xml')
-
-        # Deprecation and renaming notice here
-        old_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '_dock.xml')
-        if os.path.exists(old_path):
-            self.logger.warn('_dock.xml is old format. renaming to just .xml')
-            os.rename(old_path, self.pipeline_gui_path)
-
+        self.pipeline_gui_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '_dock_debug.xml')
 
         gui_folder = '/'.join(self.pipeline_gui_path.split('/')[:-1])
         if not os.path.exists(gui_folder):
