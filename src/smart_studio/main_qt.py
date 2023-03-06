@@ -2,7 +2,6 @@ import sys
 import multiprocessing as mp
 import platform
 from PyQt5 import QtWidgets
-from QNotifications import QNotificationArea
 
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
@@ -20,91 +19,11 @@ import os
 import logging
 
 from smart_studio.utils.state import State
-
-from logging.handlers import QueueHandler
-from PyQt5 import QtCore
-import queue
-import multiprocessing as mp
-import threading as th
-from PyQt5.QtCore import Qt
+from smart_studio.components.notification import QToast_Logger
 
 def noop(*args, **kwargs):
     pass
 
-class QToast_Logger(QtWidgets.QWidget):
-    """
-    Slightly complicated. 
-    Basically: 
-    - qna needs to run in main thread of qt to display toasts via the qna.display method
-    - some logs are from sub-threads of sub-processes tho -> we collect those in a mp.queue
-        -> the queue must be drained without blocking the main thread
-        -> we create a subthread that forwards all items from the queue to the pyqt signal which in turn connects to the main threads qna.display method
-
-    Note: if you have a better way of doing this, please create a PR! This feels rather hacky  
-    """
-    notify = QtCore.pyqtSignal(str,str,int, bool)
-    
-    def __init__(self, parent=None) -> None:
-        super().__init__(parent)    
-
-        # self.setWindowFlags(Qt.FramelessWindowHint | Qt.SubWindow)
-        # self.setAttribute(Qt.WA_TransparentForMouseEvents, True)   
-
-        # self.setMinimumWidth(400)
-        # self.setMinimumHeight(250)
-        
-        qna_queue = mp.Queue()
-        logger_toast_handler_mp_queue = QueueHandler(qna_queue)
-        logger_toast_handler_mp_queue.setLevel(logging.WARNING)
-        formatter = logging.Formatter('%(name)s | %(message)s')
-        logger_toast_handler_mp_queue.setFormatter(formatter)
-        logger_toast = logging.getLogger('smart-studio')
-        logger_toast.addHandler(logger_toast_handler_mp_queue)
-        logger_toast = logging.getLogger('livenodes')
-        logger_toast.addHandler(logger_toast_handler_mp_queue)
-
-        qna = QNotificationArea(parent)
-
-        # TODO: fix me to the upper right corner and make me relative to the window size!
-        # Alternaively: figure out, why repeated errors do not show
-        # reprocude: create a graph with incompatible connection; edit -> error shows; cancel (!); edit again -> error doesn't show
-        # something very fishy is going on here: the error is shown when the log is double, but not on the second time, where it is single...
-        # self.setGeometry(50, 50, 400, 250)
-
-        # doesn't work, as the processing happens in the sub-thread...
-        # queue_listener = QueueListener(qna_queue, logger_toast_handler)
-        # queue_listener.start()
-
-        self.worker_log_handler_termi_sig = th.Event()
-        self.worker_log_handler = th.Thread(target=self.qna_drain_log_queue, args=(qna_queue, self.worker_log_handler_termi_sig))
-        self.worker_log_handler.deamon = True
-        self.worker_log_handler.name = f"QTToastLogDrain-{self.worker_log_handler.name.split('-')[-1]}"
-        self.worker_log_handler.start()
-
-        self.notify.connect(qna.display)
-
-    def level_map(self, level):
-        if level >= 40:
-            return 'danger', None
-        elif level >=30:
-            return 'warning', 10000
-        else:
-            return 'info', 3000
-
-    def qna_drain_log_queue(self, parent_log_queue, stop_log_event):
-        while not stop_log_event.is_set():
-            try:
-                record = parent_log_queue.get(timeout=0.1)
-                self.notify.emit(record.msg, *self.level_map(record.levelno), False)
-            except queue.Empty:
-                pass
-            except (KeyboardInterrupt, SystemExit):
-                raise
-            except EOFError:
-                break
-
-    def close(self):
-        self.worker_log_handler_termi_sig.set()
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -116,10 +35,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
         # self.setLayout(QHBoxLayout())
-    
-        # iniatlize toasts
-        self.toast_logger = QToast_Logger(parent=self)
 
+        # self.toast_logger = QToast_Logger(self)
+    
         self.central_widget = QtWidgets.QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
         # self.layout.addWidget(self.central_widget)
@@ -151,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if hasattr(cur, 'stop'):
             cur.stop()
 
-        self.toast_logger.close()
+        # self.toast_logger.close()
 
         if self.logging_handler is not None:
             logger = logging.getLogger('livenodes')
