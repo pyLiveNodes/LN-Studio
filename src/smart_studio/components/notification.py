@@ -1,5 +1,6 @@
-from notificator import notificator
-from notificator.alingments import TopCenter
+# TODO: figure out again from where this was installed...
+# from notificator import notificator
+# from notificator.alingments import TopCenter
 
 from QNotifications import QNotificationArea
 
@@ -16,26 +17,26 @@ import logging
 
 class QToast_Logger(QtWidgets.QWidget):
     """
-    Slightly complicated. 
-    Basically: 
+    Slightly complicated.
+    Basically:
     - qna needs to run in main thread of qt to display toasts via the qna.display method
     - some logs are from sub-threads of sub-processes tho -> we collect those in a mp.queue
         -> the queue must be drained without blocking the main thread
         -> we create a subthread that forwards all items from the queue to the pyqt signal which in turn connects to the main threads qna.display method
 
-    Note: if you have a better way of doing this, please create a PR! This feels rather hacky  
+    Note: if you have a better way of doing this, please create a PR! This feels rather hacky
     """
     notify = QtCore.pyqtSignal(str,str,int, bool)
-    
+
     def __init__(self, parent=None) -> None:
-        super().__init__(parent)    
+        super().__init__(parent)
 
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.SubWindow)
-        # self.setAttribute(Qt.WA_TransparentForMouseEvents, True)   
+        # self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
         # self.setMinimumWidth(400)
         # self.setMinimumHeight(250)
-        
+
         qna_queue = mp.Queue()
         logger_toast_handler_mp_queue = QueueHandler(qna_queue)
         logger_toast_handler_mp_queue.setLevel(logging.WARNING)

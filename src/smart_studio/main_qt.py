@@ -19,7 +19,7 @@ import os
 import logging
 
 from smart_studio.utils.state import State
-from smart_studio.components.notification import QToast_Logger
+# from smart_studio.components.notification import QToast_Logger
 
 def noop(*args, **kwargs):
     pass
@@ -37,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setLayout(QHBoxLayout())
 
         # self.toast_logger = QToast_Logger(self)
-    
+
         self.central_widget = QtWidgets.QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
         # self.layout.addWidget(self.central_widget)
@@ -163,7 +163,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger_ln = logging.getLogger('livenodes')
         self.logging_handler = logging.FileHandler(log_file)
         logger_ln.addHandler(self.logging_handler)
-        
+
         try:
             pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
             # TODO: make these logs project dependent as well
@@ -214,7 +214,7 @@ def main():
 
     logger_root = logging.getLogger()
     logger_root.setLevel(logging.DEBUG)
-    
+
     logger_stdout_handler = logging.StreamHandler(sys.stdout)
     logger_stdout_handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(name)s | %(levelname)s | %(message)s')
@@ -225,15 +225,15 @@ def main():
     logger_file_handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(name)s | %(asctime)s | %(levelname)s | %(message)s')
     logger_file_handler.setFormatter(formatter)
-    logger_root.addHandler(logger_file_handler) 
+    logger_root.addHandler(logger_file_handler)
 
     logger_smart = logging.getLogger("smart-studio")
     logger_smart_file_handler = logging.FileHandler('smart_studio.log', mode='w')
     logger_smart_file_handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
     logger_smart_file_handler.setFormatter(formatter)
-    logger_smart.addHandler(logger_smart_file_handler) 
-    
+    logger_smart.addHandler(logger_smart_file_handler)
+
     logger = logging.getLogger('smart-studio')
     home_dir = os.getcwd()
 
@@ -244,7 +244,7 @@ def main():
         logger.exception(f'Could not open state, saving file and creating new ({path_to_state}.backup)')
         shutil.copyfile(path_to_state, f"{path_to_state}.backup")
         smart_state = State({})
-        
+
     env_vars = {key.lower(): val for key, val in {
         **dotenv_values(".env"),
         **os.environ
@@ -278,7 +278,7 @@ def main():
     def onclose():
         smart_state.val_set('window_size', (window.size().width(), window.size().height()))
         smart_state.save(path_to_state)
-    
+
     window = MainWindow(state_handler=smart_state.space_get('views'), projects=env_projects, home_dir=home_dir, _on_close_cb=onclose)
     window.resize(*smart_state.val_get('window_size', (1400, 820)))
     window.show()
