@@ -28,11 +28,22 @@ class NodeParameterSetter(QWidget):
             self.edit = EditDict(in_items={})
 
         self.layout = QVBoxLayout(self)
+        # Add edit inputs
         self.layout.addWidget(self.edit, stretch=1)
+        # Add info about ports
+        if self.node is not None: # in case no node is selected
+            self.layout.addWidget(QLabel("-- Ports --"), stretch=0)
+            self.layout.addWidget(QLabel(self._format_ports(self.node.ports_in)), stretch=0)
+            self.layout.addWidget(QLabel(self._format_ports(self.node.ports_out)), stretch=0)
+        # Add Nodes' description
         if self.node.__doc__ is not None:
+            self.layout.addWidget(QLabel("-- Description --"), stretch=0)
             label = QLabel(self.node.__doc__)
             label.setWordWrap(True)
             self.layout.addWidget(label, stretch=0)
+    
+    def _format_ports(self, ports):
+        return "\n".join([f"{name}: {value.__class__.__name__}" for name, value in ports._asdict().items()])
 
     def edit_changed_handler(self, attrs):
         # TODO: remove _set_attr in node, this is no good design
