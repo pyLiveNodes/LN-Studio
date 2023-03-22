@@ -1,13 +1,13 @@
-smart\-studio.utils package
+smart\_studio.utils package
 ===========================
 
 Submodules
 ----------
 
-smart\-studio.utils.state module
+smart\_studio.utils.state module
 --------------------------------
 
-.. automodule:: smart-studio.utils.state
+.. automodule:: smart_studio.utils.state
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ smart\-studio.utils.state module
 Module contents
 ---------------
 
-.. automodule:: smart-studio.utils
+.. automodule:: smart_studio.utils
    :members:
    :undoc-members:
    :show-inheritance:
