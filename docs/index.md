@@ -1,4 +1,7 @@
-# Livenodes
+# Smart-Studio
+
+SMART-Studio is a GUI Application to create, run and debug [LiveNodes graphs](https://livenodes.pages.csl.uni-bremen.de/livenodes/). 
+It enables live sensor recording, processing and machine learning for interactive low-latency research applications.
 
 ```{eval-rst}
 .. toctree::
@@ -21,7 +24,7 @@
     contributing.rst
     authors.rst
     changelog.rst
-    
+
 
 ```
 
