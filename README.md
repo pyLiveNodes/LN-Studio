@@ -8,6 +8,7 @@ Livenodes are small units of computation for digital signal processing in python
 Any contribution is welcome! These projects take more time than I can muster, so feel free to create issues for everything that you think might work better and feel free to create a MR for them as well!
 
 Have fun and good coding!
+
 Yale
 
 
@@ -19,11 +20,11 @@ To install Smart-Studio:
 1. Install PyQTAds: `conda install -c conda-forge pyqtads`
 2. install Smart-Studio via pip (or conda if you like): `pip install smart_studio --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
 
-## Docs
+### Docs
 
 You can find the docs [here](https://livenodes.pages.csl.uni-bremen.de/smart-studio/index.html).
 
-## Restrictions
+### Restrictions
 
 - PyQTAds pip install is broken atm -> you'll need to use the conda forge version.
 - PyQTAds is only [available for x84_68 systems](https://github.com/conda-forge/pyqtads-feedstock/issues/46). Accordingly Smart-Studio does currntly not run here either (Livenodes and PyQT do tho, so custom interaction tools are possible).
