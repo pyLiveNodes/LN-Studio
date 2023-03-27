@@ -5,6 +5,7 @@ It enables live sensor recording, processing and machine learning for interactiv
 
 ```{eval-rst}
 .. toctree::
+    :caption: Start
     :maxdepth: 2
 
     readme.rst
