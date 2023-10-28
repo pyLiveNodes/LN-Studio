@@ -1,8 +1,8 @@
 from functools import partial
 
-from PyQt5.QtGui import QIntValidator, QDoubleValidator
-from PyQt5.QtWidgets import QPushButton, QFormLayout, QCheckBox, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
+from PySide6.QtGui import QIntValidator, QDoubleValidator
+from PySide6.QtWidgets import QPushButton, QFormLayout, QCheckBox, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QLabel
+from PySide6.QtCore import Signal
 
 def update_node_attr(node, attr, type_cast, val):
     node._set_attr(**{attr: type_cast(val)})
@@ -55,7 +55,7 @@ def type_switch(update_state_fn, key, val):
 
 
 class EditList(QWidget):
-    changed = pyqtSignal(list)
+    changed = Signal(list)
 
     def __init__(self, in_items=[], extendable=True, parent=None, show=True):
         super().__init__(parent)
@@ -119,7 +119,7 @@ class EditList(QWidget):
 
 
 class EditDict(EditList):
-    changed = pyqtSignal(dict)
+    changed = Signal(dict)
 
     def __init__(self, in_items={}, extendable=True, parent=None):
         super().__init__(in_items=in_items, extendable=extendable, parent=parent, show=False)
@@ -146,7 +146,7 @@ class EditDict(EditList):
 
 
 class EditTuple(EditList):
-    changed = pyqtSignal(tuple)
+    changed = Signal(tuple)
 
     def __init__(self, in_items=(), parent=None):
         super().__init__(in_items=in_items, extendable=False, parent=parent, show=False)

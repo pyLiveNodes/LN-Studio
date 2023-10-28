@@ -3,11 +3,11 @@ import logging
 from logging.handlers import QueueHandler
 import os
 
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QHBoxLayout
+from PySide6 import QtCore
+from PySide6.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
 
-from PyQtAds import QtAds
+import PySide6QtAds as QtAds
 
 import multiprocessing as mp
 import threading as th

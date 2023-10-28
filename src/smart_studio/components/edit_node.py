@@ -1,14 +1,14 @@
 import json
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5.QtWidgets import QDialogButtonBox, QDialog, QVBoxLayout, QWidget, QHBoxLayout, QScrollArea, QLabel
-from PyQt5.QtCore import Qt
-from PyQt5.QtCore import pyqtSignal
+from PySide6.QtWidgets import QHBoxLayout
+from PySide6.QtWidgets import QDialogButtonBox, QDialog, QVBoxLayout, QWidget, QHBoxLayout, QScrollArea, QLabel
+from PySide6.QtCore import Qt
+from PySide6.QtCore import Signal
 
 from .edit import EditDict
 
 
 class NodeParameterSetter(QWidget):
-    changed = pyqtSignal(bool)
+    changed = Signal(bool)
 
     def __init__(self, node=None, parent=None):
         super().__init__(parent)
