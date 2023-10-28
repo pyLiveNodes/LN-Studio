@@ -6,10 +6,10 @@ import logging
 import threading as th
 from logging.handlers import QueueHandler
 
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5 import QtCore
+from PySide6.QtWidgets import QHBoxLayout
+from PySide6 import QtCore
 
-from PyQtAds import QtAds
+import PySide6QtAds as QtAds
 
 import multiprocessing as mp
 

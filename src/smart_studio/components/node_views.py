@@ -11,16 +11,16 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from matplotlib import animation
 import matplotlib.pyplot as plt
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import QTimer
+from PySide6 import QtCore
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import QTimer
 
 from vispy import app as vp_app
 import vispy.plot as vp
 from vispy import scene
-vp_app.use_app('pyqt5')
+# vp_app.use_app('PySide6')
 
-from PyQt5.QtWidgets import QSplitter, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from PySide6.QtWidgets import QSplitter, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
 
 from .scroll_label import ScrollLabel
 
@@ -174,7 +174,7 @@ class Vispy_View(QWidget):
         if not isinstance(node, viewer.View_Vispy):
             raise ValueError('Node must be of Type (Vispy) View')
 
-        # self.fig = vp.Fig(size=(400, 300), app="pyqt5", show=False, parent=parent)
+        # self.fig = vp.Fig(size=(400, 300), app="PySide6", show=False, parent=parent)
         # self.fig = vp.Fig(size=(400, 300), show=False, parent=parent)
         self.fig = scene.SceneCanvas(show=False, parent=self, bgcolor='white')
         node_update_fn = node.init_draw(self.fig)

@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from PySide6.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
 
 # class for scrollable label
-# from: https://www.geeksforgeeks.org/pyqt5-scrollable-label/
+# from: https://www.geeksforgeeks.org/PySide6-scrollable-label/
 class ScrollLabel(QScrollArea):
     # constructor
     def __init__(self, keep_bottom=False, *args, **kwargs):

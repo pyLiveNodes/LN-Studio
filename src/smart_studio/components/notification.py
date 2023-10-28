@@ -5,13 +5,13 @@
 from QNotifications import QNotificationArea
 
 from logging.handlers import QueueHandler
-from PyQt5 import QtCore
+from PySide6 import QtCore
 import queue
 import multiprocessing as mp
 import threading as th
-from PyQt5.QtCore import Qt
+from PySide6.QtCore import Qt
 
-from PyQt5 import QtWidgets
+from PySide6 import QtWidgets
 
 import logging
 
@@ -26,7 +26,7 @@ class QToast_Logger(QtWidgets.QWidget):
 
     Note: if you have a better way of doing this, please create a PR! This feels rather hacky
     """
-    notify = QtCore.pyqtSignal(str,str,int, bool)
+    notify = QtCore.Signal(str,str,int, bool)
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
