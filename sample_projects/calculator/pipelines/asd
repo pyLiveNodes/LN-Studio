@@ -1,0 +1,16 @@
+digraph {
+	graph [ratio=fill size="10,10!"]
+	"Display Channel Data [Print_data]" [label="Display Channel Data [Print_data]" shape=trapezium style=rounded]
+	"Display Channel Data_1 [Print_data]" [label="Display Channel Data_1 [Print_data]" shape=trapezium style=rounded]
+	"Display Channel Data_1_1 [Print_data]" [label="Display Channel Data_1_1 [Print_data]" shape=trapezium style=rounded]
+	"Data input [In_function]" [label="Data input [In_function]" shape=invtrapezium style=rounded]
+	"Data input [In_function]" -> "Display Channel Data [Print_data]" [label="Data
+->
+Text"]
+	"Data input [In_function]" -> "Display Channel Data_1 [Print_data]" [label="Channel Names
+->
+Text"]
+	"Data input [In_function]" -> "Display Channel Data_1_1 [Print_data]" [label="Meta
+->
+Text"]
+}

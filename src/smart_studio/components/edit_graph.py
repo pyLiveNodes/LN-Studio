@@ -361,16 +361,15 @@ class QT_Graph_edit(QWidget):
             if len(n.ports_in) == 0 and len(n.output_connections) > 0
         ]
 
-        # if we cannot find a node without inputs, take the first that hase outputs
+        # if we cannot find a node without inputs, take the first that has outputs
         if len(initial_pl_nodes) == 0:
             initial_pl_nodes = [
                 n for n in pl_nodes if len(n.output_connections) > 0
             ]
-
-        # if this is still empty, raise an exception
+      
+        # if this is still empty, take any existing node
         if len(initial_pl_nodes) == 0:
-            # TODO: not sure how much sense this makes, then again, cannot think of a case where you would want to save such a graph, as it can only consist of unconnected nodes...
-            raise Exception('No nodes with outputs in graph, cannot save')
+            initial_pl_nodes = pl_nodes
 
         return initial_pl_nodes[0]
 

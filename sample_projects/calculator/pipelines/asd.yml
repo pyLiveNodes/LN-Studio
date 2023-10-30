@@ -1,0 +1,31 @@
+Data input [In_function]:
+  Config:
+    compute_on: ''
+    emit_at_once: 1
+    function: sin
+    meta:
+      channels:
+      - Channel 1
+      sample_rate: 100
+      targets:
+      - target 1
+    name: Data input
+  Inputs: []
+Display Channel Data [Print_data]:
+  Config:
+    compute_on: ''
+    name: Display Channel Data
+  Inputs:
+  - Data input [In_function].data -> Display Channel Data [Print_data].text
+Display Channel Data_1 [Print_data]:
+  Config:
+    compute_on: ''
+    name: Display Channel Data_1
+  Inputs:
+  - Data input [In_function].channels -> Display Channel Data_1 [Print_data].text
+Display Channel Data_1_1 [Print_data]:
+  Config:
+    compute_on: ''
+    name: Display Channel Data_1_1
+  Inputs:
+  - Data input [In_function].meta -> Display Channel Data_1_1 [Print_data].text
