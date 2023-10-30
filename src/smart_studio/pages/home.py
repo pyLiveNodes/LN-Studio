@@ -1,13 +1,13 @@
 from functools import partial
 import sys
-from PyQt5 import QtWidgets
+from qtpy import QtWidgets
 from glob import glob
 import os
 import shutil
 
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
-from PyQt5.QtCore import Qt, QSize, pyqtSignal
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from qtpy.QtCore import Qt, QSize, Signal
 
 
 class Home(QWidget):
@@ -95,7 +95,7 @@ class Home(QWidget):
 
 
 class Project_Selection(QWidget):
-    selection = pyqtSignal(int)
+    selection = Signal(int)
 
     def __init__(self, projects=[], parent=None):
         super().__init__(parent)
@@ -125,7 +125,7 @@ class Project_Selection(QWidget):
 class Pipline_Selection(QWidget):
     # TODO: figure out how to hold stat...
 
-    clicked = pyqtSignal(str)
+    clicked = Signal(str)
 
     # Adapted from: https://gist.github.com/JokerMartini/538f8262c69c2904fa8f
     def __init__(self, pipelines, parent=None):
@@ -164,10 +164,10 @@ class Pipline_Selection(QWidget):
 
 
 class Selection(QWidget):
-    items_changed = pyqtSignal()
-    item_on_config = pyqtSignal(str)
-    item_on_debug = pyqtSignal(str)
-    item_on_start = pyqtSignal(str)
+    items_changed = Signal()
+    item_on_config = Signal(str)
+    item_on_debug = Signal(str)
+    item_on_start = Signal(str)
 
     def __init__(self, folder_path, pipelines="./pipelines/*.json"):
         super().__init__()

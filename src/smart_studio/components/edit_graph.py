@@ -6,8 +6,8 @@ import itertools
 import traceback
 import numpy as np
 
-from PyQt5.QtWidgets import QHBoxLayout, QWidget, QLabel
-from PyQt5.QtCore import pyqtSignal
+from qtpy.QtWidgets import QHBoxLayout, QWidget, QLabel
+from qtpy.QtCore import Signal
 import graphviz
 
 from livenodes.node import Node
@@ -112,7 +112,7 @@ def attatch_click_cb(node_graphic_ob, cb):
 
 
 class QT_Graph_edit(QWidget):
-    node_selected = pyqtSignal(Node)
+    node_selected = Signal(Node)
 
     def __init__(self, pipeline_path, pipeline=None, node_registry=None, parent=None):
         super().__init__(parent)

@@ -3,9 +3,9 @@ import logging
 from logging.handlers import QueueHandler
 import os
 
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
+from qtpy.QtWidgets import QHBoxLayout
+from qtpy import QtCore
+from qtpy.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
 
 # from PyQtAds import QtAds
 from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)

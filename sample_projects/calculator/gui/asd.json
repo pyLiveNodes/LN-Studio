@@ -57,8 +57,8 @@
         "association_to_node": "Display Channel Data [Print_data]"
       },
       "position": {
-        "x": 337.0,
-        "y": 148.0
+        "x": 282.0,
+        "y": 71.0
       }
     },
     {
@@ -68,8 +68,8 @@
         "association_to_node": "Display Channel Data_1 [Print_data]"
       },
       "position": {
-        "x": 310.0,
-        "y": 255.0
+        "x": 135.0,
+        "y": 317.0
       }
     },
     {
@@ -79,8 +79,8 @@
         "association_to_node": "Display Channel Data_1_1 [Print_data]"
       },
       "position": {
-        "x": 479.0,
-        "y": 257.0
+        "x": 485.0,
+        "y": 170.0
       }
     },
     {

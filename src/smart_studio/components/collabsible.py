@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
+from qtpy import QtCore, QtGui, QtWidgets
+from qtpy.QtWidgets import QApplication, QMainWindow, QFrame, QHBoxLayout, QLabel
 
 # from: https://stackoverflow.com/questions/52615115/how-to-create-collapsible-box-in-pyqt
 class CollapsibleBox(QtWidgets.QWidget):
@@ -42,7 +42,7 @@ class CollapsibleBox(QtWidgets.QWidget):
             QtCore.QPropertyAnimation(self.content_area, b"maximumHeight")
         )
 
-    # @QtCore.pyqtSlot()
+    # @QtCore.Slot()
     def on_pressed(self):
         checked = self.toggle_button.isChecked()
         # self.toggle_button.setArrowType(

@@ -1,23 +1,1114 @@
-2023-10-30 15:12:53,094 | INFO | MainProcess | MainThread | Projects folder: ./sample_projects/*
-2023-10-30 15:12:54,230 | INFO | MainProcess | MainThread | Home Dir: /Users/yale/Repositories/livenodes/smart-studio
-2023-10-30 15:12:54,230 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
-2023-10-30 15:12:57,518 | INFO | MainProcess | MainThread | Running: ./sample_projects/calculator/./pipelines/asd.json
-2023-10-30 15:12:57,519 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator
-2023-10-30 15:12:57,551 | DEBUG | MainProcess | MainThread | ======= Display Channel Data [Print_data] qt emitted signal True
-2023-10-30 15:12:57,551 | DEBUG | MainProcess | MainThread | ======= Display Channel Data_1 [Print_data] qt emitted signal True
-2023-10-30 15:12:57,551 | DEBUG | MainProcess | MainThread | ======= Display Channel Data_1_1 [Print_data] qt emitted signal True
-2023-10-30 15:12:57,568 | INFO | LN-Executor | MainThread | Starting Worker
-2023-10-30 15:12:57,568 | INFO | LN-Executor | MainThread | Starting Worker
-2023-10-30 15:12:59,986 | INFO | MainProcess | MainThread | Stopping Worker
-2023-10-30 15:12:59,986 | INFO | LN-Executor | MainThread | Stopping Worker
-2023-10-30 15:12:59,986 | INFO | LN-Executor | MainThread | Stopping Worker
-2023-10-30 15:13:01,994 | INFO | MainProcess | MainThread | View terminated
-2023-10-30 15:13:01,994 | INFO | MainProcess | MainThread | Terminating draw widgets
-2023-10-30 15:13:01,994 | INFO | MainProcess | MainThread | Stopping Widgets
-2023-10-30 15:13:01,993 | INFO | LN-Executor | MainThread | Worker Stopped
-2023-10-30 15:13:01,994 | INFO | MainProcess | MainThread | Killing Worker
-2023-10-30 15:13:01,994 | INFO | MainProcess | MainThread | Back to Home Screen
-2023-10-30 15:13:01,994 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
-2023-10-30 15:13:02,036 | INFO | MainProcess | MainThread | Ref count old view (Home) 5
-2023-10-30 15:13:02,036 | INFO | MainProcess | MainThread | Nr of views: 1
-2023-10-30 15:13:05,090 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:33:49,131 | INFO | MainProcess | MainThread | Projects folder: ./sample_projects/*
+2023-10-30 15:33:54,807 | INFO | MainProcess | MainThread | Home Dir: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:33:54,808 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:33:56,894 | INFO | MainProcess | MainThread | Running: ./sample_projects/calculator/./pipelines/asd.json
+2023-10-30 15:33:56,895 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator
+2023-10-30 15:33:56,921 | DEBUG | MainProcess | MainThread | ======= Display Channel Data [Print_data] qt emitted signal True
+2023-10-30 15:33:56,921 | DEBUG | MainProcess | MainThread | ======= Display Channel Data_1 [Print_data] qt emitted signal True
+2023-10-30 15:33:56,921 | DEBUG | MainProcess | MainThread | ======= Display Channel Data_1_1 [Print_data] qt emitted signal True
+2023-10-30 15:33:56,932 | INFO | LN-Executor | MainThread | Starting Worker
+2023-10-30 15:33:56,932 | INFO | LN-Executor | MainThread | Starting Worker
+2023-10-30 15:33:59,752 | INFO | MainProcess | MainThread | Stopping Worker
+2023-10-30 15:33:59,752 | INFO | LN-Executor | MainThread | Stopping Worker
+2023-10-30 15:33:59,752 | INFO | LN-Executor | MainThread | Stopping Worker
+2023-10-30 15:34:01,757 | INFO | MainProcess | MainThread | View terminated
+2023-10-30 15:34:01,757 | INFO | MainProcess | MainThread | Terminating draw widgets
+2023-10-30 15:34:01,757 | INFO | MainProcess | MainThread | Stopping Widgets
+2023-10-30 15:34:01,757 | INFO | MainProcess | MainThread | Killing Worker
+2023-10-30 15:34:01,757 | INFO | MainProcess | MainThread | Back to Home Screen
+2023-10-30 15:34:01,757 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:34:01,772 | INFO | MainProcess | MainThread | Ref count old view (Home) 5
+2023-10-30 15:34:01,772 | INFO | MainProcess | MainThread | Nr of views: 1
+2023-10-30 15:34:03,501 | INFO | MainProcess | MainThread | Configuring: ./sample_projects/calculator/./pipelines/asd.json
+2023-10-30 15:34:03,501 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_List_Str: Channel Names>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_List_Str: Annotation>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data 1>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data 2>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Toggle>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Data: Stream>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,504 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_List_Int: File>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Dict: Meta>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Number: Percent>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Any>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Input>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_stringable: Text>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_List_Str: Annotation>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data 1>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data 2>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Toggle>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Data: Stream>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Data: Stream_segs>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,505 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_List_Int: File>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Dict: Meta>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Number: Percent>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Any>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Input>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data 1>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data 2>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Toggle>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Data: Stream>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Data: Stream_segs>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_List_Int: File>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Dict: Meta>
+2023-10-30 15:34:03,506 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Number: Percent>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Any>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Input>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Data 2>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Toggle>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Data>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Data: Stream>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_List_Int: File>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <- <Port_Dict: Meta>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,507 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Any>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Input>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Toggle>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Data>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Data: Stream>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_List_Int: File>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <- <Port_Dict: Meta>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Any>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,508 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Input>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Data>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Data: Stream>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Data: Stream_segs>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_List_Int: File>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Dict: Meta>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Any>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Input>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Data: Stream>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,509 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_List_Int: File>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <- <Port_Dict: Meta>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Any>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Input>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_List_Int: File>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Dict: Meta>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Number: Percent>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Any>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,510 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Input>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_stringable: Text>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_List_Int: File>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Dict: Meta>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Number: Percent>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Any>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Input>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_stringable: Text>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_List_Int: File>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_Dict: Meta>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_Number: Percent>
+2023-10-30 15:34:03,511 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Any>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Input>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_stringable: Text>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,512 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_List_Int: File>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_Dict: Meta>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_Number: Percent>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Any>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Input>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_stringable: Text>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_List_Int: File>
+2023-10-30 15:34:03,513 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1>  <Port_Dict: Meta>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Any>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Input>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_List_Int: File>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2>  <Port_Dict: Meta>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Any>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Input>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_List_Int: File>
+2023-10-30 15:34:03,514 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger>  <Port_Dict: Meta>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Number: Percent>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Any>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Input>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_List_Int: File>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_Dict: Meta>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_Number: Percent>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Any>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Input>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File>  <Port_Dict: Meta>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File>  <Port_Number: Percent>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Any>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,515 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Input>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_Number: Percent>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Any>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Int: Trigger>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Int: Time to Event>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Input>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Sync>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_stringable: Text>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Any>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Input>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,516 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Int: Trigger>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Any: Input>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Any: Input>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_Any: Input>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_Any: Input>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_Any: Input>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_Any: Input>
+2023-10-30 15:34:03,517 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,518 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,518 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Input> <--> <Port_Any: Sync>
+2023-10-30 15:34:03,518 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Input> <--> <Port_stringable: Text>
+2023-10-30 15:34:03,518 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Sync> <--> <Port_stringable: Text>
+2023-10-30 15:34:07,494 | DEBUG | MainProcess | MainThread | initial node used for saving: Data input [In_function]
+2023-10-30 15:34:08,049 | INFO | MainProcess | MainThread | Back to Home Screen
+2023-10-30 15:34:08,049 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:34:08,062 | INFO | MainProcess | MainThread | Ref count old view (Home) 6
+2023-10-30 15:34:08,062 | INFO | MainProcess | MainThread | Nr of views: 1
+2023-10-30 15:34:09,381 | INFO | MainProcess | MainThread | Configuring: ./sample_projects/calculator/./pipelines/asd.json
+2023-10-30 15:34:09,381 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_List_Str: Channel Names>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_List_Str: Annotation>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data 1>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data 2>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Toggle>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Data: Stream>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_List_Int: File>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Dict: Meta>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Number: Percent>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Any>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Input>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_stringable: Text>
+2023-10-30 15:34:09,384 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_List_Str: Annotation>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data 1>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data 2>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Toggle>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Data: Stream>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Data: Stream_segs>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_List_Int: File>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Dict: Meta>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Number: Percent>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Any>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Input>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,385 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data 1>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data 2>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Toggle>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Data: Stream>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Data: Stream_segs>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_List_Int: File>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Dict: Meta>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Number: Percent>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Any>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Input>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Data 2>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Toggle>
+2023-10-30 15:34:09,386 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Data>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Data: Stream>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_List_Int: File>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <- <Port_Dict: Meta>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Any>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Input>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Toggle>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Data>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Data: Stream>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,387 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_List_Int: File>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <- <Port_Dict: Meta>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Any>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Input>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Data>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Data: Stream>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Data: Stream_segs>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_List_Int: File>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Dict: Meta>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Any>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,388 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Input>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Data: Stream>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_List_Int: File>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <- <Port_Dict: Meta>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Any>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Input>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,389 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_List_Int: File>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Dict: Meta>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Number: Percent>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Any>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Input>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_stringable: Text>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_List_Int: File>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Dict: Meta>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Number: Percent>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Any>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,390 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Input>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_stringable: Text>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_List_Int: File>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_Dict: Meta>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_Number: Percent>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Any>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Input>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_stringable: Text>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:09,391 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_List_Int: File>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_Dict: Meta>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_Number: Percent>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Any>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Input>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_stringable: Text>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_List_Int: File>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1>  <Port_Dict: Meta>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Any>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Input>
+2023-10-30 15:34:09,392 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_List_Int: File>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2>  <Port_Dict: Meta>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Any>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Input>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_List_Int: File>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger>  <Port_Dict: Meta>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Number: Percent>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Any>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,393 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Input>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_List_Int: File>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_Dict: Meta>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_Number: Percent>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Any>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Input>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File>  <Port_Dict: Meta>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File>  <Port_Number: Percent>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Any>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,394 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Input>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_Number: Percent>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Any>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Int: Trigger>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Int: Time to Event>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Input>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Sync>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_stringable: Text>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Any>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Input>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Int: Trigger>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,395 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Any: Input>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Any: Input>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_Any: Input>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_Any: Input>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:09,396 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_Any: Input>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_Any: Input>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Input> <--> <Port_Any: Sync>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Input> <--> <Port_stringable: Text>
+2023-10-30 15:34:09,397 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Sync> <--> <Port_stringable: Text>
+2023-10-30 15:34:10,517 | DEBUG | MainProcess | MainThread | initial node used for saving: Data input [In_function]
+2023-10-30 15:34:10,836 | INFO | MainProcess | MainThread | Back to Home Screen
+2023-10-30 15:34:10,836 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:34:10,849 | INFO | MainProcess | MainThread | Ref count old view (Home) 6
+2023-10-30 15:34:10,849 | INFO | MainProcess | MainThread | Nr of views: 1
+2023-10-30 15:34:15,629 | INFO | MainProcess | MainThread | Configuring: ./sample_projects/calculator/./pipelines/asd.json
+2023-10-30 15:34:15,629 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator
+2023-10-30 15:34:15,631 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_List_Str: Channel Names>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_List_Str: Annotation>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data 1>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data 2>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Toggle>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Data>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Data: Stream>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_List_Int: File>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Dict: Meta>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data>  <Port_Number: Percent>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Any>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Input>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Data> -> <Port_stringable: Text>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_List_Str: Annotation>
+2023-10-30 15:34:15,632 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data 1>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data 2>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Toggle>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Data>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Data: Stream>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Data: Stream_segs>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_List_Int: File>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Dict: Meta>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_Number: Percent>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Any>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Input>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,633 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Channel Names> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data 1>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data 2>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Toggle>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Data>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Data: Stream>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Data: Stream_segs>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_List_Int: File>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Dict: Meta>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_Number: Percent>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Any>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Input>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Str: Annotation> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Data 2>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Toggle>
+2023-10-30 15:34:15,634 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Data>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Data: Stream>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_List_Int: File>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <- <Port_Dict: Meta>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Any>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Input>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Toggle>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Data>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Data: Stream>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,635 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_List_Int: File>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <- <Port_Dict: Meta>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Any>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Input>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Data>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Data: Stream>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Data: Stream_segs>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_List_Int: File>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <- <Port_Dict: Meta>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Any>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,636 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Input>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Toggle> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Data: Stream>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_List_Int: File>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <- <Port_Dict: Meta>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Any>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Input>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Data> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Data: Stream_segs>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,637 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_List_Int: File>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Dict: Meta>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream>  <Port_Number: Percent>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Any>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Input>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream> -> <Port_stringable: Text>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Matrix_Number: Sim>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_List_Int: File>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Dict: Meta>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs>  <Port_Number: Percent>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Any>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,638 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Input>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Data: Stream_segs> -> <Port_stringable: Text>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Matrix_Number: SSM>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_List_Int: File>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_Dict: Meta>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim>  <Port_Number: Percent>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Any>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,639 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Input>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: Sim> -> <Port_stringable: Text>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger 1>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_List_Int: File>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_Dict: Meta>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM>  <Port_Number: Percent>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Any>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Input>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_Matrix_Number: SSM> -> <Port_stringable: Text>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Trigger 2>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_List_Int: File>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1>  <Port_Dict: Meta>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Any>
+2023-10-30 15:34:15,640 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Input>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Trigger>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_List_Int: File>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2>  <Port_Dict: Meta>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Any>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Input>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger>  <Port_ListUnique_Str: Channel Names>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_List_Int: File>
+2023-10-30 15:34:15,641 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger>  <Port_Dict: Meta>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Number: Percent>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Any>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Input>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Trigger> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_List_Int: File>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_Dict: Meta>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_Number: Percent>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Any>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Input>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_ListUnique_Str: Channel Names> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File>  <Port_Dict: Meta>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File>  <Port_Number: Percent>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Any>
+2023-10-30 15:34:15,642 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Input>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_List_Int: File> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_Number: Percent>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Any>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Int: Trigger>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Int: Time to Event>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta>  <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Input>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_Any: Sync>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Dict: Meta> -> <Port_stringable: Text>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Any>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Input>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,643 | INFO | MainProcess | MainThread | Allowed directions: <Port_Number: Percent> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Int: Trigger>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Any: Input>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Any> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Int: Time to Event>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Any: Input>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Trigger> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data NP>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_Any: Input>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_Int: Time to Event> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_np_compatible: Data 1>
+2023-10-30 15:34:15,644 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_Any: Input>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data NP> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_np_compatible: Data 2>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_Any: Input>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 1> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_Any: Input>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_np_compatible: Data 2> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Input> <--> <Port_Any: Sync>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Input> <--> <Port_stringable: Text>
+2023-10-30 15:34:15,645 | INFO | MainProcess | MainThread | Allowed directions: <Port_Any: Sync> <--> <Port_stringable: Text>
+2023-10-30 15:34:16,838 | DEBUG | MainProcess | MainThread | initial node used for saving: Data input [In_function]
+2023-10-30 15:34:17,174 | INFO | MainProcess | MainThread | Back to Home Screen
+2023-10-30 15:34:17,175 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:34:17,189 | INFO | MainProcess | MainThread | Ref count old view (Home) 6
+2023-10-30 15:34:17,189 | INFO | MainProcess | MainThread | Nr of views: 1
+2023-10-30 15:34:17,829 | INFO | MainProcess | MainThread | Running: ./sample_projects/calculator/./pipelines/asd.json
+2023-10-30 15:34:17,829 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator
+2023-10-30 15:34:17,849 | DEBUG | MainProcess | MainThread | ======= Display Channel Data [Print_data] qt emitted signal True
+2023-10-30 15:34:17,849 | DEBUG | MainProcess | MainThread | ======= Display Channel Data_1 [Print_data] qt emitted signal True
+2023-10-30 15:34:17,849 | DEBUG | MainProcess | MainThread | ======= Display Channel Data_1_1 [Print_data] qt emitted signal True
+2023-10-30 15:34:17,859 | INFO | LN-Executor | MainThread | Starting Worker
+2023-10-30 15:34:17,859 | INFO | LN-Executor | MainThread | Starting Worker
+2023-10-30 15:34:28,870 | INFO | MainProcess | MainThread | Stopping Worker
+2023-10-30 15:34:28,870 | INFO | LN-Executor | MainThread | Stopping Worker
+2023-10-30 15:34:28,870 | INFO | LN-Executor | MainThread | Stopping Worker
+2023-10-30 15:34:30,876 | INFO | MainProcess | MainThread | View terminated
+2023-10-30 15:34:30,876 | INFO | MainProcess | MainThread | Terminating draw widgets
+2023-10-30 15:34:30,876 | INFO | MainProcess | MainThread | Stopping Widgets
+2023-10-30 15:34:30,876 | INFO | MainProcess | MainThread | Killing Worker
+2023-10-30 15:34:30,876 | INFO | MainProcess | MainThread | Back to Home Screen
+2023-10-30 15:34:30,876 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-10-30 15:34:30,891 | INFO | MainProcess | MainThread | Ref count old view (Home) 5
+2023-10-30 15:34:30,891 | INFO | MainProcess | MainThread | Nr of views: 1
+2023-10-30 15:34:33,096 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio

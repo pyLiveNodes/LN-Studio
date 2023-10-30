@@ -6,8 +6,8 @@ import logging
 import threading as th
 from logging.handlers import QueueHandler
 
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5 import QtCore
+from qtpy.QtWidgets import QHBoxLayout
+from qtpy import QtCore
 
 # from PyQtAds import QtAds
 from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
