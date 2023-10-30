@@ -1,6 +1,35 @@
+import configparser
+import logging
+import json
+import os
+logger = logging.getLogger()
+
+from appdirs import user_data_dir
+
+appname = "SmartStudio"
+appauthor = "Yale Hartmann"
+path_to_state = os.path.join(user_data_dir(appname, appauthor), 'state.ini')
+os.makedirs(user_data_dir(appname, appauthor), exist_ok=True)
+logger.info(f'Using state file {path_to_state}')
+
+STATE = configparser.ConfigParser()
+try:
+    STATE.read(path_to_state)
+except:
+    logger.exception(f'Could not open state. Creating new ({path_to_state})')
+
+def write_state():
+    with open(path_to_state, 'w') as f:
+        STATE.write(f)
+
+def state_parse(json_str):
+    return json.loads(json_str)
+
+# ==============================================================================
+
 import json 
 from functools import reduce
-import os
+
 
 class State():
     def __init__(self, values={}):

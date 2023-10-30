@@ -16,14 +16,11 @@ class Home(QWidget):
                  onstart,
                  onconfig,
                  ondebug,
-                 projects='./projects/*',
+                 projects,
                  parent=None):
         super().__init__(parent)
 
-        # This is somewhat fucked up...
-        # self.setStyleSheet("Home {background-image: url('./static/connected_human.jpg'); background-repeat: no-repeat; background-position: center;}")
-
-        self.projects = glob(projects)
+        self.projects = projects
 
         self.onstart = onstart
         self.onconfig = onconfig
@@ -31,11 +28,9 @@ class Home(QWidget):
 
         self.qt_selection = None
 
-        # projects = Project_Selection(projects=self.projects)
         self.qt_projects = Project_Selection(self.projects)
         self.qt_projects.selection.connect(self.select_project_by_id)
 
-        # TODO: figure out how to fucking get this to behave as i woudl like it, ie no fucking rescales to fit because thats what images should do not fucking buttons
         self.qt_grid = QVBoxLayout(self)
         self.qt_grid.addWidget(self.qt_projects)
         self.qt_grid.addStretch(1)
@@ -43,21 +38,25 @@ class Home(QWidget):
 
         self.select_project_by_id(0)
 
-    def get_state(self):
-        return { \
-            "cur_project": self.cur_project,
-            "cur_pipeline": self.qt_selection.get_selected()
-        }
+    def save_state(self, config):
+        config["cur_project"] = self.cur_project
+        config["cur_pipeline"] = self.qt_selection.get_selected()
 
-    def set_state(self, cur_project, cur_pipeline=None):
+    def set_state(self, config):
+        cur_project = config["cur_project"] # has to be always present
+        cur_pipeline = config.get("cur_pipeline", None)
+        
+        # Set UI State
+        id = 0
         if cur_project in self.projects:
             id = self.projects.index(cur_project)
-        else:
-            id = 0
+
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
+        
         if cur_pipeline is not None:
             self.qt_selection.set_selected(cur_pipeline)
+        
 
     def _on_start(self, pipeline_path):
         self.onstart(self.cur_project,
@@ -76,7 +75,7 @@ class Home(QWidget):
 
     def select_project(self, project):
         self.cur_project = project
-        pipelines = f"{self.cur_project}/pipelines/*.json"
+        pipelines = f"{self.cur_project}/*.json"
 
         qt_selection = Selection(pipelines=pipelines)
         qt_selection.items_changed.connect(self.refresh_selection)

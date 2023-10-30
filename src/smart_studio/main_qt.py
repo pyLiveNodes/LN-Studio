@@ -18,7 +18,7 @@ import os
 
 import logging
 
-from smart_studio.utils.state import State
+from smart_studio.utils.state import State, STATE, write_state, state_parse
 # from smart_studio.components.notification import QToast_Logger
 
 def noop(*args, **kwargs):
@@ -89,13 +89,16 @@ class MainWindow(QtWidgets.QMainWindow):
         return super().closeEvent(event)
 
     def _set_state(self, view):
-        if hasattr(view,
-                   'set_state') and self.state_handler.val_exists(view.__class__.__name__):
-            view.set_state(**self.state_handler.val_get(view.__class__.__name__))
+        section_name = f"View.{view.__class__.__name__}"
+        if hasattr(view, 'set_state') and self.state_handler.has_section(section_name):
+            view.set_state(self.state_handler[section_name])
 
     def _save_state(self, view):
-        if hasattr(view, 'get_state'):
-            self.state_handler.val_set(view.__class__.__name__, view.get_state())
+        section_name = f"View.{view.__class__.__name__}"
+        if hasattr(view, 'save_state'):
+            if not self.state_handler.has_section(section_name):
+                self.state_handler[section_name] = {}
+            view.save_state(self.state_handler[section_name])
 
     def return_home(self):
         cur = self.central_widget.currentWidget()
@@ -210,7 +213,6 @@ def main():
     # === Load environment variables ========================================================================
     import os
     import shutil
-    from dotenv import dotenv_values
 
     logger_root = logging.getLogger()
     logger_root.setLevel(logging.DEBUG)
@@ -237,24 +239,8 @@ def main():
     logger = logging.getLogger('smart-studio')
     home_dir = os.getcwd()
 
-    path_to_state = os.path.join(home_dir, 'smart-state.json')
-    try:
-        smart_state = State.load(path_to_state)
-    except Exception as err:
-        logger.exception(f'Could not open state, saving file and creating new ({path_to_state}.backup)')
-        shutil.copyfile(path_to_state, f"{path_to_state}.backup")
-        smart_state = State({})
-
-    env_vars = {key.lower(): val for key, val in {
-        **dotenv_values(".env"),
-        **os.environ
-    }.items() if key in ['PROJECTS', 'MODULES']}
-
-    smart_state.val_merge(env_vars)
-
     env_projects = smart_state.val_get('projects', './projects/*')
-    # env_modules = json.loads(smart_state.val_get('modules', '[ "livenodes.nodes", "livenodes.plux"]'))
-
+    TODO
     logger.info(f'Projects folder: {env_projects}')
 
     # === Fix MacOS specifics ========================================================================
@@ -275,12 +261,14 @@ def main():
     app = QtWidgets.QApplication([])
     # print(smart_state)
     # print(smart_state.space_get('views'))
-    def onclose():
-        smart_state.val_set('window_size', (window.size().width(), window.size().height()))
-        smart_state.save(path_to_state)
+    window_state = STATE['Window']
 
-    window = MainWindow(state_handler=smart_state.space_get('views'), projects=env_projects, home_dir=home_dir, _on_close_cb=onclose)
-    window.resize(*smart_state.val_get('window_size', (1400, 820)))
+    def onclose():
+        window_state['window_size'] = [window.size().width(), window.size().height()]
+        write_state()
+
+    window = MainWindow(state_handler=STATE, projects=env_projects, home_dir=home_dir, _on_close_cb=onclose)
+    window.resize(*state_parse(window_state.get('window_size', '[1400, 820]')))
     window.show()
 
     # chdir because of relative imports in style.qss ....

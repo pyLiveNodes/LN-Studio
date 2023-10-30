@@ -16,13 +16,14 @@ dependencies = [
     "matplotlib>=3.5.1",
     "vispy>=0.10.0",
     "PyQt5>=5.12.3",
-    "python-dotenv>=0.20.0",
     "qtpynodeeditor>=0.2.0",
     "python_qnotifications>=2.0.6",
+    "appdirs>=1.4.4"
 ]
 
 [project.scripts]
 smart_studio = "smart_studio.main_qt:main"
+smart_studio_migrate = "smart_studio.migrate:migrate"
 
 [project.optional-dependencies]
 dev = [
