@@ -10,8 +10,7 @@ from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5 import QtCore
 
 # from PyQtAds import QtAds
-from qtpydocking import (DockManager, DockWidget, DockWidgetArea,
-                         ToggleViewActionMode, DockWidgetFeature)
+from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
 
 import multiprocessing as mp
 

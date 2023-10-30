@@ -8,8 +8,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
 
 # from PyQtAds import QtAds
-from qtpydocking import (DockManager, DockWidget, DockWidgetArea,
-                         ToggleViewActionMode, DockWidgetFeature)
+from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
 
 import multiprocessing as mp
 import threading as th
