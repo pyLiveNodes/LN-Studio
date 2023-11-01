@@ -18,7 +18,7 @@ QT_VERSION_TUPLE = tuple(int(i) for i in QT_VERSION.split('.')[:3])
 del QT_VERSION
 
 
-LINUX = sys.platform.startswith('linux')
+LINUX = sys.platform.startswith('linux') or sys.platform.startswith('darwin')
 
 
 def emit_top_level_event_for_widget(widget: Optional['DockWidget'],

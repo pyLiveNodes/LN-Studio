@@ -60,7 +60,7 @@ class FloatingDockContainerPrivate:
         self.set_state(DragState.inactive)
         if not self.drop_container:
             logger.debug('title_mouse_release_event: no drop container?')
-            return
+            return False
 
         dock_manager = self.dock_manager
         dock_area_overlay = dock_manager.dock_area_overlay()
@@ -79,6 +79,7 @@ class FloatingDockContainerPrivate:
                              'x %s y %s w %s h %s',
                              rect.x(), rect.y(),
                              rect.width(), rect.height())
+                return False
             else:
                 public = self.public
                 frame_width = (public.frameSize().width() -
@@ -98,6 +99,7 @@ class FloatingDockContainerPrivate:
 
         container_overlay.hide_overlay()
         dock_area_overlay.hide_overlay()
+        return True
 
     def update_drop_overlays(self, global_pos: QPoint):
         '''
@@ -313,6 +315,7 @@ class FloatingDockContainer(FloatingWidgetBase):
         drag_state : DragState
         mouse_event_handler : QWidget
         '''
+        logger.debug('FloatingDockContainer.start_floating')
         self.resize(size)
         self.d.set_state(drag_state)
         self.d.drag_start_mouse_position = drag_start_mouse_pos
@@ -337,6 +340,7 @@ class FloatingDockContainer(FloatingWidgetBase):
         size : QSize
         mouse_event_handler : QWidget
         '''
+        logger.debug('FloatingDockContainer.start_dragging')
         self.start_floating(drag_start_mouse_pos, size,
                             DragState.floating_widget, mouse_event_handler)
 
@@ -348,6 +352,7 @@ class FloatingDockContainer(FloatingWidgetBase):
         logger.debug('FloatingDockContainer.finish_dragging')
         if LINUX:
             self.setAttribute(Qt.WA_X11NetWmWindowTypeDock, False)
+            self.raise_()
             self.setWindowOpacity(1)
             self.activateWindow()
             if self.d.mouse_event_handler is not None:
@@ -454,6 +459,7 @@ class FloatingDockContainer(FloatingWidgetBase):
         value : bool
         '''
         state = self.d.dragging_state
+        # logger.debug(f"mouse pressed: {state == DragState.mouse_pressed}, floating: {state == DragState.floating_widget}, event_type:{e.type()}")
         if state == DragState.inactive:
             # Normally we would check here, if the left mouse button is pressed.
             # But from QT version 5.12.2 on the mouse events from
@@ -561,10 +567,12 @@ class FloatingDockContainer(FloatingWidgetBase):
         if event.type() == QEvent.MouseButtonRelease:
             logger.debug('MouseButtonRelease')
             if self.d.dragging_state == DragState.floating_widget:
-                qapp = QApplication.instance()
-                qapp.removeEventFilter(self)
                 logger.debug('FloatingWidget.eventFilter QEvent.MouseButtonRelease')
-                self.finish_dragging()
+                if self.finish_dragging(): 
+                    # if finished dragging and ended up on a valid dock area, assume we did successfully dock
+                    # otherwise assume we did not dock and therefore should keep the event filter 
+                    qapp = QApplication.instance()
+                    qapp.removeEventFilter(self)
                 self.d.title_mouse_release_event()
 
         return False
