@@ -1,13 +1,13 @@
 from functools import partial
 import sys
-from PyQt5 import QtWidgets
+from qtpy import QtWidgets
 from glob import glob
 import os
 import shutil
 
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
-from PyQt5.QtCore import Qt, QSize, pyqtSignal
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from qtpy.QtCore import Qt, QSize, Signal
 
 
 class Home(QWidget):
@@ -78,7 +78,7 @@ class Home(QWidget):
         self.cur_project = project
         pipelines = f"{self.cur_project}/pipelines/*.json"
 
-        qt_selection = Selection(pipelines=pipelines)
+        qt_selection = Selection(folder_path=self.cur_project, pipelines=pipelines)
         qt_selection.items_changed.connect(self.refresh_selection)
         qt_selection.item_on_start.connect(self._on_start)
         qt_selection.item_on_config.connect(self._on_config)
@@ -95,7 +95,7 @@ class Home(QWidget):
 
 
 class Project_Selection(QWidget):
-    selection = pyqtSignal(int)
+    selection = Signal(int)
 
     def __init__(self, projects=[], parent=None):
         super().__init__(parent)
@@ -125,7 +125,7 @@ class Project_Selection(QWidget):
 class Pipline_Selection(QWidget):
     # TODO: figure out how to hold stat...
 
-    clicked = pyqtSignal(str)
+    clicked = Signal(str)
 
     # Adapted from: https://gist.github.com/JokerMartini/538f8262c69c2904fa8f
     def __init__(self, pipelines, parent=None):
@@ -164,15 +164,17 @@ class Pipline_Selection(QWidget):
 
 
 class Selection(QWidget):
-    items_changed = pyqtSignal()
-    item_on_config = pyqtSignal(str)
-    item_on_debug = pyqtSignal(str)
-    item_on_start = pyqtSignal(str)
+    items_changed = Signal()
+    item_on_config = Signal(str)
+    item_on_debug = Signal(str)
+    item_on_start = Signal(str)
 
-    def __init__(self, pipelines="./pipelines/*.json"):
+    def __init__(self, folder_path, pipelines="./pipelines/*.json"):
         super().__init__()
 
         pipelines = sorted(glob(pipelines))
+
+        self.folder_path = folder_path
 
         # combobox1 = QComboBox()
         # print(pipelines)
@@ -183,6 +185,9 @@ class Selection(QWidget):
 
         selection = Pipline_Selection(pipelines)
         selection.clicked.connect(self.text_changed)
+
+        new = QPushButton("New")
+        new.clicked.connect(self.onnew)
 
         copy = QPushButton("Copy")
         copy.clicked.connect(self.oncopy)
@@ -205,6 +210,7 @@ class Selection(QWidget):
         buttons.addWidget(delete)
         buttons.addStretch(1)
         buttons.addWidget(self.selected)
+        buttons.addWidget(new)
         buttons.addWidget(copy)
         buttons.addWidget(debug)
         buttons.addWidget(config)
@@ -246,6 +252,16 @@ class Selection(QWidget):
             path.replace('/pipelines/', '/gui/').replace('.json', '_dock.xml'),
         ]
         return [x for x in possible_files if os.path.exists(x)]
+
+
+    def onnew(self):
+        text, ok = QInputDialog.getText(self, 'Create new', f'Name:')
+        if ok:
+            new_name = f"{self.folder_path}/pipelines/{text}.json"
+            if os.path.exists(new_name):
+                raise Exception('Pipeline already exists')
+            open(new_name, 'w').close()
+            self.items_changed.emit()
 
     def oncopy(self):
         name = self.text.split('/')[-1].replace('.json', '')
