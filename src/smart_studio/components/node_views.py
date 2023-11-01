@@ -11,16 +11,16 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from matplotlib import animation
 import matplotlib.pyplot as plt
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import QTimer
+from qtpy import QtCore
+from qtpy.QtWidgets import QWidget
+from qtpy.QtCore import QTimer
 
 from vispy import app as vp_app
 import vispy.plot as vp
 from vispy import scene
 vp_app.use_app('pyqt5')
 
-from PyQt5.QtWidgets import QSplitter, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from qtpy.QtWidgets import QSplitter, QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
 
 from .scroll_label import ScrollLabel
 

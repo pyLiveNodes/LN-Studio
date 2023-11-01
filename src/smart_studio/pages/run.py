@@ -6,10 +6,11 @@ import logging
 import threading as th
 from logging.handlers import QueueHandler
 
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5 import QtCore
+from qtpy.QtWidgets import QHBoxLayout
+from qtpy import QtCore
 
-from PyQtAds import QtAds
+# from PyQtAds import QtAds
+from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
 
 import multiprocessing as mp
 
@@ -33,10 +34,11 @@ class Run(Page):
         self.nodes = [n for n in Node.discover_graph(pipeline) if isinstance(n, viewer.View)]
         self.draw_widgets = list(map(partial(node_view_mapper, self), self.nodes))
         
-        QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
+        # QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
         
         self.layout = QHBoxLayout(self)
-        self.dock_manager = QtAds.CDockManager(self)
+        # self.dock_manager = QtAds.CDockManager(self)
+        self.dock_manager = DockManager(self)
         self.layout.addWidget(self.dock_manager)
         self.widgets = []
 
@@ -44,24 +46,27 @@ class Run(Page):
             logger.debug(' '.join(map(str, text)))
 
         for widget, node in zip(self.draw_widgets, self.nodes):
-            dock_widget = QtAds.CDockWidget(node.name)
+            # dock_widget = QtAds.CDockWidget(node.name)
+            dock_widget = DockWidget(node.name)
             self.widgets.append(dock_widget)
-            dock_widget.viewToggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
-            dock_widget.setWidget(widget)
-            dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
+            dock_widget.view_toggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
+            dock_widget.set_widget(widget)
+            # dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
 
-            self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock_widget)
+            # self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock_widget)
+            self.dock_manager.add_dock_widget(DockWidgetArea.right, dock_widget)
 
         if os.path.exists(self.pipeline_gui_path):
             with open(self.pipeline_gui_path, 'r') as f:
-                self.dock_manager.restoreState(QtCore.QByteArray(f.read().encode()))
+                self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
 
         # restore might remove some of the newly added widgets -> add it back in here
         for widget, node in zip(self.widgets, self.nodes):
-            if widget.isClosed():
+            if widget.is_closed():
                 # print('----', str(node))
-                widget.setClosedState(False)
-                self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
+                widget.set_closed_state(False)
+                # self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
+                self.dock_manager.add_dock_widget(DockWidgetArea.right, widget)
 
 
         # === Start pipeline =================================================
@@ -134,7 +139,7 @@ class Run(Page):
 
     def save(self):
         with open(self.pipeline_gui_path, 'w') as f:
-            f.write(self.dock_manager.saveState().data().decode())
+            f.write(self.dock_manager.save_state().data().decode())
 
     def _create_paths(self, pipeline_path):
         self.pipeline_path = pipeline_path
