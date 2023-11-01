@@ -1,6 +1,6 @@
 import json
 
-from PyQt5.QtWidgets import QSplitter, QHBoxLayout
+from qtpy.QtWidgets import QSplitter, QHBoxLayout
 
 from smart_studio.components.edit_node import NodeConfigureContainer
 from smart_studio.components.edit_graph import QT_Graph_edit
