@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-from PyQt5.QtWidgets import QWidget
+from qtpy.QtWidgets import QWidget
 from .utils import noop
 import logging
 

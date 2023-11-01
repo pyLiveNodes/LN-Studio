@@ -14,8 +14,8 @@
     "projects": "./sample_projects/*",
     "modules": "[ \"livenodes.nodes\", \"livenodes.plux\"]",
     "window_size": [
-      1400,
-      820
+      1393,
+      816
     ]
   }
 }

@@ -6,8 +6,8 @@ import itertools
 import traceback
 import numpy as np
 
-from PyQt5.QtWidgets import QHBoxLayout, QWidget, QLabel
-from PyQt5.QtCore import pyqtSignal
+from qtpy.QtWidgets import QHBoxLayout, QWidget, QLabel
+from qtpy.QtCore import Signal
 import graphviz
 
 from livenodes.node import Node
@@ -112,7 +112,7 @@ def attatch_click_cb(node_graphic_ob, cb):
 
 
 class QT_Graph_edit(QWidget):
-    node_selected = pyqtSignal(Node)
+    node_selected = Signal(Node)
 
     def __init__(self, pipeline_path, pipeline=None, node_registry=None, parent=None):
         super().__init__(parent)
@@ -361,16 +361,15 @@ class QT_Graph_edit(QWidget):
             if len(n.ports_in) == 0 and len(n.output_connections) > 0
         ]
 
-        # if we cannot find a node without inputs, take the first that hase outputs
+        # if we cannot find a node without inputs, take the first that has outputs
         if len(initial_pl_nodes) == 0:
             initial_pl_nodes = [
                 n for n in pl_nodes if len(n.output_connections) > 0
             ]
-
-        # if this is still empty, raise an exception
+      
+        # if this is still empty, take any existing node
         if len(initial_pl_nodes) == 0:
-            # TODO: not sure how much sense this makes, then again, cannot think of a case where you would want to save such a graph, as it can only consist of unconnected nodes...
-            raise Exception('No nodes with outputs in graph, cannot save')
+            initial_pl_nodes = pl_nodes
 
         return initial_pl_nodes[0]
 
