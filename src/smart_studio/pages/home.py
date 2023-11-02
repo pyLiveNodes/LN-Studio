@@ -6,79 +6,127 @@ import os
 import shutil
 
 from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel, QFileDialog
 from qtpy.QtCore import Qt, QSize, Signal
+from smart_studio.utils.state import STATE
 
+from livenodes import REGISTRY
 
+# TODO: clean this whole thing up, the different selectors etc feels messy atm
+# specifically or because the config and init are not working well together atm
 class Home(QWidget):
 
     def __init__(self,
                  onstart,
                  onconfig,
                  ondebug,
-                 projects='./projects/*',
+                 projects,
                  parent=None):
         super().__init__(parent)
 
-        # This is somewhat fucked up...
-        # self.setStyleSheet("Home {background-image: url('./static/connected_human.jpg'); background-repeat: no-repeat; background-position: center;}")
+        self.projects = projects
 
-        self.projects = glob(projects)
+        if len(self.projects) == 0:
+            file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+            self.projects = [file]
+            self.selected_folder = file
+            STATE['View.Home']['folders'] = [file]
+            STATE['View.Home']["selected_folder"] = file
+
 
         self.onstart = onstart
         self.onconfig = onconfig
         self.ondebug = ondebug
 
         self.qt_selection = None
+        self.qt_projects = None
 
-        # projects = Project_Selection(projects=self.projects)
-        self.qt_projects = Project_Selection(self.projects)
-        self.qt_projects.selection.connect(self.select_project_by_id)
+        self.update_projects(self.projects)
 
-        # TODO: figure out how to fucking get this to behave as i woudl like it, ie no fucking rescales to fit because thats what images should do not fucking buttons
+        self.header_layout = QHBoxLayout()
+        self.header_layout.addStretch(1)
+        self.header_layout.addWidget(InstalledPackages())
+
         self.qt_grid = QVBoxLayout(self)
         self.qt_grid.addWidget(self.qt_projects)
+        self.qt_grid.addLayout(self.header_layout)
+        # self.qt_grid.addWidget(self.qt_projects)
+        # self.qt_grid.addWidget(InstalledPackages())
         self.qt_grid.addStretch(1)
         # l1.setFixedWidth(80)
 
         self.select_project_by_id(0)
 
-    def get_state(self):
-        return { \
-            "cur_project": self.cur_project,
-            "cur_pipeline": self.qt_selection.get_selected()
-        }
 
-    def set_state(self, cur_project, cur_pipeline=None):
-        if cur_project in self.projects:
-            id = self.projects.index(cur_project)
-        else:
-            id = 0
+    def update_projects(self, projects):
+        qt_projects = Project_Selection(projects)
+        qt_projects.selection.connect(self.select_project_by_id)
+        qt_projects.remove.connect(self.remove_project)
+        qt_projects.add.connect(self.add_project)
+    
+        if self.qt_projects is not None:
+            self.qt_grid.removeWidget(self.qt_projects)
+            self.qt_projects.deleteLater()
+            self.qt_grid.insertWidget(0, qt_projects)
+        self.qt_projects = qt_projects
+
+    def remove_project(self, project):
+        self.projects.remove(self.projects[project])
+        self.update_projects(self.projects)
+        newly_selected = min(project, len(self.projects) - 1)
+        print("selected", newly_selected, self.projects)
+        self.qt_projects._set_selected(newly_selected)
+        self.select_project_by_id(newly_selected)
+
+    def add_project(self, project):
+        self.projects.append(project)
+        self.update_projects(self.projects)
+        newly_selected = max(len(self.projects) - 1, 0)
+        print("selected", newly_selected, self.projects)
+        self.qt_projects._set_selected(newly_selected)
+        self.select_project_by_id(newly_selected)
+
+    def save_state(self, config):
+        config['folders'] = self.projects
+        config["selected_folder"] = self.selected_folder
+        config["selected_file"] = self.qt_selection.get_selected()
+
+    def set_state(self, config):       
+        selected_folder = config.get("selected_folder", None)
+        selected_file = config.get("selected_file", None)
+        
+        # Set UI State
+        id = 0
+        if selected_folder in self.projects:
+            id = self.projects.index(selected_folder)
+
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
-        if cur_pipeline is not None:
-            self.qt_selection.set_selected(cur_pipeline)
+        
+        if selected_file is not None:
+            self.qt_selection.set_selected(selected_file)
+        
 
     def _on_start(self, pipeline_path):
-        self.onstart(self.cur_project,
-                     pipeline_path.replace(self.cur_project, '.'))
+        self.onstart(self.selected_folder,
+                     pipeline_path.replace(self.selected_folder, '.'))
 
     def _on_config(self, pipeline_path):
-        self.onconfig(self.cur_project,
-                      pipeline_path.replace(self.cur_project, '.'))
+        self.onconfig(self.selected_folder,
+                      pipeline_path.replace(self.selected_folder, '.'))
 
     def _on_debug(self, pipeline_path):
-        self.ondebug(self.cur_project,
-                      pipeline_path.replace(self.cur_project, '.'))
+        self.ondebug(self.selected_folder,
+                      pipeline_path.replace(self.selected_folder, '.'))
 
     def refresh_selection(self):
-        self.select_project(self.cur_project)
+        self.select_project(self.selected_folder)
 
     def select_project(self, project):
-        self.cur_project = project
-        pipelines = f"{self.cur_project}/pipelines/*.json"
+        self.selected_folder = project
+        pipelines = f"{self.selected_folder}/*.yml"
 
-        qt_selection = Selection(folder_path=self.cur_project, pipelines=pipelines)
+        qt_selection = Selection(folder_path=self.selected_folder, pipelines=pipelines)
         qt_selection.items_changed.connect(self.refresh_selection)
         qt_selection.item_on_start.connect(self._on_start)
         qt_selection.item_on_config.connect(self._on_config)
@@ -94,19 +142,46 @@ class Home(QWidget):
         self.select_project(self.projects[project_id])
 
 
+class InstalledPackages(QWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        self.packages = REGISTRY.installed_packages()
+
+        l2 = QVBoxLayout(self)
+        l2.addWidget(QLabel('Installed Packages:'))
+        item_list_str = '</li><li>'.join(self.packages)
+        print(f"<html><ul><li>{item_list_str}</li></ul></html>")
+        packages_str = QLabel(f"<html><ul><li>{item_list_str}</li></ul></html>")
+        l2.addWidget(packages_str)
+
+
 class Project_Selection(QWidget):
     selection = Signal(int)
+    remove = Signal(int)
+    add = Signal(str)
 
     def __init__(self, projects=[], parent=None):
         super().__init__(parent)
+        
+        self.projects = projects
 
         self.combo = QComboBox()
         self.combo.addItems(projects)
         self.combo.currentIndexChanged.connect(self._selected)
 
+        add = QPushButton("+")
+        add.clicked.connect(self.onadd)
+
+        remove = QPushButton("-")
+        remove.clicked.connect(self.onremove)
+
         l2 = QHBoxLayout(self)
         # l2.addWidget(QLabel('S-MART'))
+        l2.addWidget(remove)
         l2.addWidget(self.combo)
+        l2.addWidget(add)
         l2.addStretch(2)
         # for project in projects:
         #     l2.addWidget(QLabel(project))
@@ -114,6 +189,16 @@ class Project_Selection(QWidget):
         # l1 = QVBoxLayout(self)
         # l1.addChildLayout(l2)
         # l1.addStretch(2)
+
+
+    def onremove(self):
+        if len(self.projects) == 1:
+            return
+        self.remove.emit(self.combo.currentIndex())
+
+    def onadd(self):
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.add.emit(file)
 
     def _set_selected(self, id):
         self.combo.setCurrentIndex(id)
@@ -123,8 +208,6 @@ class Project_Selection(QWidget):
 
 
 class Pipline_Selection(QWidget):
-    # TODO: figure out how to hold stat...
-
     clicked = Signal(str)
 
     # Adapted from: https://gist.github.com/JokerMartini/538f8262c69c2904fa8f
@@ -148,10 +231,9 @@ class Pipline_Selection(QWidget):
         self.mainLayout.addWidget(self.scroll_area)
 
         for itm in pipelines:
-            icon = QIcon(
-                itm.replace('/pipelines/', '/gui/').replace('.json', '.png'))
+            icon = QIcon(itm.replace('.yml', '.png'))
             button = QToolButton()
-            button.setText(itm.split('/')[-1].replace('.json', ''))
+            button.setText(itm.split('/')[-1].replace('.yml', ''))
             button.setIcon(icon)
             button.setToolButtonStyle(
                 Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
@@ -169,7 +251,7 @@ class Selection(QWidget):
     item_on_debug = Signal(str)
     item_on_start = Signal(str)
 
-    def __init__(self, folder_path, pipelines="./pipelines/*.json"):
+    def __init__(self, folder_path, pipelines="*.yml"):
         super().__init__()
 
         pipelines = sorted(glob(pipelines))
@@ -185,15 +267,15 @@ class Selection(QWidget):
 
         selection = Pipline_Selection(pipelines)
         selection.clicked.connect(self.text_changed)
+        
+        delete = QPushButton("Delete")
+        delete.clicked.connect(self.ondelete)
 
         new = QPushButton("New")
         new.clicked.connect(self.onnew)
 
         copy = QPushButton("Copy")
         copy.clicked.connect(self.oncopy)
-
-        delete = QPushButton("Delete")
-        delete.clicked.connect(self.ondelete)
 
         start = QPushButton("Start")
         start.clicked.connect(self.onstart)
@@ -208,15 +290,16 @@ class Selection(QWidget):
 
         buttons = QHBoxLayout()
         buttons.addWidget(delete)
-        buttons.addStretch(1)
         buttons.addWidget(self.selected)
+        buttons.addStretch(1)
         buttons.addWidget(new)
         buttons.addWidget(copy)
-        buttons.addWidget(debug)
         buttons.addWidget(config)
+        buttons.addWidget(debug)
         buttons.addWidget(start)
 
-        self.set_selected(pipelines[0])
+        if len(pipelines) > 0:
+            self.set_selected(pipelines[0])
 
         self.setProperty("cssClass", "home")
 
@@ -244,31 +327,28 @@ class Selection(QWidget):
 
 
     def _associated_files(self, path):
-        possible_files = [
-            path,
-            path.replace('.json', '.png'),
-            path.replace('/pipelines/', '/gui/'),
-            path.replace('/pipelines/', '/gui/').replace('.json', '.png'),
-            path.replace('/pipelines/', '/gui/').replace('.json', '_dock.xml'),
-        ]
-        return [x for x in possible_files if os.path.exists(x)]
+        return list(glob.glob(f"{path.replace('.yml', '')}*"))
 
 
     def onnew(self):
         text, ok = QInputDialog.getText(self, 'Create new', f'Name:')
         if ok:
-            new_name = f"{self.folder_path}/pipelines/{text}.json"
+            new_name = f"{self.folder_path}/{text}.yml"
             if os.path.exists(new_name):
                 raise Exception('Pipeline already exists')
+            if len(text) == 0:
+                raise Exception('Name cannot be empty')
             open(new_name, 'w').close()
             self.items_changed.emit()
 
     def oncopy(self):
-        name = self.text.split('/')[-1].replace('.json', '')
+        name = self.text.split('/')[-1].replace('.yml', '')
         text, ok = QInputDialog.getText(self, f'Copy {name}', 'New name:')
         if ok:
             if os.path.exists(self.text.replace(name, text)):
                 raise Exception('Pipeline already exists')
+            if len(text) == 0:
+                raise Exception('Name cannot be empty')
             for f in self._associated_files(self.text):
                 shutil.copyfile(f, f.replace(name, text))
             self.items_changed.emit()

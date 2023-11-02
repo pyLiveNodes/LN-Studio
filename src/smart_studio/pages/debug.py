@@ -174,8 +174,4 @@ class Debug(Page):
 
     def _create_paths(self, pipeline_path):
         self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '_dock_debug.xml')
-
-        gui_folder = '/'.join(self.pipeline_gui_path.split('/')[:-1])
-        if not os.path.exists(gui_folder):
-            os.mkdir(gui_folder)
+        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock_debug.xml')

@@ -143,15 +143,4 @@ class Run(Page):
 
     def _create_paths(self, pipeline_path):
         self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '.xml')
-
-        # Deprecation and renaming notice here
-        old_path = pipeline_path.replace('/pipelines/', '/gui/', 1).replace('.json', '_dock.xml')
-        if os.path.exists(old_path):
-            self.logger.warn('_dock.xml is old format. renaming to just .xml')
-            os.rename(old_path, self.pipeline_gui_path)
-
-
-        gui_folder = '/'.join(self.pipeline_gui_path.split('/')[:-1])
-        if not os.path.exists(gui_folder):
-            os.mkdir(gui_folder)
+        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock.xml')
