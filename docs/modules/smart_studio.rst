@@ -18,7 +18,7 @@ Submodules
 smart\_studio.main\_qt module
 -----------------------------
 
-.. automodule:: smart_studio.main_qt
+.. automodule:: smart_studio.main
    :members:
    :undoc-members:
    :show-inheritance:

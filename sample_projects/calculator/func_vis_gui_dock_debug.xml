@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtAdvancedDockingSystem Version="0" Containers="1">
+    <Container Floating="0">
+        <Splitter Orientation="-" Count="3">
+            <Splitter Orientation="|" Count="2">
+                <Area Tabs="1" Current="Display Channel Data">
+                    <Widget Name="Display Channel Data" Closed="0"/>
+                </Area>
+                <Area Tabs="1" Current="Display Channel Data_1">
+                    <Widget Name="Display Channel Data_1" Closed="0"/>
+                </Area>
+                <Sizes>361 360 </Sizes>
+            </Splitter>
+            <Area Tabs="1" Current="Draw Data Lines">
+                <Widget Name="Draw Data Lines" Closed="0"/>
+            </Area>
+            <Area Tabs="1" Current="Data input">
+                <Widget Name="Data input" Closed="0"/>
+            </Area>
+            <Sizes>278 548 256 </Sizes>
+        </Splitter>
+    </Container>
+</QtAdvancedDockingSystem>

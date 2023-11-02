@@ -17,8 +17,18 @@ Yale
 I recommend basing your code on the [example project repo](https://gitlab.csl.uni-bremen.de/livenodes/example-project) and adjusting what you need. The project also includes a guide on how to setup Smart-Studio.
 
 To install Smart-Studio:
-1. Install PyQTAds: `conda install -c conda-forge pyqtads`
-2. install Smart-Studio via pip (or conda if you like): `pip install smart_studio --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
+1. Install Smart-Studio via pip (or conda if you like): `pip install smart_studio --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
+2. Run `smart_studio`.
+3. Select your livenodes folder (or create a new one).
+4. Have fun!
+
+For Development:
+1. install Smart-Studio via pip (or conda if you like): `pip install -e . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
+
+## Migration from 0.9.4
+
+Moving from 0.9 to 0.10 includes refactoring of the project structure. The following steps are necessary to migrate your project:
+In your **project folder (the one where smart_state.json is located)**, run `smart_studio_migrate` to migrate your project to the new structure.`
 
 ### Docs
 
@@ -26,5 +36,4 @@ You can find the docs [here](https://livenodes.pages.csl.uni-bremen.de/smart-stu
 
 ### Restrictions
 
-- PyQTAds pip install is broken atm -> you'll need to use the conda forge version.
-- PyQTAds is only [available for x84_68 systems](https://github.com/conda-forge/pyqtads-feedstock/issues/46). Accordingly Smart-Studio does currntly not run here either (Livenodes and PyQT do tho, so custom interaction tools are possible).
+None, I switched the conda forge PyQtAds bindings to the [pure python implementation](https://github.com/klauer/qtpydocking/tree/master) of Ken Lauer so that we can use smart_studio with pure pip. 
