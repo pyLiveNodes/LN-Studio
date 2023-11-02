@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import glob
+import shutil
 from livenodes import Node
 logger = logging.getLogger()
 
@@ -21,7 +22,7 @@ def migrate():
             'size': old_state['values']['window_size'],
         }
 
-        folders = [f"{f}/pipelines" for f in glob.glob(os.path.abspath(os.path.join(home_dir, old_state['values']['projects']))) if os.path.isdir(os.path.abspath(f))]
+        folders = [f for f in glob.glob(os.path.abspath(os.path.join(home_dir, old_state['values']['projects']))) if os.path.isdir(os.path.abspath(f))]
         STATE['View.Home'] = {
             'selected_folder': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_project'])),
             'selected_file': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_pipeline'].replace('/pipelines/', '/'))),
@@ -33,7 +34,7 @@ def migrate():
         # === Migrate pipelines ================================================================
         logger.info('Migrating Pipelines')
         for folder in folders:
-            files = glob.glob(os.path.join(folder, '*.json'))
+            files = glob.glob(f"{folder}/pipelines/*.json")
             for f in files:
                 pipeline = Node.load(f, ignore_connection_errors=False)
                 os.remove(f)
@@ -50,7 +51,7 @@ def migrate():
                 pipeline.dot_graph_full(transparent_bg=True, filename=f_new, file_type='png')
 
                 # move gui files
-                gui_short = f'f"{f_new}/gui/'
+                gui_short = f_short.replace('/pipelines/', '/gui/')
                 if os.path.exists(f"{gui_short}.json"):
                     os.rename(f"{gui_short}.json", f"{f_new}_gui.json")
                 if os.path.exists(f"{gui_short}_dock.xml"):
@@ -58,8 +59,15 @@ def migrate():
                 if os.path.exists(f"{gui_short}_dock_debug.xml"):
                     os.rename(f"{gui_short}_dock_debug.xml", f"{f_new}_gui_dock_debug.xml")
             
-            os.remove(os.path.dirname(gui_short))
-            os.remove(os.path.dirname(f"{f_new}/logs/"))
+            # remove old folders
+            shutil.rmtree(os.path.dirname(f_short))
+            shutil.rmtree(os.path.dirname(gui_short), ignore_errors=True)
+            shutil.rmtree(os.path.dirname(f_short.replace('/pipelines/', '/logs/')), ignore_errors=True)
 
+        # === Clean old files ================================================================
         os.remove(os.path.join(home_dir, 'smart-state.json'))
+        if os.path.exists(os.path.join(home_dir, 'smart_studio.log')):
+            os.remove(os.path.join(home_dir, 'smart_studio.log'))
+        if os.path.exists(os.path.join(home_dir, 'smart_studio.full.log')):
+            os.remove(os.path.join(home_dir, 'smart_studio.full.log'))
 
