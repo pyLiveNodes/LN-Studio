@@ -75,7 +75,7 @@ class Home(QWidget):
 
     def select_project(self, project):
         self.selected_folder = project
-        pipelines = f"{self.selected_folder}/*.json"
+        pipelines = f"{self.selected_folder}/*.yml"
 
         qt_selection = Selection(folder_path=self.selected_folder, pipelines=pipelines)
         qt_selection.items_changed.connect(self.refresh_selection)
@@ -145,10 +145,9 @@ class Pipline_Selection(QWidget):
         self.mainLayout.addWidget(self.scroll_area)
 
         for itm in pipelines:
-            icon = QIcon(
-                itm.replace('/pipelines/', '/gui/').replace('.json', '.png'))
+            icon = QIcon(itm.replace('.yml', '.png'))
             button = QToolButton()
-            button.setText(itm.split('/')[-1].replace('.json', ''))
+            button.setText(itm.split('/')[-1].replace('.yml', ''))
             button.setIcon(icon)
             button.setToolButtonStyle(
                 Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
@@ -166,7 +165,7 @@ class Selection(QWidget):
     item_on_debug = Signal(str)
     item_on_start = Signal(str)
 
-    def __init__(self, folder_path, pipelines="./pipelines/*.json"):
+    def __init__(self, folder_path, pipelines="*.yml"):
         super().__init__()
 
         pipelines = sorted(glob(pipelines))
@@ -241,20 +240,13 @@ class Selection(QWidget):
 
 
     def _associated_files(self, path):
-        possible_files = [
-            path,
-            path.replace('.json', '.png'),
-            path.replace('/pipelines/', '/gui/'),
-            path.replace('/pipelines/', '/gui/').replace('.json', '.png'),
-            path.replace('/pipelines/', '/gui/').replace('.json', '_dock.xml'),
-        ]
-        return [x for x in possible_files if os.path.exists(x)]
+        return list(glob.glob(f"{path.replace('.yml', '')}*"))
 
 
     def onnew(self):
         text, ok = QInputDialog.getText(self, 'Create new', f'Name:')
         if ok:
-            new_name = f"{self.folder_path}/{text}.json"
+            new_name = f"{self.folder_path}/{text}.yml"
             if os.path.exists(new_name):
                 raise Exception('Pipeline already exists')
             if len(text) == 0:
@@ -263,7 +255,7 @@ class Selection(QWidget):
             self.items_changed.emit()
 
     def oncopy(self):
-        name = self.text.split('/')[-1].replace('.json', '')
+        name = self.text.split('/')[-1].replace('.yml', '')
         text, ok = QInputDialog.getText(self, f'Copy {name}', 'New name:')
         if ok:
             if os.path.exists(self.text.replace(name, text)):

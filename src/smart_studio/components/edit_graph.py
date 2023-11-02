@@ -201,7 +201,7 @@ class QT_Graph_edit(QWidget):
 
     def _create_paths(self, pipeline_path):
         self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui.yml', 1)
+        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui.json', 1)
 
 
     def _create_known_classes(self, node_registry):
@@ -396,12 +396,11 @@ class QT_Graph_edit(QWidget):
         # Node.load(self.pipeline_path)
 
         # loadable file format
-        pipeline.save(self.pipeline_path)
-        # human readable file format
-        pipeline.save(self.pipeline_path, compact=True, extension='yml')
+        pipeline_base = self.pipeline_path.replace('.yml', '', 1)
+        pipeline.save(pipeline_base, extension='yml')
 
         try:
-            pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=self.pipeline_gui_path.replace('.json', ''), file_type='png')
-            pipeline.dot_graph_full(transparent_bg=False, filename=self.pipeline_path.replace('.json', ''), file_type='pdf')
+            pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=pipeline_base, file_type='png')
+            pipeline.dot_graph_full(transparent_bg=True, filename=pipeline_base, file_type='pdf')
         except graphviz.backend.execute.ExecutableNotFound as err:
             logger.exception('Could not create dot graph. Executable not found.')
