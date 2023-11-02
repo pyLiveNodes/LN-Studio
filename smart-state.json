@@ -5,7 +5,7 @@
       "values": {
         "Home": {
           "cur_project": "./sample_projects/calculator",
-          "cur_pipeline": "./sample_projects/calculator/pipelines/playback_vis.json"
+          "cur_pipeline": "./sample_projects/calculator/pipelines/func_vis.json"
         }
       }
     }
