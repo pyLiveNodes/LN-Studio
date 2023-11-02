@@ -229,11 +229,11 @@ def main():
     window_state = STATE['Window']
 
     def onclose():
-        window_state['window_size'] = [window.size().width(), window.size().height()]
+        window_state['size'] = [window.size().width(), window.size().height()]
         write_state()
 
     window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
-    window.resize(*window_state.get('window_size', (1400, 820)))
+    window.resize(*window_state.get('size', (1400, 820)))
     window.show()
 
     # chdir because of relative imports in style.qss ....

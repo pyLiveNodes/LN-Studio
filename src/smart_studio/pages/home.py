@@ -6,10 +6,12 @@ import os
 import shutil
 
 from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel
+from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel, QFileDialog
 from qtpy.QtCore import Qt, QSize, Signal
+from smart_studio.utils.state import STATE
 
-
+# TODO: clean this whole thing up, the different selectors etc feels messy atm
+# specifically or because the config and init are not working well together atm
 class Home(QWidget):
 
     def __init__(self,
@@ -22,14 +24,22 @@ class Home(QWidget):
 
         self.projects = projects
 
+        if len(self.projects) == 0:
+            file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+            self.projects = [file]
+            self.selected_folder = file
+            STATE['View.Home']['folders'] = [file]
+            STATE['View.Home']["selected_folder"] = file
+
+
         self.onstart = onstart
         self.onconfig = onconfig
         self.ondebug = ondebug
 
         self.qt_selection = None
+        self.qt_projects = None
 
-        self.qt_projects = Project_Selection(self.projects)
-        self.qt_projects.selection.connect(self.select_project_by_id)
+        self.update_projects(self.projects)
 
         self.qt_grid = QVBoxLayout(self)
         self.qt_grid.addWidget(self.qt_projects)
@@ -38,12 +48,42 @@ class Home(QWidget):
 
         self.select_project_by_id(0)
 
+
+    def update_projects(self, projects):
+        qt_projects = Project_Selection(projects)
+        qt_projects.selection.connect(self.select_project_by_id)
+        qt_projects.remove.connect(self.remove_project)
+        qt_projects.add.connect(self.add_project)
+    
+        if self.qt_projects is not None:
+            self.qt_grid.removeWidget(self.qt_projects)
+            self.qt_projects.deleteLater()
+            self.qt_grid.insertWidget(0, qt_projects)
+        self.qt_projects = qt_projects
+
+    def remove_project(self, project):
+        self.projects.remove(self.projects[project])
+        self.update_projects(self.projects)
+        newly_selected = min(project, len(self.projects) - 1)
+        print("selected", newly_selected, self.projects)
+        self.qt_projects._set_selected(newly_selected)
+        self.select_project_by_id(newly_selected)
+
+    def add_project(self, project):
+        self.projects.append(project)
+        self.update_projects(self.projects)
+        newly_selected = max(len(self.projects) - 1, 0)
+        print("selected", newly_selected, self.projects)
+        self.qt_projects._set_selected(newly_selected)
+        self.select_project_by_id(newly_selected)
+
     def save_state(self, config):
+        config['folders'] = self.projects
         config["selected_folder"] = self.selected_folder
         config["selected_file"] = self.qt_selection.get_selected()
 
-    def set_state(self, config):
-        selected_folder = config["selected_folder"] # has to be always present
+    def set_state(self, config):       
+        selected_folder = config.get("selected_folder", None)
         selected_file = config.get("selected_file", None)
         
         # Set UI State
@@ -95,17 +135,29 @@ class Home(QWidget):
 
 class Project_Selection(QWidget):
     selection = Signal(int)
+    remove = Signal(int)
+    add = Signal(str)
 
     def __init__(self, projects=[], parent=None):
         super().__init__(parent)
+        
+        self.projects = projects
 
         self.combo = QComboBox()
         self.combo.addItems(projects)
         self.combo.currentIndexChanged.connect(self._selected)
 
+        add = QPushButton("+")
+        add.clicked.connect(self.onadd)
+
+        remove = QPushButton("-")
+        remove.clicked.connect(self.onremove)
+
         l2 = QHBoxLayout(self)
         # l2.addWidget(QLabel('S-MART'))
+        l2.addWidget(remove)
         l2.addWidget(self.combo)
+        l2.addWidget(add)
         l2.addStretch(2)
         # for project in projects:
         #     l2.addWidget(QLabel(project))
@@ -113,6 +165,16 @@ class Project_Selection(QWidget):
         # l1 = QVBoxLayout(self)
         # l1.addChildLayout(l2)
         # l1.addStretch(2)
+
+
+    def onremove(self):
+        if len(self.projects) == 1:
+            return
+        self.remove.emit(self.combo.currentIndex())
+
+    def onadd(self):
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.add.emit(file)
 
     def _set_selected(self, id):
         self.combo.setCurrentIndex(id)
@@ -181,15 +243,15 @@ class Selection(QWidget):
 
         selection = Pipline_Selection(pipelines)
         selection.clicked.connect(self.text_changed)
+        
+        delete = QPushButton("Delete")
+        delete.clicked.connect(self.ondelete)
 
         new = QPushButton("New")
         new.clicked.connect(self.onnew)
 
         copy = QPushButton("Copy")
         copy.clicked.connect(self.oncopy)
-
-        delete = QPushButton("Delete")
-        delete.clicked.connect(self.ondelete)
 
         start = QPushButton("Start")
         start.clicked.connect(self.onstart)
@@ -204,15 +266,16 @@ class Selection(QWidget):
 
         buttons = QHBoxLayout()
         buttons.addWidget(delete)
-        buttons.addStretch(1)
         buttons.addWidget(self.selected)
+        buttons.addStretch(1)
         buttons.addWidget(new)
         buttons.addWidget(copy)
-        buttons.addWidget(debug)
         buttons.addWidget(config)
+        buttons.addWidget(debug)
         buttons.addWidget(start)
 
-        self.set_selected(pipelines[0])
+        if len(pipelines) > 0:
+            self.set_selected(pipelines[0])
 
         self.setProperty("cssClass", "home")
 

@@ -26,6 +26,7 @@ try:
     SETTINGS.read(path_to_settings)
 except:
     logger.exception(f'Could not open settings. Creating new ({path_to_settings})')
+    open(path_to_settings, 'w').close()
 
 def write_settings():
     with open(path_to_settings, 'w') as f:
@@ -38,7 +39,12 @@ def settings_parse(json_str):
 if not os.path.exists(path_to_state):
     logger.info(f'Creating new state file ({path_to_state})')
     with open(path_to_state, 'w') as f:
-        yaml.dump({}, f)
+        yaml.dump({
+            'View.Home': {
+                'folders': []
+            },
+            'Window': {}
+        }, f)
 
 with open(path_to_state, 'r') as file:
     STATE = yaml.safe_load(file)

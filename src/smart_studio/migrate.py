@@ -48,7 +48,7 @@ def migrate():
                 f_new = f_short.replace('/pipelines/', '/')
                 pipeline.save(f_new, extension='yml')
                 pipeline.dot_graph_full(transparent_bg=True, filename=f_new, file_type='pdf')
-                pipeline.dot_graph_full(transparent_bg=True, filename=f_new, file_type='png')
+                pipeline.dot_graph_full(transparent_bg=True, filename=f_new, file_type='png', edge_labels=False)
 
                 # move gui files
                 gui_short = f_short.replace('/pipelines/', '/gui/')
