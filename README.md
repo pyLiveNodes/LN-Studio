@@ -25,6 +25,11 @@ To install Smart-Studio:
 For Development:
 1. install Smart-Studio via pip (or conda if you like): `pip install -e . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
 
+## Migration from 0.9.4
+
+Moving from 0.9 to 0.10 includes refactoring of the project structure. The following steps are necessary to migrate your project:
+In your **project folder (the one where smart_state.json is located)**, run `smart_studio_migrate` to migrate your project to the new structure.`
+
 ### Docs
 
 You can find the docs [here](https://livenodes.pages.csl.uni-bremen.de/smart-studio/index.html).
