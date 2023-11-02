@@ -35,7 +35,6 @@ from .dock_splitter import DockSplitter
 from .dock_widget import DockWidget
 from .dock_widget_tab import DockWidgetTab
 
-
 __all__ = [
     '__version__',
     'DockAreaLayout',

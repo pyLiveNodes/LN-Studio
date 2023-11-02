@@ -1,69 +1,72 @@
-import json 
-from functools import reduce
+import configparser
+import logging
+import json
 import os
+import yaml
+logger = logging.getLogger()
 
-class State():
-    def __init__(self, values={}):
-        self.__spaces = {}
-        self.__values = values
+from appdirs import user_data_dir
 
-    def space_create(self, name, values={}):
-        if name in self.__spaces:
-            raise ValueError('Space already exists')
-        self.__spaces[name] = State(values=values)
-        return self.__spaces[name]
-    
-    def space_add(self, name, state):
-        if name in self.__spaces:
-            raise ValueError('Space already exists')
-        self.__spaces[name] = state
+appname = "SmartStudio"
+appauthor = "Yale Hartmann"
+path_to_settings = os.path.join(user_data_dir(appname, appauthor), 'settings.ini')
+path_to_state = os.path.join(user_data_dir(appname, appauthor), 'state.yml')
+path_to_log_smart = os.path.join(user_data_dir(appname, appauthor), 'smart_studio.log')
+path_to_log_ln = os.path.join(user_data_dir(appname, appauthor), 'livenodes.log')
 
-    def space_get(self, name, fallback={}):
-        if name not in self.__spaces:
-            return self.space_create(name, values=fallback)
-        return self.__spaces.get(name)
+os.makedirs(user_data_dir(appname, appauthor), exist_ok=True)
 
-    def __repr__(self):
-        return '{values: ' + ','.join(self.__values.keys()) + 'spaces: ' + ','.join(self.__spaces.keys()) + '}'
+logger.info(f'Using settings file {path_to_settings}')
+logger.info(f'Using state file {path_to_state}')
+logger.info(f'Using log files {path_to_log_smart}, {path_to_log_ln}')
 
-    def val_merge(self, *args):
-        # merges all dicts that are passed as arguments into the current values
-        # later dicts overwrite earlier ones
-        # self.__values is maintained
-        self.__values = reduce(lambda cur, nxt: {**nxt, **cur}, reversed([*args, self.__values]), {})
+# === Settings ==============================================================================
+SETTINGS = configparser.ConfigParser()
+try:
+    SETTINGS.read(path_to_settings)
+except:
+    logger.exception(f'Could not open settings. Creating new ({path_to_settings})')
+    open(path_to_settings, 'w').close()
 
-    def val_exists(self, key):
-        return key in self.__values
+def write_settings():
+    with open(path_to_settings, 'w') as f:
+        SETTINGS.write(f)
 
-    def val_get(self, key, fallback=None):
-        if key not in self.__values and fallback is not None:
-            self.__values[key] = fallback
-        return self.__values[key]
+def settings_parse(json_str):
+    return json.loads(json_str)
 
-    def val_set(self, key, val):
-        self.__values[key] = val
+# === State ==============================================================================
+if not os.path.exists(path_to_state):
+    logger.info(f'Creating new state file ({path_to_state})')
+    with open(path_to_state, 'w') as f:
+        yaml.dump({
+            'View.Home': {
+                'folders': []
+            },
+            'Window': {}
+        }, f)
 
-    def dict_to(self):
-        return {
-            'spaces': {key: val.dict_to() for key, val in self.__spaces.items()},
-            'values': self.__values
-        }
+with open(path_to_state, 'r') as file:
+    STATE = yaml.safe_load(file)
 
-    @staticmethod
-    def dict_from(dct):
-        state = State(dct.get('values', {}))
-        for key, space in dct.get('spaces', {}).items():
-            state.space_add(key, State.dict_from(space))
-        return state
+def write_state():
+    with open(path_to_state, 'w') as f:
+        yaml.dump(STATE, f)
 
-    def save(self, path):
-        with open(path, 'w') as f:
-            json.dump(self.dict_to(), f, indent=2)
 
-    @staticmethod
-    def load(path):
-        if os.path.exists(path):
-            with open(path, 'r') as f:
-                space = json.load(f)
-                return State.dict_from(space)
-        return State({})
+# === LOG ==============================================================================
+import logging 
+
+logger_smart = logging.getLogger("smart-studio")
+logger_smart_file_handler = logging.FileHandler(path_to_log_smart, mode='w')
+logger_smart_file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
+logger_smart_file_handler.setFormatter(formatter)
+logger_smart.addHandler(logger_smart_file_handler)
+
+logger_ln = logging.getLogger("livenodes")
+logger_ln_file_handler = logging.FileHandler(path_to_log_ln, mode='w')
+logger_ln_file_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
+logger_ln_file_handler.setFormatter(formatter)
+logger_ln.addHandler(logger_ln_file_handler)
