@@ -23,8 +23,8 @@ def migrate():
 
         folders = [f"{f}/pipelines" for f in glob.glob(os.path.abspath(os.path.join(home_dir, old_state['values']['projects']))) if os.path.isdir(os.path.abspath(f))]
         STATE['View.Home'] = {
-            'selected_folder': os.path.abspath(home_dir, old_state['spaces']['views']['values']['Home']['selected_folder']),
-            'selected_file': os.path.abspath(home_dir, old_state['spaces']['views']['values']['Home']['selected_file'].replace('/pipelines/', '/')),
+            'selected_folder': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_project'])),
+            'selected_file': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_pipeline'].replace('/pipelines/', '/'))),
             'folders': folders
         }
 
