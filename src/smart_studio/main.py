@@ -18,7 +18,7 @@ import os
 
 import logging
 
-from smart_studio.utils.state import State, STATE, write_state, state_parse
+from smart_studio.utils.state import STATE, SETTINGS, write_state
 # from smart_studio.components.notification import QToast_Logger
 
 def noop(*args, **kwargs):
@@ -27,7 +27,7 @@ def noop(*args, **kwargs):
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, state_handler, parent=None, projects='./projects/*', home_dir=os.getcwd(), _on_close_cb=noop):
+    def __init__(self, state_handler, parent=None, home_dir=os.getcwd(), _on_close_cb=noop):
         super(MainWindow, self).__init__(parent)
 
         self.logger = logging.getLogger('smart-studio')
@@ -46,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.widget_home = Home(onconfig=self.onconfig,
                                 onstart=self.onstart,
                                 ondebug=self.ondebug,
-                                projects=projects)
+                                projects=state_handler['View.Home']['folders'])
         self.central_widget.addWidget(self.widget_home)
         # self.resized.connect(self.widget_home.refresh_selection)
 
@@ -90,13 +90,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def _set_state(self, view):
         section_name = f"View.{view.__class__.__name__}"
-        if hasattr(view, 'set_state') and self.state_handler.has_section(section_name):
+        if hasattr(view, 'set_state') and section_name in self.state_handler:
             view.set_state(self.state_handler[section_name])
 
     def _save_state(self, view):
         section_name = f"View.{view.__class__.__name__}"
         if hasattr(view, 'save_state'):
-            if not self.state_handler.has_section(section_name):
+            if not section_name in self.state_handler:
                 self.state_handler[section_name] = {}
             view.save_state(self.state_handler[section_name])
 
@@ -120,22 +120,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'Running: {project_path}/{pipeline_path}')
         self.logger.info(f'CWD: {os.getcwd()}')
 
-        log_folder = './logs'
-        log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
-
-        if not os.path.exists(log_folder):
-            os.mkdir(log_folder)
-
-        logger_ln = logging.getLogger('livenodes')
-        self.logging_handler = logging.FileHandler(log_file)
-        # The time here is actually correct, as record creation time is used (not time of formatting)
-        # see: https://docs.python.org/3/library/logging.html#logging.Formatter.formatTime
-        formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
-        self.logging_handler.setFormatter(formatter)
-        self.logging_handler.setLevel(logging.INFO)
-        logger_ln.addHandler(self.logging_handler)
-
         try:
+            # TODO: open dialog on connection errors
             pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
             # TODO: make these logs project dependent as well
             widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
@@ -146,26 +132,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            logger_ln.exception('Could not load pipeline. Staying home')
+            self.logger.exception('Could not load pipeline. Staying home')
             self.stop()
             os.chdir(self.home_dir)
-            logger_ln.info(f'CWD: {os.getcwd()}')
+            self.logger.info(f'CWD: {os.getcwd()}')
 
     def ondebug(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
         self.logger.info(f'Debugging: {project_path}/{pipeline_path}')
         self.logger.info(f'CWD: {os.getcwd()}')
-
-        log_folder = './logs'
-        log_file = f"{log_folder}/{datetime.datetime.fromtimestamp(time.time())}"
-
-        if not os.path.exists(log_folder):
-            os.mkdir(log_folder)
-
-        logger_ln = logging.getLogger('livenodes')
-        self.logging_handler = logging.FileHandler(log_file)
-        logger_ln.addHandler(self.logging_handler)
 
         try:
             pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
@@ -178,10 +154,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self._set_state(widget_run)
         except Exception as err:
-            logger_ln.exception('Could not load pipeline. Staying home')
+            self.logger.exception('Could not load pipeline. Staying home')
             self.stop()
             os.chdir(self.home_dir)
-            logger_ln.info(f'CWD: {os.getcwd()}')
+            self.logger.info(f'CWD: {os.getcwd()}')
 
 
     def onconfig(self, project_path, pipeline_path):
@@ -217,7 +193,6 @@ class MainWindow(QtWidgets.QMainWindow):
 def main():
     # === Load environment variables ========================================================================
     import os
-    import shutil
 
     logger_root = logging.getLogger()
     logger_root.setLevel(logging.DEBUG)
@@ -228,25 +203,10 @@ def main():
     logger_stdout_handler.setFormatter(formatter)
     logger_root.addHandler(logger_stdout_handler)
 
-    logger_file_handler = logging.FileHandler('smart_studio.full.log', mode='w')
-    logger_file_handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(name)s | %(asctime)s | %(levelname)s | %(message)s')
-    logger_file_handler.setFormatter(formatter)
-    logger_root.addHandler(logger_file_handler)
-
-    logger_smart = logging.getLogger("smart-studio")
-    logger_smart_file_handler = logging.FileHandler('smart_studio.log', mode='w')
-    logger_smart_file_handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
-    logger_smart_file_handler.setFormatter(formatter)
-    logger_smart.addHandler(logger_smart_file_handler)
-
     logger = logging.getLogger('smart-studio')
     home_dir = os.getcwd()
 
-    env_projects = smart_state.val_get('projects', './projects/*')
-    TODO
-    logger.info(f'Projects folder: {env_projects}')
+    logger.info(f"Projects folders: {STATE['View.Home']['folders']}")
 
     # === Fix MacOS specifics ========================================================================
     # this fix is for macos (https://docs.python.org/3.8/library/multiprocessing.html#contexts-and-start-methods)
@@ -272,8 +232,8 @@ def main():
         window_state['window_size'] = [window.size().width(), window.size().height()]
         write_state()
 
-    window = MainWindow(state_handler=STATE, projects=env_projects, home_dir=home_dir, _on_close_cb=onclose)
-    window.resize(*state_parse(window_state.get('window_size', '[1400, 820]')))
+    window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
+    window.resize(*window_state.get('window_size', (1400, 820)))
     window.show()
 
     # chdir because of relative imports in style.qss ....

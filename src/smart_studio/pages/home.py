@@ -39,45 +39,45 @@ class Home(QWidget):
         self.select_project_by_id(0)
 
     def save_state(self, config):
-        config["cur_project"] = self.cur_project
-        config["cur_pipeline"] = self.qt_selection.get_selected()
+        config["selected_folder"] = self.selected_folder
+        config["selected_file"] = self.qt_selection.get_selected()
 
     def set_state(self, config):
-        cur_project = config["cur_project"] # has to be always present
-        cur_pipeline = config.get("cur_pipeline", None)
+        selected_folder = config["selected_folder"] # has to be always present
+        selected_file = config.get("selected_file", None)
         
         # Set UI State
         id = 0
-        if cur_project in self.projects:
-            id = self.projects.index(cur_project)
+        if selected_folder in self.projects:
+            id = self.projects.index(selected_folder)
 
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
         
-        if cur_pipeline is not None:
-            self.qt_selection.set_selected(cur_pipeline)
+        if selected_file is not None:
+            self.qt_selection.set_selected(selected_file)
         
 
     def _on_start(self, pipeline_path):
-        self.onstart(self.cur_project,
-                     pipeline_path.replace(self.cur_project, '.'))
+        self.onstart(self.selected_folder,
+                     pipeline_path.replace(self.selected_folder, '.'))
 
     def _on_config(self, pipeline_path):
-        self.onconfig(self.cur_project,
-                      pipeline_path.replace(self.cur_project, '.'))
+        self.onconfig(self.selected_folder,
+                      pipeline_path.replace(self.selected_folder, '.'))
 
     def _on_debug(self, pipeline_path):
-        self.ondebug(self.cur_project,
-                      pipeline_path.replace(self.cur_project, '.'))
+        self.ondebug(self.selected_folder,
+                      pipeline_path.replace(self.selected_folder, '.'))
 
     def refresh_selection(self):
-        self.select_project(self.cur_project)
+        self.select_project(self.selected_folder)
 
     def select_project(self, project):
-        self.cur_project = project
-        pipelines = f"{self.cur_project}/*.json"
+        self.selected_folder = project
+        pipelines = f"{self.selected_folder}/*.json"
 
-        qt_selection = Selection(folder_path=self.cur_project, pipelines=pipelines)
+        qt_selection = Selection(folder_path=self.selected_folder, pipelines=pipelines)
         qt_selection.items_changed.connect(self.refresh_selection)
         qt_selection.item_on_start.connect(self._on_start)
         qt_selection.item_on_config.connect(self._on_config)
@@ -122,8 +122,6 @@ class Project_Selection(QWidget):
 
 
 class Pipline_Selection(QWidget):
-    # TODO: figure out how to hold stat...
-
     clicked = Signal(str)
 
     # Adapted from: https://gist.github.com/JokerMartini/538f8262c69c2904fa8f
@@ -256,9 +254,11 @@ class Selection(QWidget):
     def onnew(self):
         text, ok = QInputDialog.getText(self, 'Create new', f'Name:')
         if ok:
-            new_name = f"{self.folder_path}/pipelines/{text}.json"
+            new_name = f"{self.folder_path}/{text}.json"
             if os.path.exists(new_name):
                 raise Exception('Pipeline already exists')
+            if len(text) == 0:
+                raise Exception('Name cannot be empty')
             open(new_name, 'w').close()
             self.items_changed.emit()
 
@@ -268,6 +268,8 @@ class Selection(QWidget):
         if ok:
             if os.path.exists(self.text.replace(name, text)):
                 raise Exception('Pipeline already exists')
+            if len(text) == 0:
+                raise Exception('Name cannot be empty')
             for f in self._associated_files(self.text):
                 shutil.copyfile(f, f.replace(name, text))
             self.items_changed.emit()

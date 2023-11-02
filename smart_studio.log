@@ -1,0 +1,27 @@
+2023-11-01 12:10:28,530 | INFO | MainProcess | MainThread | Projects folders: ['/Users/yale/Repositories/livenodes/smart-studio/sample_projects/calc2/pipelines', '/Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator/pipelines']
+2023-11-01 12:10:30,320 | INFO | MainProcess | MainThread | Home Dir: /Users/yale/Repositories/livenodes/smart-studio
+2023-11-01 12:10:30,320 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio
+2023-11-01 12:10:33,575 | INFO | MainProcess | MainThread | Configuring: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator/pipelines/./playback_vis.json
+2023-11-01 12:10:33,575 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio/sample_projects/calculator/pipelines
+2023-11-01 12:10:33,576 | ERROR | MainProcess | MainThread | Could not load pipeline. Staying home
+Traceback (most recent call last):
+  File "/Users/yale/Repositories/livenodes/smart-studio/src/smart_studio/main.py", line 199, in onconfig
+    pipeline = Node.load(pipeline_path, ignore_connection_errors=True)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/livenodes/components/node_serializer.py", line 135, in load
+    return cls.from_dict(json_str, **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/livenodes/components/node_serializer.py", line 78, in from_dict
+    items_instc[name] = reg.nodes.get(itm['class'], **itm['settings'], **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/livenodes/registry.py", line 50, in get
+    return self.reg.get(key.lower(), *args, **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/class_registry/registry.py", line 106, in get
+    return self.create_instance(self.get_class(key), *args, **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/class_registry/registry.py", line 135, in create_instance
+    return class_(*args, **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/livenodes_core_nodes/in_playback.py", line 60, in __init__
+    super().__init__(name=name, compute_on=compute_on, **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/livenodes/producer.py", line 19, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/yale/Repositories/livenodes/smart-studio/venv/lib/python3.9/site-packages/livenodes/node.py", line 39, in __init__
+    super().__init__(name=name, **kwargs)
+TypeError: __init__() got an unexpected keyword argument 'block'
+2023-11-01 12:10:33,578 | INFO | MainProcess | MainThread | CWD: /Users/yale/Repositories/livenodes/smart-studio

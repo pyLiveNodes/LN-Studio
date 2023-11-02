@@ -145,8 +145,11 @@ class QT_Graph_edit(QWidget):
         ### Add nodes and layout
         layout = None
         if os.path.exists(self.pipeline_gui_path):
-            with open(self.pipeline_gui_path, 'r') as f:
-                layout = json.load(f)
+            try:
+                with open(self.pipeline_gui_path, 'r') as f:
+                    layout = json.load(f)
+            except Exception:
+                logger.exception('Could not load layout. Creating new.')    
         # print(self.pipeline_gui_path)
         self._add_pipeline(layout, pipeline)
 
@@ -198,12 +201,8 @@ class QT_Graph_edit(QWidget):
 
     def _create_paths(self, pipeline_path):
         self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('/pipelines/', '/gui/',
-                                                       1)
+        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui.yml', 1)
 
-        gui_folder = '/'.join(self.pipeline_gui_path.split('/')[:-1])
-        if not os.path.exists(gui_folder):
-            os.mkdir(gui_folder)
 
     def _create_known_classes(self, node_registry):
         ### Setup Datastructures
