@@ -1,4 +1,0 @@
-digraph {
-	graph [ratio=fill size="10,10!"]
-	"Data input [In_function]" [label="Data input [In_function]" shape=invtrapezium style=rounded]
-}
