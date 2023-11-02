@@ -35,8 +35,6 @@ from .dock_splitter import DockSplitter
 from .dock_widget import DockWidget
 from .dock_widget_tab import DockWidgetTab
 
-from . import examples
-
 
 __all__ = [
     '__version__',
@@ -65,6 +63,5 @@ __all__ = [
     'WidgetState',
     'ToggleViewActionMode',
     'InsertionOrder',
-    'examples',
     'util',
 ]
