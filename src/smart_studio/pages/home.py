@@ -10,6 +10,8 @@ from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QC
 from qtpy.QtCore import Qt, QSize, Signal
 from smart_studio.utils.state import STATE
 
+from livenodes import REGISTRY
+
 # TODO: clean this whole thing up, the different selectors etc feels messy atm
 # specifically or because the config and init are not working well together atm
 class Home(QWidget):
@@ -41,8 +43,15 @@ class Home(QWidget):
 
         self.update_projects(self.projects)
 
+        self.header_layout = QHBoxLayout()
+        self.header_layout.addStretch(1)
+        self.header_layout.addWidget(InstalledPackages())
+
         self.qt_grid = QVBoxLayout(self)
         self.qt_grid.addWidget(self.qt_projects)
+        self.qt_grid.addLayout(self.header_layout)
+        # self.qt_grid.addWidget(self.qt_projects)
+        # self.qt_grid.addWidget(InstalledPackages())
         self.qt_grid.addStretch(1)
         # l1.setFixedWidth(80)
 
@@ -131,6 +140,21 @@ class Home(QWidget):
 
     def select_project_by_id(self, project_id):
         self.select_project(self.projects[project_id])
+
+
+class InstalledPackages(QWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        self.packages = REGISTRY.installed_packages()
+
+        l2 = QVBoxLayout(self)
+        l2.addWidget(QLabel('Installed Packages:'))
+        item_list_str = '</li><li>'.join(self.packages)
+        print(f"<html><ul><li>{item_list_str}</li></ul></html>")
+        packages_str = QLabel(f"<html><ul><li>{item_list_str}</li></ul></html>")
+        l2.addWidget(packages_str)
 
 
 class Project_Selection(QWidget):
