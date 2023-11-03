@@ -6,9 +6,16 @@ import shutil
 from livenodes import Node
 logger = logging.getLogger()
 
+
 from smart_studio.utils.state import write_state, STATE
 
 def migrate():
+    logger_stdout_handler = logging.StreamHandler(sys.stdout)
+    logger_stdout_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(name)s | %(levelname)s | %(message)s')
+    logger_stdout_handler.setFormatter(formatter)
+    logger.addHandler(logger_stdout_handler)
+
     home_dir = os.getcwd()
 
     if os.path.exists(os.path.join(home_dir, 'smart-state.json')):
