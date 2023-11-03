@@ -6,7 +6,7 @@ import shutil
 import sys
 from livenodes import Node
 logger = logging.getLogger()
-
+logger.setLevel(logging.INFO)
 
 from smart_studio.utils.state import write_state, STATE
 
@@ -18,6 +18,8 @@ def migrate():
     logger.addHandler(logger_stdout_handler)
 
     home_dir = os.getcwd()
+    logger.info(f'Migrating from cwd: {home_dir}')
+
 
     if os.path.exists(os.path.join(home_dir, 'smart-state.json')):
         # === Migrate old state ================================================================
