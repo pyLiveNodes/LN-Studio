@@ -24,8 +24,8 @@ class Config(Page):
 
     def get_actions(self):
         return [ \
-            Action(label="Back", fn=self.save, kind=ActionKind.BACK),
-            Action(label="Cancel", kind=ActionKind.BACK),
+            Action(label="Back (no save)", kind=ActionKind.BACK),
+            Action(label="Save", fn=self.save, kind=ActionKind.BACK),
             Action(label="Auto-layout", fn=self.edit_graph.auto_layout, kind=ActionKind.OTHER),
         ]
 

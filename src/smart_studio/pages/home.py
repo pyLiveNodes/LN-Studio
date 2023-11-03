@@ -63,7 +63,7 @@ class Home(QWidget):
         qt_projects.selection.connect(self.select_project_by_id)
         qt_projects.remove.connect(self.remove_project)
         qt_projects.add.connect(self.add_project)
-    
+
         if self.qt_projects is not None:
             self.qt_grid.removeWidget(self.qt_projects)
             self.qt_projects.deleteLater()
@@ -91,10 +91,10 @@ class Home(QWidget):
         config["selected_folder"] = self.selected_folder
         config["selected_file"] = self.qt_selection.get_selected()
 
-    def set_state(self, config):       
+    def set_state(self, config):
         selected_folder = config.get("selected_folder", None)
         selected_file = config.get("selected_file", None)
-        
+
         # Set UI State
         id = 0
         if selected_folder in self.projects:
@@ -102,10 +102,10 @@ class Home(QWidget):
 
         self.qt_projects._set_selected(id)
         self.select_project_by_id(id)
-        
+
         if selected_file is not None:
             self.qt_selection.set_selected(selected_file)
-        
+
 
     def _on_start(self, pipeline_path):
         self.onstart(self.selected_folder,
@@ -146,7 +146,7 @@ class InstalledPackages(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        
+
         self.packages = REGISTRY.installed_packages()
 
         l2 = QVBoxLayout(self)
@@ -164,7 +164,7 @@ class Project_Selection(QWidget):
 
     def __init__(self, projects=[], parent=None):
         super().__init__(parent)
-        
+
         self.projects = projects
 
         self.combo = QComboBox()
@@ -267,7 +267,7 @@ class Selection(QWidget):
 
         selection = Pipline_Selection(pipelines)
         selection.clicked.connect(self.text_changed)
-        
+
         delete = QPushButton("Delete")
         delete.clicked.connect(self.ondelete)
 
@@ -327,7 +327,7 @@ class Selection(QWidget):
 
 
     def _associated_files(self, path):
-        return list(glob.glob(f"{path.replace('.yml', '')}*"))
+        return list(glob(f"{path.replace('.yml', '')}*"))
 
 
     def onnew(self):
