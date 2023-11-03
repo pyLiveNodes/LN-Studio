@@ -3,6 +3,7 @@ import logging
 import os
 import glob
 import shutil
+import sys
 from livenodes import Node
 logger = logging.getLogger()
 
