@@ -25,9 +25,7 @@ from qtpy.QtWidgets import QSplitter, QInputDialog, QMessageBox, QToolButton, QC
 from .scroll_label import ScrollLabel
 
 import seaborn as sns
-
-sns.set_style("darkgrid")
-sns.set_context("paper")
+import darkdetect
 
 logger = logging.getLogger('smart-studio')
 
@@ -201,7 +199,15 @@ class MPL_View(FigureCanvasQTAgg):
         if not isinstance(node, viewer.View_MPL):
             raise ValueError('Node must be of Type (MPL) View')
 
+        self.figure.patch.set_facecolor("None")
+        self.figure.set_facecolor("None")
         plt.rc('font', **font)
+
+        if darkdetect.isDark():
+            plt.style.use("dark_background")
+        else:
+            sns.set_style("darkgrid")
+        sns.set_context("paper")
         
         # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subfigures.html
         # subfigs = self.figure.subfigures(rows, cols)  #, wspace=1, hspace=0.07)

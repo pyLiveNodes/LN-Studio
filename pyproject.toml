@@ -19,7 +19,9 @@ dependencies = [
     "PyQt5>=5.12.3",
     "qtpynodeeditor>=0.2.0",
     "python_qnotifications>=2.0.6",
-    "appdirs>=1.4.4"
+    "appdirs>=1.4.4",
+    "darkdetect>=0.8.0",
+    "pyqtdarktheme~=2.1.0"
 ]
 
 [project.scripts]
