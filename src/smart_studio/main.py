@@ -2,6 +2,13 @@ import sys
 import multiprocessing as mp
 import platform
 from qtpy import QtWidgets
+import darkdetect
+import qdarktheme
+from qdarktheme._main import _sync_theme_with_system, _apply_style
+from functools import partial
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
@@ -25,6 +32,7 @@ def noop(*args, **kwargs):
     pass
 
 
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, state_handler, parent=None, home_dir=os.getcwd(), _on_close_cb=noop):
@@ -39,6 +47,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.toast_logger = QToast_Logger(self)
 
         self.central_widget = QtWidgets.QStackedWidget(self)
+
+        # if darkdetect.isDark():
+        #     self.central_widget.setProperty("cssClass", [ "dark_bg" ])
+        # else:
+        #     self.central_widget.setProperty("cssClass", [ "light_bg" ])
+
         self.setCentralWidget(self.central_widget)
         # self.layout.addWidget(self.central_widget)
         # self.layout.addWidget(QLabel('Test'))
@@ -188,7 +202,35 @@ class MainWindow(QtWidgets.QMainWindow):
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
 
+def create_stylesheet(theme):
+    image_dir = os.path.join(os.path.dirname(__file__), 'static')
+    return f"""
+            MainWindow {{
+                background-image: url('{image_dir}/connected_human_{theme}.jpg');
+                background-repeat: no-repeat; 
+                background-position: center top;
+            }}
 
+            QStackedWidget {{
+                background-color: transparent;
+            }}
+
+            """
+            # MPL_View {{
+            #     background-color: transparent;
+            # }}
+
+def dark_mode_callback(app):
+    theme = darkdetect.theme().lower()
+    additional_qss = create_stylesheet(theme)
+    _apply_style(
+        app,
+        additional_qss=additional_qss,
+        theme=theme,
+        corner_shape="rounded",
+        custom_colors=None,
+        default_theme=theme
+    )
 
 def main():
     # === Load environment variables ========================================================================
@@ -223,7 +265,15 @@ def main():
     get_registry()
 
     # === Setup application ========================================================================
+    qdarktheme.enable_hi_dpi() # must be set before the application is created
     app = QtWidgets.QApplication([])
+    app.setApplicationName("Smart Studio")
+
+    # app.setStyleSheet(create_stylesheet(darkdetect.theme().lower()))
+    # qdarktheme.setup_theme("auto", additional_qss=create_stylesheet(darkdetect.theme().lower())) #, custom_colors={"background": "#0f0f0f00"})
+    dark_mode_callback(app)
+    _sync_theme_with_system(app, partial(dark_mode_callback, app))
+
     # print(smart_state)
     # print(smart_state.space_get('views'))
     window_state = STATE['Window']
@@ -234,15 +284,13 @@ def main():
 
     window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
     window.resize(*window_state.get('size', (1400, 820)))
+    window.setWindowTitle("Smart Studio")
+
+    # uncomment to have a debugger for qss on the side
+    # from qss_debugger.debugger import VisualTreeDebugger
+    # debugger = VisualTreeDebugger(window)
+
     window.show()
-
-    # chdir because of relative imports in style.qss ....
-    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-    os.chdir(script_dir)
-    with open("./static/style.qss", 'r') as f:
-        app.setStyleSheet(f.read())
-    os.chdir(home_dir)
-
     sys.exit(app.exec())
 
 if __name__ == '__main__':
