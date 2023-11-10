@@ -327,8 +327,15 @@ class Selection(QWidget):
 
 
     def _associated_files(self, path):
-        return list(glob(f"{path.replace('.yml', '')}*"))
-
+        base = path.replace('.yml', '')
+        return [
+            path,
+            f"{base}.png",
+            f"{base}.pdf",
+            f"{base}_gui.json",
+            f"{base}_gui_dock.xml",
+            f"{base}_gui_dock_debug.xml",
+        ]
 
     def onnew(self):
         text, ok = QInputDialog.getText(self, 'Create new', f'Name:')
