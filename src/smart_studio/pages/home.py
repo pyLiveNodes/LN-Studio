@@ -44,8 +44,8 @@ class Home(QWidget):
         self.update_projects(self.projects)
 
         self.header_layout = QHBoxLayout()
-        self.header_layout.addStretch(1)
         self.header_layout.addWidget(InstalledPackages())
+        self.header_layout.addStretch(1)
 
         self.qt_grid = QVBoxLayout(self)
         self.qt_grid.addWidget(self.qt_projects)
@@ -209,6 +209,7 @@ class Project_Selection(QWidget):
 
 class Pipline_Selection(QWidget):
     clicked = Signal(str)
+    db_click = Signal(str)
 
     # Adapted from: https://gist.github.com/JokerMartini/538f8262c69c2904fa8f
     def __init__(self, pipelines, parent=None):
