@@ -30,16 +30,20 @@ def migrate():
             logger.info('Old State:')
             logger.info(old_state)
 
-        STATE['Window'] = {
-            'size': old_state['values']['window_size'],
-        }
+        if 'Window' not in STATE:
+            STATE['Window'] = {
+                'size': old_state['values']['window_size']
+            }
 
         folders = [f for f in glob.glob(os.path.abspath(os.path.join(home_dir, old_state['values']['projects']))) if os.path.isdir(os.path.abspath(f))]
-        STATE['View.Home'] = {
-            'selected_folder': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_project'])),
-            'selected_file': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_pipeline'].replace('/pipelines/', '/'))),
-            'folders': folders
-        }
+        if 'View.Home' not in STATE:
+            STATE['View.Home'] = {
+                'selected_folder': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_project'])),
+                'selected_file': os.path.abspath(os.path.join(home_dir, old_state['spaces']['views']['values']['Home']['cur_pipeline'].replace('/pipelines/', '/'))),
+                'folders': []
+            }
+
+        STATE['View.Home']['folders'].extend(folders)
 
         write_state()
 
