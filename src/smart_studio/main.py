@@ -19,13 +19,11 @@ from livenodes.node import Node
 from livenodes import get_registry
 
 
-import datetime
-import time
 import os
 
 import logging
 
-from smart_studio.utils.state import STATE, SETTINGS, write_state
+from smart_studio.utils.state import STATE, write_state
 # from smart_studio.components.notification import QToast_Logger
 
 def noop(*args, **kwargs):
