@@ -3,10 +3,9 @@ from functools import partial
 import json
 import os
 import itertools
-import traceback
 import numpy as np
 
-from qtpy.QtWidgets import QHBoxLayout, QWidget, QLabel
+from qtpy.QtWidgets import QHBoxLayout, QWidget
 from qtpy.QtCore import Signal
 import graphviz
 
@@ -28,11 +27,16 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
     def __init__(self, style=None, parent=None):
         super().__init__(style, parent)
         self.association_to_node = None
+        self.flow_scene = None
 
         # self._info = QLabel("Info")
 
     def set_node_association(self, pl_node):
         self.association_to_node = pl_node
+
+    def set_flow_scene(self, flow_scene):
+        self.flow_scene = flow_scene
+
 
     def __getstate__(self) -> dict:
         res = super().__getstate__()
@@ -76,11 +80,16 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
 
             if smart_emit_node is not None and smart_receicing_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
-                smart_receicing_node.add_input(
-                    smart_emit_node,
-                    emit_port=smart_emit_node.get_port_out_by_label(emit_port_label),
-                    recv_port=smart_receicing_node.get_port_in_by_label(recv_port_label)
-                )
+                try:
+                    smart_receicing_node.add_input(
+                        smart_emit_node,
+                        emit_port=smart_emit_node.get_port_out_by_label(emit_port_label),
+                        recv_port=smart_receicing_node.get_port_in_by_label(recv_port_label)
+                    )
+                except ValueError:
+                    logger.warn('Unsafe Circle, removing in qtypynodeeditor as well.')
+                    self.flow_scene.delete_connection(connection)
+
 
     def output_connection_deleted(self, connection):
         if self.association_to_node is not None:
@@ -187,6 +196,7 @@ class QT_Graph_edit(QWidget):
             try:
                 pl_node = node.model.constructor(**msg.edit_dict)
                 node.model.set_node_association(pl_node)
+                node.model.set_flow_scene(self.scene)
                 node._graphics_obj = attatch_click_cb(
                     node._graphics_obj,
                     partial(self.node_selected.emit, pl_node))
@@ -344,6 +354,8 @@ class QT_Graph_edit(QWidget):
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
             for name, n in p_nodes:
                 s_nodes[name]._model.set_node_association(n)
+                s_nodes[name]._model.set_flow_scene(self.scene)
+
                 # COMMENT: ouch, this feels very wrong...
                 s_nodes[name]._graphics_obj = attatch_click_cb(
                     s_nodes[name]._graphics_obj,

@@ -152,7 +152,7 @@ class InstalledPackages(QWidget):
         l2 = QVBoxLayout(self)
         l2.addWidget(QLabel('Installed Packages:'))
         item_list_str = '</li><li>'.join(self.packages)
-        print(f"<html><ul><li>{item_list_str}</li></ul></html>")
+        # print(f"<html><ul><li>{item_list_str}</li></ul></html>")
         packages_str = QLabel(f"<html><ul><li>{item_list_str}</li></ul></html>")
         l2.addWidget(packages_str)
 
