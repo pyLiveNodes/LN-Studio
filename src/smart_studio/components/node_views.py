@@ -7,7 +7,6 @@ from qtpy import QtCore
 from qtpy.QtWidgets import QWidget
 from qtpy.QtCore import QTimer
 
-
 from qtpy.QtWidgets import QSplitter, QVBoxLayout, QWidget, QHBoxLayout, QLabel
 
 from .scroll_label import ScrollLabel
@@ -27,12 +26,6 @@ def node_view_mapper(parent, node):
             return MPL_View(node)
         else:
             raise ValueError('Matplotlib not installed, cannot load MPL_View')
-    elif isinstance(node, viewer.View_Vispy):
-        if is_installed('vispy'):
-            from .views.vispy import Vispy_View
-            return Vispy_View(node, parent=parent)
-        else:
-            raise ValueError('Vispy not installed, cannot load Vispy_View')
     elif isinstance(node, viewer.View_QT):
         return QT_View(node, parent=parent)
     else:
