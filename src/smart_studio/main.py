@@ -179,14 +179,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            if os.stat(pipeline_path).st_size == 0:
-                # the pipeline was just created and no nodes were added yet
-                pipeline = None
-            else:
-                # this is an existing pipeline we should try to load
-                pipeline = Node.load(pipeline_path, ignore_connection_errors=True)
-            widget_run = Parent(child=Config(pipeline=pipeline,
-                                            node_registry=get_registry(),
+            widget_run = Parent(child=Config(node_registry=get_registry(),
                                             pipeline_path=pipeline_path),
                                 name=f"Configuring: {pipeline_path}",
                                 back_fn=self.return_home)

@@ -102,12 +102,10 @@ class NodeConfigureContainer(QWidget):
 
 class CreateNodeDialog(QDialog):
 
-    def __init__(self, node):
+    def __init__(self, data_model):
         super().__init__()
 
-        self.node = node
-
-        self.setWindowTitle(f"Create Node: {node.model.name}")
+        self.setWindowTitle(f"Create Node: {data_model.name}")
 
         # TODO: replace with ok with save
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
@@ -116,7 +114,7 @@ class CreateNodeDialog(QDialog):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.edit_dict = node.model.constructor.example_init
+        self.edit_dict = data_model.constructor.example_init
         edit_form = EditDict(self.edit_dict)
 
         self.layout = QVBoxLayout(self)
