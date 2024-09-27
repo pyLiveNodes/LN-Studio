@@ -20,7 +20,7 @@ dependencies = [
     "python_qnotifications>=2.0.6",
     "appdirs>=1.4.4",
     "darkdetect",
-    "pyqtdarktheme~=2.1.0"
+    "pyqtdarktheme-fork>=2.1.0"
 ]
 
 [project.scripts]
@@ -47,5 +47,5 @@ enabled = true
 
 [tool.black]
 line-length = 180
-target-version = ['py38']
+target-version = ['py312']
 skip-string-normalization = true
