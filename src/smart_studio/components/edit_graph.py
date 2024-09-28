@@ -404,7 +404,7 @@ class QT_Graph_edit(QWidget):
                         
                         # --- Create Smart Studio Connection --- 
                         _emit_idx = [x.key for x in _emit_node.ports_out].index(con['emit_port'])
-                        _recv_idx = [x.key for x in _recv_node.ports_out].index(con['recv_port'])
+                        _recv_idx = [x.key for x in _recv_node.ports_in].index(con['recv_port'])
                         n_out = s_nodes[con["emit_node"]][PortType.output][_emit_idx]
                         n_in = s_nodes[name][PortType.input][_recv_idx]
                         self.scene.create_connection(n_out, n_in)
