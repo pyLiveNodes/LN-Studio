@@ -134,7 +134,6 @@ class QT_Graph_edit(QWidget):
         self._create_paths(pipeline_path)
 
         self.known_classes = {}
-        self.known_streams = {}
         self.known_ports = {}
 
         self._create_known_classes(node_registry)
@@ -231,7 +230,7 @@ class QT_Graph_edit(QWidget):
     # Collect and create Datatypes
     @staticmethod
     def port_to_key(port):
-        return f"<{port.__class__.__name__}>"
+        return f"<{port.__class__.__name__}: {port.label}>"
 
 
     def _register_node(self, node_or_cls):
@@ -254,12 +253,12 @@ class QT_Graph_edit(QWidget):
                 # register new datatype
                 self.known_dtypes[new_key] = NodeDataType(id=new_key, name=port.label)
 
-            if not new_key in self.known_streams:
+            if not new_key in self.known_ports:
                 # register new stream type
-                self.known_streams[new_key] = port
+                self.known_ports[new_key] = port
                 
-                # add converters
-                for known_key in self.known_streams.keys():
+                # add converters only for new ports, as the others should already have
+                for known_key in self.known_ports.keys():
                     self._add_converter(new_key, known_key)
 
         # register node
@@ -285,7 +284,7 @@ class QT_Graph_edit(QWidget):
     def _add_converter(self, a, b):
         log_dir_allowed = ''
         
-        if self.known_streams[b].__class__.can_input_to(self.known_streams[a].__class__):
+        if self.known_ports[b].__class__.can_input_to(self.known_ports[a].__class__):
             # The input/output stuff on the TypeConverter class is reversed to ours
             # https://klauer.github.io/qtpynodeeditor/api.html?highlight=typeconverter
             converter = TypeConverter(self.known_dtypes[b],
@@ -295,7 +294,7 @@ class QT_Graph_edit(QWidget):
                                                 converter)
             log_dir_allowed += '<-'
 
-        if self.known_streams[a].__class__.can_input_to(self.known_streams[b].__class__):
+        if self.known_ports[a].__class__.can_input_to(self.known_ports[b].__class__):
             converter = TypeConverter(self.known_dtypes[a],
                                     self.known_dtypes[b], noop)
             self.registry.register_type_converter(self.known_dtypes[a],
@@ -317,7 +316,7 @@ class QT_Graph_edit(QWidget):
             raise Exception('Registry is Required') 
 
         self.known_dtypes = {}
-        self.known_streams = {}
+        self.known_ports = {}
 
         for node_cls in node_registry.nodes.reg.values():
             self._register_node(node_cls)
