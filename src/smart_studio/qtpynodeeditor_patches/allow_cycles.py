@@ -101,4 +101,5 @@ def can_connect(self) -> tuple['Port', Optional[TypeConverter]]:
 
 
 qtpynodeeditor.node_connection_interaction.NodeConnectionInteraction.can_connect = can_connect
+print('Patched cycles')
 ### End patch

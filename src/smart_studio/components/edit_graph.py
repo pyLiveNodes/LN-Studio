@@ -139,6 +139,9 @@ class QT_Graph_edit(QWidget):
 
         self._create_known_classes(node_registry)
 
+        # TODO: could this moved be moved to a patch? -yh
+        # Would be great if the copy_nodes patch would not rely on this function...
+        # ofc we could also adjust that one to not rely on this function here...
         self_alias = self
         def _create_node(self, data_model, pl_node=None):
             nonlocal self_alias

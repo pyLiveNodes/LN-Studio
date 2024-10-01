@@ -99,3 +99,5 @@ def generate_context_menu(self, pos: QPoint):
 
 
 qtpynodeeditor.flow_view.FlowView.generate_context_menu = generate_context_menu
+print('Patched Fix for context menu')
+### End patch

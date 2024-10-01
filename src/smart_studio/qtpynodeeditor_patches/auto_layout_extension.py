@@ -32,6 +32,6 @@ def auto_arrange(self,
         pos_x, pos_y = pos
         node.position = (pos_x * scale, pos_y * scale)
 
-
 qtpynodeeditor.flow_scene.FlowScene.auto_arrange = auto_arrange
+print('Patched Auto Layouts')
 ### End patch
