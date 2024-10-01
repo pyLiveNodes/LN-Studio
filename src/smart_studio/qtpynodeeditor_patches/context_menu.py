@@ -71,9 +71,10 @@ def generate_context_menu(self, pos: QPoint):
             logger.error("Model not found: %s", model_name)
         else:
             node = self._scene.create_node(model)
-            pos_view = self.mapToScene(pos)
-            node.graphics_object.setPos(pos_view)
-            self._scene.node_placed.emit(node)
+            if node is not None:
+                pos_view = self.mapToScene(pos)
+                node.graphics_object.setPos(pos_view)
+                self._scene.node_placed.emit(node)
 
         model_menu.close()
 

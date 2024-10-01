@@ -146,12 +146,11 @@ class QT_Graph_edit(QWidget):
         def _create_node(self, data_model, pl_node=None):
             nonlocal self_alias
             if pl_node is None:
-                try:
-                    msg = CreateNodeDialog(data_model)
-                    if msg.exec():
-                        pl_node = data_model.constructor(**msg.edit_dict)
-                except Exception as err:
-                    logger.exception('Could not create node.', err)
+                msg = CreateNodeDialog(data_model)
+                if msg.exec():
+                    pl_node = data_model.constructor(**msg.edit_dict)
+                else:
+                    logger.exception(f'Could not create node: {data_model.name}. Dialog was canceled.')
                     return None
                 
             new_data_model = self_alias._register_node(pl_node)
@@ -161,7 +160,7 @@ class QT_Graph_edit(QWidget):
                 node.graphics_object = ngo
 
                 node.model.set_node_association(pl_node)
-                node.model.set_flow_scene(self_alias.scene)
+                node.model.set_flow_scene(self)
                 node._graphics_obj = attatch_click_cb(
                     node._graphics_obj,
                     partial(self_alias.node_selected.emit, pl_node))
@@ -416,7 +415,7 @@ class QT_Graph_edit(QWidget):
                         
             # 3. pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
-            # TODO: check if this is still necessary, as we now have overwritten the create_node function above
+            # check if this is still necessary, as we now have overwritten the create_node function above -> yes it's still necessary for restored nodes
             for name, itm in dct.items():
                 s_nodes[name]._model.set_node_association(p_nodes[name])
                 s_nodes[name]._model.set_flow_scene(self.scene)
