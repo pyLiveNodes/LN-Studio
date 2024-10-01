@@ -229,7 +229,7 @@ class QT_Graph_edit(QWidget):
     # Collect and create Datatypes
     @staticmethod
     def port_to_key(port):
-        return f"<{port.__class__.__name__}: {port.label}>"
+        return f"<{port.__class__.__name__}>"
 
 
     def _register_node(self, node_or_cls):
