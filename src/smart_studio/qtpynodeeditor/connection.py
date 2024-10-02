@@ -11,7 +11,6 @@ from .node import Node, NodeDataType
 from .node_data import NodeData
 from .port import Port, PortType, opposite_port
 from .style import StyleCollection
-from .type_converter import TypeConverter
 
 
 class Connection(QObject, Serializable):
@@ -20,7 +19,7 @@ class Connection(QObject, Serializable):
     updated = Signal(QObject)
 
     def __init__(self, port_a: Port, port_b: Port = None, *,
-                 style: StyleCollection, converter: TypeConverter = None):
+                 style: StyleCollection):
         super().__init__()
         self._uid = str(uuid.uuid4())
 
@@ -65,7 +64,6 @@ class Connection(QObject, Serializable):
             self._required_port = PortType.input
 
         self._last_hovered_node = None
-        self._converter = converter
         self._style = style
         self._connection_geometry = ConnectionGeometry(style)
         self._graphics_object = None
@@ -108,19 +106,6 @@ class Connection(QObject, Serializable):
             out_id=out_port.node.id,
             out_index=out_port.index,
         )
-
-        if self._converter:
-            def get_type_json(type: PortType):
-                node_type = self.data_type(type)
-                return dict(
-                    id=node_type.id,
-                    name=node_type.name
-                )
-
-            connection_json["converter"] = {
-                "in": get_type_json(PortType.input),
-                "out": get_type_json(PortType.output),
-            }
 
         return connection_json
 
@@ -314,21 +299,6 @@ class Connection(QObject, Serializable):
             return ports[valid_type].data_type
 
     @property
-    def type_converter(self) -> typing.Optional[TypeConverter]:
-        """
-        The type converter used for the connection.
-
-        Returns
-        -------
-        converter : TypeConverter or None
-        """
-        return self._converter
-
-    @type_converter.setter
-    def type_converter(self, converter: TypeConverter):
-        self._converter = converter
-
-    @property
     def is_complete(self) -> bool:
         """
         Connection is complete - in/out nodes are set
@@ -350,9 +320,6 @@ class Connection(QObject, Serializable):
         in_port, out_port = self.ports
         if not in_port:
             return
-
-        if node_data is not None and self._converter:
-            node_data = self._converter(node_data)
 
         in_port.node.propagate_data(node_data, in_port)
 

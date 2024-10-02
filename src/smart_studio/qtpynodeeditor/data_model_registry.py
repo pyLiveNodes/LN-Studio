@@ -2,7 +2,6 @@ import logging
 import typing
 
 from .node_data import NodeData, NodeDataModel, NodeDataType
-from .type_converter import TypeConverter
 
 logger = logging.getLogger(__name__)
 
@@ -20,10 +19,9 @@ class DataModelRegistry:
         self._categories.add(category)
         self._models_category[name] = category
 
-    def register_type_converter(self,
+    def register_type_convertable(self,
                                 type_in: NodeDataType,
-                                type_out: NodeDataType,
-                                type_converter: TypeConverter):
+                                type_out: NodeDataType):
         """
         Register a type converter for a given data type.
 
@@ -35,8 +33,8 @@ class DataModelRegistry:
         type_out : NodeDataType or NodeData subclass
             The output type.
 
-        type_converter : TypeConverter
-            The type converter to use for the conversion.
+        type_convertable : Bool
+            If the ports are compatible
         """
         # TODO typing annotation
         if hasattr(type_in, 'data_type'):
@@ -44,7 +42,7 @@ class DataModelRegistry:
         if hasattr(type_out, 'data_type'):
             type_out = typing.cast(NodeData, type_out).data_type
 
-        self.type_converters[(type_in, type_out)] = type_converter
+        self.type_converters[(type_in, type_out)] = True
 
     def create(self, model_name: str) -> NodeDataModel:
         """
@@ -125,9 +123,9 @@ class DataModelRegistry:
         """
         return self._categories
 
-    def get_type_converter(self, d1: NodeDataType, d2: NodeDataType) -> TypeConverter:
+    def get_type_convertable(self, d1: NodeDataType, d2: NodeDataType) -> bool:
         """
-        Get type converter
+        Get if types are convertable
 
         Parameters
         ----------
@@ -136,6 +134,6 @@ class DataModelRegistry:
 
         Returns
         -------
-        value : TypeConverter
+        value : Bool
         """
-        return self.type_converters.get((d1, d2), None)
+        return self.type_converters.get((d1, d2), False)

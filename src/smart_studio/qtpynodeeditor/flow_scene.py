@@ -17,7 +17,6 @@ from .node import Node
 from .node_data import NodeDataModel, NodeDataType
 from .node_graphics_object import NodeGraphicsObject
 from .port import Port, PortType
-from .type_converter import TypeConverter
 
 
 def locate_node_at(scene_point, scene, view_transform):
@@ -323,22 +322,6 @@ class FlowSceneModel:
         node._cleanup()
         del self._nodes[node.id]
 
-    def _restore_node(self, node_json: dict) -> Node:
-        """
-        Restore a node from a state dictionary
-
-        Parameters
-        ----------
-        node_json : dict
-
-        Returns
-        -------
-        value : Node
-        """
-        with self._new_node_context(node_json["model"]["name"]) as node:
-            ...
-
-        return node
 
     @contextlib.contextmanager
     def _new_node_context(self, data_model_name, *, emit_placed=False):
@@ -469,7 +452,6 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         return locate_node_at(point, self, transform)
 
     def create_connection(self, port_a: Port, port_b: Port = None, *,
-                          converter: TypeConverter = None,
                           check_cycles=True) -> Connection:
         """
         Create a connection
@@ -480,8 +462,6 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
             The first port, either input or output
         port_b : Port, optional
             The second port, opposite of the type of port_a
-        converter : TypeConverter, optional
-            The type converter to use for data propagation
         check_cycles : bool, optional
             Ensures that creating the connection would not introduce a cycle
 
@@ -496,20 +476,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         ConnectionDataTypeFailure
             If port data types are not compatible
         """
-        if port_a is not None and port_b is not None:
-            in_port = port_a if port_a.port_type == PortType.input else port_b
-            out_port = port_b if port_a.port_type == PortType.input else port_a
-            if in_port.data_type.id != out_port.data_type.id:
-                if not converter:
-                    # If not specified, try to get it from the registry
-                    converter = self.registry.get_type_converter(out_port.data_type,
-                                                                 in_port.data_type)
-                if (not converter or (converter.type_in != out_port.data_type
-                                      or converter.type_out != in_port.data_type)):
-                    raise ConnectionDataTypeFailure(
-                        f'{in_port.data_type} and {out_port.data_type} are not compatible'
-                    )
-        connection = Connection(port_a=port_a, port_b=port_b, style=self._style, converter=converter)
+        connection = Connection(port_a=port_a, port_b=port_b, style=self._style)
         if port_a is not None:
             port_a.add_connection(connection)
 
@@ -542,8 +509,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
 
     def create_connection_by_index(
             self, node_in: Node, port_index_in: int,
-            node_out: Node, port_index_out: int,
-            converter: TypeConverter) -> Connection:
+            node_out: Node, port_index_out: int) -> Connection:
         """
         Create connection
 
@@ -553,7 +519,6 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         port_index_in : int
         node_out : Node
         port_index_out : int
-        converter : TypeConverter
 
         Returns
         -------
@@ -561,7 +526,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         """
         port_in = node_in[PortType.input][port_index_in]
         port_out = node_out[PortType.output][port_index_out]
-        return self.create_connection(port_out, port_in, converter=converter)
+        return self.create_connection(port_out, port_in)
 
     def restore_connection(self, connection_json: dict) -> Connection:
         """
@@ -583,27 +548,9 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         node_in = self._nodes[node_in_id]
         node_out = self._nodes[node_out_id]
 
-        def get_converter():
-            converter = connection_json.get("converter", None)
-            if converter is None:
-                return None
-
-            in_type = NodeDataType(
-                id=converter["in"]["id"],
-                name=converter["in"]["name"],
-            )
-
-            out_type = NodeDataType(
-                id=converter["out"]["id"],
-                name=converter["out"]["name"],
-            )
-
-            return self._registry.get_type_converter(out_type, in_type)
-
         connection = self.create_connection_by_index(
             node_in, port_index_in,
-            node_out, port_index_out,
-            converter=get_converter())
+            node_out, port_index_out)
 
         # Note: the connection_created(...) signal has already been sent by
         # create_connection(...)

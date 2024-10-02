@@ -14,8 +14,6 @@ from livenodes.components.node_connector import Connectionist
 
 import smart_studio.qtpynodeeditor as qtpynodeeditor
 from smart_studio.qtpynodeeditor import (NodeDataModel, NodeDataType, PortType)
-from smart_studio.qtpynodeeditor.type_converter import TypeConverter
-from smart_studio.qtpynodeeditor.exceptions import ConnectionDataTypeFailure
 from smart_studio.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
 
 from .edit_node import CreateNodeDialog
@@ -257,9 +255,6 @@ class QT_Graph_edit(QWidget):
                 # register new stream type
                 self.known_ports[new_key] = port
                 
-                # add converters only for new ports, as the others should already have
-                for known_key in self.known_ports.keys():
-                    self._add_converter(new_key, known_key)
 
         # register node
         cls = type(cls_name, (CustomNodeDataModel,), \
@@ -281,29 +276,6 @@ class QT_Graph_edit(QWidget):
 
         return cls
     
-    def _add_converter(self, a, b):
-        log_dir_allowed = ''
-        
-        if self.known_ports[b].__class__.can_input_to(self.known_ports[a].__class__):
-            # The input/output stuff on the TypeConverter class is reversed to ours
-            # https://klauer.github.io/qtpynodeeditor/api.html?highlight=typeconverter
-            converter = TypeConverter(self.known_dtypes[b],
-                                    self.known_dtypes[a], noop)
-            self.registry.register_type_converter(self.known_dtypes[b],
-                                                self.known_dtypes[a],
-                                                converter)
-            log_dir_allowed += '<-'
-
-        if self.known_ports[a].__class__.can_input_to(self.known_ports[b].__class__):
-            converter = TypeConverter(self.known_dtypes[a],
-                                    self.known_dtypes[b], noop)
-            self.registry.register_type_converter(self.known_dtypes[a],
-                                                self.known_dtypes[b],
-                                                converter)
-            log_dir_allowed += '->'
-
-        logger.info(f"Allowed directions: {str(a)} {log_dir_allowed} {str(b)}")
-
     def _create_known_classes(self, node_registry):
         ### Setup Datastructures
         # style = StyleCollection.from_json(style_json)

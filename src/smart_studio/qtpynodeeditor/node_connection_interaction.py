@@ -9,7 +9,6 @@ from .exceptions import (ConnectionCycleFailure, ConnectionDataTypeFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
                          NodeConnectionFailure)
 from .port import PortType, opposite_port
-from .type_converter import TypeConverter
 
 if typing.TYPE_CHECKING:
     from .connection import Connection  # noqa
@@ -39,15 +38,14 @@ class NodeConnectionInteraction:
         self._connection = connection
         self._scene = scene
 
-    @property
-    def creates_cycle(self):
-        """Would completing the connection introduce a cycle?"""
-        required_port = self.connection_required_port
-        return self.connection_node.has_connection_by_port_type(
-            self._node, required_port)
-
+    # @property
+    # def creates_cycle(self):
+    #     """Would completing the connection introduce a cycle?"""
+    #     required_port = self.connection_required_port
+    #     return self.connection_node.has_connection_by_port_type(
+    #         self._node, required_port)
     
-    def can_connect(self) -> tuple['Port', Optional[TypeConverter]]:
+    def can_connect(self) -> tuple['Port']:
         """
         Can connect when following conditions are met:
             1) Connection 'requires' a port - i.e., is missing either a start
@@ -66,9 +64,6 @@ class NodeConnectionInteraction:
         -------
         port : Port
             The port to be connected.
-
-        converter : TypeConverter
-            The data type converter to use.
 
         Raises
         ------
@@ -115,29 +110,35 @@ class NodeConnectionInteraction:
 
         candidate_node_data_type = port.data_type
         if connection_data_type.id == candidate_node_data_type.id:
-            return port, None
+            return port
 
-        registry = self._scene.registry
+        # Quick check if we already resolved can_input this in the past
+        # if scenc.register_type_convertable
+
+        # 1. Step: figure out which node is the sender and which is the receiver
+        # 2. get the respective ports and check if they can input in the correct order
+        con_port = self._connection._ports[opposite_port(required_port)]
         if required_port == PortType.input:
-            converter = registry.get_type_converter(connection_data_type,
-                                                    candidate_node_data_type)
+            # if we still require an input, the node associated to the connection is an output
+            pl_port_emit = list(self.connection_node._model.association_to_node.ports_out)[con_port.index]
+            pl_port_recv = list(self._node._model.association_to_node.ports_in)[port.index]
         else:
-            converter = registry.get_type_converter(candidate_node_data_type,
-                                                    connection_data_type)
-        if not converter:
+            pl_port_recv = list(self.connection_node._model.association_to_node.ports_in)[con_port.index]
+            pl_port_emit = list(self._node._model.association_to_node.ports_out)[port.index]
+        if not pl_port_emit.can_input_to(pl_port_recv):
             raise ConnectionDataTypeFailure(
                 f'{connection_data_type} and {candidate_node_data_type} are not compatible'
             )
-
-        return port, converter
+        
+        # Register that this is allowed for future reference
+        self._scene.registry.register_type_convertable(connection_data_type, candidate_node_data_type)
+        return port
 
     def try_connect(self) -> bool:
         """
         Try to connect the nodes. Steps::
 
             1) Check conditions from 'can_connect'
-            1.5) If the connection is possible but a type conversion is needed, add
-                 a converter node to the scene, and connect it properly
             2) Assign node to required port in Connection
             3) Assign Connection to empty port in NodeState
             4) Adjust Connection geometry
@@ -149,16 +150,11 @@ class NodeConnectionInteraction:
         """
         # 1) Check conditions from 'can_connect'
         try:
-            port, converter = self.can_connect()
+            port = self.can_connect()
         except NodeConnectionFailure as ex:
             logger.debug('Cannot connect node', exc_info=ex)
             logger.info('Cannot connect node: %s', ex)
             return False
-
-        # 1.5) If the connection is possible but a type conversion is needed,
-        # assign a convertor to connection
-        if converter:
-            self._connection.type_converter = converter
 
         # 2) Assign node to required port in Connection
         port.add_connection(self._connection)

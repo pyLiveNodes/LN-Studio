@@ -209,13 +209,13 @@ class NodePainter:
                 diff = geom.dragging_pos - scene_pos
                 dist = math.sqrt(QPointF.dotProduct(diff, diff))
 
-                registry = scene.registry
                 dtype1, dtype2 = state.reacting_data_type, data_type
                 if port_type != PortType.input:
                     dtype2, dtype1 = dtype1, dtype2
 
-                type_convertable = registry.get_type_converter(dtype1, dtype2) is not None
+                type_convertable = scene.registry.get_type_convertable(dtype1, dtype2) is not None
                 if dtype1.id == dtype2.id or type_convertable:
+                # if dtype1.id == dtype2.id:
                     thres = 40.0
                     r = ((2.0 - dist / thres)
                          if dist < thres
