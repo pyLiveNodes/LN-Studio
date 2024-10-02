@@ -1,7 +1,7 @@
 import logging
 import math
 
-from qtpy.QtCore import QLineF, QPoint, QRectF, Qt
+from qtpy.QtCore import QLineF, QPoint, QRectF, Qt, QPointF, QCoreApplication
 from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QKeySequence,
                         QMouseEvent, QPainter, QPen, QShowEvent, QWheelEvent)
 from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
@@ -10,16 +10,18 @@ from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
 from .connection_graphics_object import ConnectionGraphicsObject
 from .flow_scene import FlowScene
 from .node_graphics_object import NodeGraphicsObject
+from .enums import PortType
 
 logger = logging.getLogger(__name__)
 
 
 class FlowView(QGraphicsView):
     def __init__(self, scene, parent=None):
-        super().__init__(parent=parent)
+        super(self.__class__, self).__init__(parent=parent)
 
         self._clear_selection_action = None
         self._delete_selection_action = None
+        self._copy_selection_action = None
         self._scene = None
         self._click_pos = None
 
@@ -60,6 +62,16 @@ class FlowView(QGraphicsView):
         value : QAction
         """
         return self._delete_selection_action
+    
+    def copy_selection_action(self) -> QAction:
+        """
+        Copy selection action
+
+        Returns
+        -------
+        value : QAction
+        """
+        return self._copy_selection_action
 
     def setScene(self, scene: FlowScene):
         """
@@ -70,21 +82,28 @@ class FlowView(QGraphicsView):
         scene : FlowScene
         """
         self._scene = scene
-        super().setScene(self._scene)
+        super(self.__class__, self).setScene(self._scene)
 
         # setup actions
         del self._clear_selection_action
         self._clear_selection_action = QAction("Clear Selection", self)
         self._clear_selection_action.setShortcut(QKeySequence.Cancel)
         self._clear_selection_action.triggered.connect(self._scene.clearSelection)
-
         self.addAction(self._clear_selection_action)
+
         del self._delete_selection_action
         self._delete_selection_action = QAction("Delete Selection", self)
         self._delete_selection_action.setShortcut(QKeySequence.Backspace)
         self._delete_selection_action.setShortcut(QKeySequence.Delete)
         self._delete_selection_action.triggered.connect(self.delete_selected)
         self.addAction(self._delete_selection_action)
+
+        del self._copy_selection_action
+        self._copy_selection_action = QAction("Copy Selection", self)
+        self._copy_selection_action.setShortcut(QCoreApplication.translate('context', 'Ctrl+D'))
+        # self._copy_selection_action.setShortcut(QKeySequence.Copy)
+        self._copy_selection_action.triggered.connect(self.copy_selected)
+        self.addAction(self._copy_selection_action)
 
     def scale_up(self):
         step = 1.2
@@ -97,6 +116,30 @@ class FlowView(QGraphicsView):
         step = 1.2
         factor = step ** -1.0
         self.scale(factor, factor)
+
+    def copy_selected(self):
+        # TODO: once created the new nodes should be selected not the old ones...
+
+        id_map = {}
+        # create nodes first
+        for item in self._scene.selectedItems():
+            if isinstance(item, NodeGraphicsObject):
+                pl_node = item._node._model.association_to_node.copy()
+                pos = item.scenePos()
+                # since we have overwritten the scene.create_node function in edit_graph, we do not need to set any associations etc here
+                s_node = self._scene.create_node(item._node._model, pl_node) 
+                s_node.graphics_object.setPos(QPointF(pos.x() + 10, pos.y() + 10))
+                id_map[id(item._node)] = s_node
+
+        # then create connections where possible (ie the connection might be between a newly created and an existing node which might lead to duplicate inputs in the existing which would not be allowed atm)
+        for item in self._scene.selectedItems():
+            if isinstance(item, ConnectionGraphicsObject):
+                in_node = id_map[id(item.connection.input_node)]
+                in_port = in_node[PortType.input][item.connection.ports[0].index]
+
+                out_node = id_map[id(item.connection.output_node)]
+                out_port = out_node[PortType.output][item.connection.ports[1].index]
+                self._scene.create_connection(out_port, in_port)
 
     def delete_selected(self):
         # Delete the selected connections first, ensuring that they won't be
@@ -171,9 +214,10 @@ class FlowView(QGraphicsView):
                 logger.error("Model not found: %s", model_name)
             else:
                 node = self._scene.create_node(model)
-                pos_view = self.mapToScene(pos)
-                node.graphics_object.setPos(pos_view)
-                self._scene.node_placed.emit(node)
+                if node is not None:
+                    pos_view = self.mapToScene(pos)
+                    node.graphics_object.setPos(pos_view)
+                    self._scene.node_placed.emit(node)
 
             model_menu.close()
 
@@ -182,10 +226,14 @@ class FlowView(QGraphicsView):
         # Setup filtering
         def filter_handler(text):
             for name, top_lvl_item in top_level_items.items():
+                any_visible = False
                 for i in range(top_lvl_item.childCount()):
                     child = top_lvl_item.child(i)
                     model_name = child.data(0, Qt.UserRole)
-                    child.setHidden(text not in model_name)
+                    hidden = text.lower() not in model_name.lower()
+                    child.setHidden(hidden)
+                    any_visible = any_visible or not hidden
+                top_lvl_item.setHidden(not any_visible)
 
         txt_box.textChanged.connect(filter_handler)
 

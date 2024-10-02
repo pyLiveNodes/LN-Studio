@@ -12,11 +12,11 @@ import graphviz
 from livenodes import Node, Connection, get_registry
 from livenodes.components.node_connector import Connectionist
 
-import qtpynodeeditor
-from qtpynodeeditor import (NodeDataModel, NodeDataType, PortType)
-from qtpynodeeditor.type_converter import TypeConverter
-from qtpynodeeditor.exceptions import ConnectionDataTypeFailure
-from qtpynodeeditor.node_graphics_object import NodeGraphicsObject
+import smart_studio.qtpynodeeditor as qtpynodeeditor
+from smart_studio.qtpynodeeditor import (NodeDataModel, NodeDataType, PortType)
+from smart_studio.qtpynodeeditor.type_converter import TypeConverter
+from smart_studio.qtpynodeeditor.exceptions import ConnectionDataTypeFailure
+from smart_studio.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
 
 from .edit_node import CreateNodeDialog
 from .utils import noop

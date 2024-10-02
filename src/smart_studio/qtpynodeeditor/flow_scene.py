@@ -645,11 +645,13 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
             node.__setstate__(node_json)
         return node
 
-    def auto_arrange(self, layout='bipartite', scale=700, align='horizontal',
-                     **kwargs):
+    def auto_arrange(self,
+                 layout='planar_layout',
+                 scale=700,
+                 align='horizontal',
+                 **kwargs):
         '''
         Automatically arrange nodes with networkx, if available
-
         Raises
         ------
         ImportError
@@ -658,16 +660,13 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         import networkx
         dig = self.to_digraph()
 
-        layouts = {
-            name: getattr(networkx.layout, f'{name}_layout')
-            for name in ('bipartite', 'circular', 'kamada_kawai', 'random',
-                         'shell', 'spring', 'spectral')
-        }
-
         try:
-            layout_func = layouts[layout]
+            if hasattr(networkx.layout, layout):
+                layout_func = getattr(networkx.layout, layout)
+            else:
+                layout_func = getattr(networkx.nx_agraph, layout)
         except KeyError:
-            raise ValueError(f'Unknown layout type {layout}') from None
+            raise ValueError('Unknown layout type {}'.format(layout)) from None
 
         layout = layout_func(dig, **kwargs)
         for node, pos in layout.items():

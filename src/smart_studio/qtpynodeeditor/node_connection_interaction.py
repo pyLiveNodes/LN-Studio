@@ -46,6 +46,7 @@ class NodeConnectionInteraction:
         return self.connection_node.has_connection_by_port_type(
             self._node, required_port)
 
+    
     def can_connect(self) -> tuple['Port', Optional[TypeConverter]]:
         """
         Can connect when following conditions are met:
@@ -102,11 +103,11 @@ class NodeConnectionInteraction:
             )
 
         # 4) Cycle check
-        if self.creates_cycle:
-            raise ConnectionCycleFailure(
-                f'Connecting {self._node} and {node} would introduce a '
-                f'cycle in the graph'
-            )
+        # if self.creates_cycle:
+        #     raise ConnectionCycleFailure(
+        #         f'Connecting {self._node} and {node} would introduce a '
+        #         f'cycle in the graph'
+        #     )
 
         # 5) Connection type equals node port type, or there is a registered
         #    type conversion that can translate between the two

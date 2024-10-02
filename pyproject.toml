@@ -16,7 +16,6 @@ dependencies = [
     "matplotlib>=3.5.1",
     "QtPy>=2.4.1",
     "PyQt5>=5.12.3",
-    "qtpynodeeditor>=0.2.0",
     "python_qnotifications>=2.0.6",
     "appdirs>=1.4.4",
     "darkdetect",
