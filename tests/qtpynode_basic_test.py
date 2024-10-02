@@ -3,8 +3,8 @@ import unittest.mock
 import pytest
 import qtpy.QtCore
 
-import qtpynodeeditor as nodeeditor
-from qtpynodeeditor import PortType
+import smart_studio.qtpynodeeditor as nodeeditor
+from smart_studio.qtpynodeeditor import PortType
 
 
 class MyNodeData(nodeeditor.NodeData):
