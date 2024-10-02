@@ -112,26 +112,20 @@ class NodeConnectionInteraction:
         if connection_data_type.id == candidate_node_data_type.id:
             return port
 
-        # Quick check if we already resolved can_input this in the past
-        # if scenc.register_type_convertable
-
         # 1. Step: figure out which node is the sender and which is the receiver
         # 2. get the respective ports and check if they can input in the correct order
-        con_port = self._connection._ports[opposite_port(required_port)]
         if required_port == PortType.input:
-            # if we still require an input, the node associated to the connection is an output
-            pl_port_emit = list(self.connection_node._model.association_to_node.ports_out)[con_port.index]
-            pl_port_recv = list(self._node._model.association_to_node.ports_in)[port.index]
+            # if we still require an input, the candidate must be of type input / recv and the already present one is the emitter
+            data_type_emit = connection_data_type
+            data_type_recv = candidate_node_data_type
         else:
-            pl_port_recv = list(self.connection_node._model.association_to_node.ports_in)[con_port.index]
-            pl_port_emit = list(self._node._model.association_to_node.ports_out)[port.index]
-        if not pl_port_emit.can_input_to(pl_port_recv):
+            data_type_recv = connection_data_type
+            data_type_emit = candidate_node_data_type
+        if not data_type_emit.port.can_input_to(data_type_recv.port):
             raise ConnectionDataTypeFailure(
                 f'{connection_data_type} and {candidate_node_data_type} are not compatible'
             )
         
-        # Register that this is allowed for future reference
-        self._scene.registry.register_type_convertable(connection_data_type, candidate_node_data_type)
         return port
 
     def try_connect(self) -> bool:

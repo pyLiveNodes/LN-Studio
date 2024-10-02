@@ -213,9 +213,7 @@ class NodePainter:
                 if port_type != PortType.input:
                     dtype2, dtype1 = dtype1, dtype2
 
-                type_convertable = scene.registry.get_type_convertable(dtype1, dtype2) is not None
-                if dtype1.id == dtype2.id or type_convertable:
-                # if dtype1.id == dtype2.id:
+                if dtype1.id == dtype2.id or dtype1.port.can_input_to(dtype2.port):
                     thres = 40.0
                     r = ((2.0 - dist / thres)
                          if dist < thres

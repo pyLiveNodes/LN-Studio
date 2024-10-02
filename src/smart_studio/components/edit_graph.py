@@ -249,7 +249,7 @@ class QT_Graph_edit(QWidget):
 
             if not new_key in self.known_dtypes:
                 # register new datatype
-                self.known_dtypes[new_key] = NodeDataType(id=new_key, name=port.label)
+                self.known_dtypes[new_key] = NodeDataType(id=new_key, name=port.label, port=port.__class__)
 
             if not new_key in self.known_ports:
                 # register new stream type

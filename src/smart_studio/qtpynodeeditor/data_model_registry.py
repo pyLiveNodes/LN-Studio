@@ -1,14 +1,11 @@
 import logging
-import typing
-
-from .node_data import NodeData, NodeDataModel, NodeDataType
+from .node_data import NodeDataModel
 
 logger = logging.getLogger(__name__)
 
 
 class DataModelRegistry:
     def __init__(self):
-        self.type_converters = {}
         self._models_category = {}
         self._item_creators = {}
         self._categories = set()
@@ -18,31 +15,6 @@ class DataModelRegistry:
         self._item_creators[name] = (creator, {'style': style, **init_kwargs})
         self._categories.add(category)
         self._models_category[name] = category
-
-    def register_type_convertable(self,
-                                type_in: NodeDataType,
-                                type_out: NodeDataType):
-        """
-        Register a type converter for a given data type.
-
-        Parameters
-        ----------
-        type_in : NodeDataType or NodeData subclass
-            The input type.
-
-        type_out : NodeDataType or NodeData subclass
-            The output type.
-
-        type_convertable : Bool
-            If the ports are compatible
-        """
-        # TODO typing annotation
-        if hasattr(type_in, 'data_type'):
-            type_in = typing.cast(NodeData, type_in).data_type
-        if hasattr(type_out, 'data_type'):
-            type_out = typing.cast(NodeData, type_out).data_type
-
-        self.type_converters[(type_in, type_out)] = True
 
     def create(self, model_name: str) -> NodeDataModel:
         """
@@ -122,18 +94,3 @@ class DataModelRegistry:
         value : DataModelRegistry.CategoriesSet
         """
         return self._categories
-
-    def get_type_convertable(self, d1: NodeDataType, d2: NodeDataType) -> bool:
-        """
-        Get if types are convertable
-
-        Parameters
-        ----------
-        d1 : NodeDataType
-        d2 : NodeDataType
-
-        Returns
-        -------
-        value : Bool
-        """
-        return self.type_converters.get((d1, d2), False)

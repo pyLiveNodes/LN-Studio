@@ -10,7 +10,7 @@ from .base import Serializable
 from .enums import ConnectionPolicy, NodeValidationState, PortType
 from .port import Port
 
-NodeDataType = namedtuple('NodeDataType', ('id', 'name'))
+NodeDataType = namedtuple('NodeDataType', ('id', 'name', 'port'))
 
 
 class NodeData:
@@ -20,7 +20,7 @@ class NodeData:
     The actual data is stored in subtypes
     """
 
-    data_type = NodeDataType(None, None)
+    data_type = NodeDataType(None, None, None)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
