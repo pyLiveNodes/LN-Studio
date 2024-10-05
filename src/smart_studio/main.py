@@ -77,6 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._set_state(self.widget_home)
 
     def stop(self):
+        logger.info('Stopping Current Widget and Pipeline')
         cur = self.central_widget.currentWidget()
         if hasattr(cur, 'stop'):
             cur.stop()
@@ -271,6 +272,7 @@ def main():
 
     def onclose():
         nonlocal window, window_state
+        logger.info('Writing Application State')
         try:
             window_state['size'] = [window.size().width(), window.size().height()]
             write_state()
@@ -281,9 +283,10 @@ def main():
     def handle_exception(exc_type, exc_value, exc_traceback):
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
-            return
-        logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-        QtWidgets.QMessageBox.critical(None, "Uncaught Exception", str(exc_value), QtWidgets.QMessageBox.Ok)
+            logger.error("KeyboardInterrupt, exiting")
+        else:
+            logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+            QtWidgets.QMessageBox.critical(None, "Uncaught Exception", str(exc_value), QtWidgets.QMessageBox.Ok)
         try:
             onclose()
             window.stop()
