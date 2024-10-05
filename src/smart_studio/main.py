@@ -270,9 +270,29 @@ def main():
     window_state = STATE['Window']
 
     def onclose():
-        window_state['size'] = [window.size().width(), window.size().height()]
-        write_state()
+        nonlocal window, window_state
+        try:
+            window_state['size'] = [window.size().width(), window.size().height()]
+            write_state()
+        except:
+            logger.error('Could not gracfully write application state')
 
+    # Global error handler
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+        logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+        QtWidgets.QMessageBox.critical(None, "Uncaught Exception", str(exc_value), QtWidgets.QMessageBox.Ok)
+        try:
+            onclose()
+            window.stop()
+        except:
+            logger.error('Could not gracfully close application')
+        sys.exit(1)
+
+    sys.excepthook = handle_exception
+    
     window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
     window.resize(*window_state.get('size', (1400, 820)))
     window.setWindowTitle("Smart Studio")

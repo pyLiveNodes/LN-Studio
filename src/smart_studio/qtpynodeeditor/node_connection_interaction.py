@@ -115,7 +115,7 @@ class NodeConnectionInteraction:
         # 1. Step: figure out which node is the sender and which is the receiver
         # 2. get the respective ports and check if they can input in the correct order
         if required_port == PortType.input:
-            # if we still require an input, the candidate must be of type input / recv and the already present one is the emitter
+        # if we still require an input, the candidate must be of type input / recv and the already present one is the emitter
             data_type_emit = connection_data_type
             data_type_recv = candidate_node_data_type
         else:
