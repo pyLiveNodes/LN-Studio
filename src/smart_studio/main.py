@@ -77,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._set_state(self.widget_home)
 
     def stop(self):
-        logger.info('Stopping Current Widget and Pipeline')
+        self.logger.info('Stopping Current Widget and Pipeline')
         cur = self.central_widget.currentWidget()
         if hasattr(cur, 'stop'):
             cur.stop()
