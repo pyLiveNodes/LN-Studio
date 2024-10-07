@@ -60,10 +60,10 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         emit_port_label = out_port.model.data_type[out_port.port_type][out_port.index].name
         recv_port_label = in_port.model.data_type[in_port.port_type][in_port.index].name
 
-        smart_receicing_node = in_port.model.association_to_node
+        smart_receiving_node = in_port.model.association_to_node
         smart_emit_node = out_port.model.association_to_node
 
-        return smart_emit_node, smart_receicing_node, emit_port_label, recv_port_label
+        return smart_emit_node, smart_receiving_node, emit_port_label, recv_port_label
 
     # TODO: do the same for the input connections!
     # Comment: make sure to not then have duplicates in the connections -yh
@@ -76,15 +76,15 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         # HACK: this currently works because of the three passes below (ie create node, create conneciton, associate pl node)
         # TODO: fix this by checking if the connection already exists and if so ignore the call
         if self.association_to_node is not None:
-            smart_emit_node, smart_receicing_node, emit_port_label, recv_port_label = self._get_port_infos(connection)
+            smart_emit_node, smart_receiving_node, emit_port_label, recv_port_label = self._get_port_infos(connection)
 
-            if smart_emit_node is not None and smart_receicing_node is not None:
+            if smart_emit_node is not None and smart_receiving_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
                 try:
-                    smart_receicing_node.add_input(
+                    smart_receiving_node.add_input(
                         smart_emit_node,
                         emit_port=smart_emit_node.get_port_out_by_label(emit_port_label),
-                        recv_port=smart_receicing_node.get_port_in_by_label(recv_port_label)
+                        recv_port=smart_receiving_node.get_port_in_by_label(recv_port_label)
                     )
                 except ValueError:
                     logger.warning('Unsafe Circle, removing in qtypynodeeditor as well.')
