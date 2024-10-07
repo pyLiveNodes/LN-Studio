@@ -86,9 +86,13 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
                         emit_port=smart_emit_node.get_port_out_by_label(emit_port_label),
                         recv_port=smart_receiving_node.get_port_in_by_label(recv_port_label)
                     )
-                except ValueError:
-                    logger.warning('Unsafe Circle, removing in qtypynodeeditor as well.')
-                    self.flow_scene.delete_connection(connection)
+                except ValueError as err:
+                    if 'Connection already exists' in str(err):
+                        logger.info('Connection already exists. Not adding again.')
+                    else:
+                        logger.error(err)
+                        logger.warning('Removing in qtypynodeeditor as well.')
+                        self.flow_scene.delete_connection(connection)
 
 
     def output_connection_deleted(self, connection):
@@ -140,7 +144,7 @@ class QT_Graph_edit(QWidget):
         # Would be great if the copy_nodes patch would not rely on this function...
         # ofc we could also adjust that one to not rely on this function here...
         self_alias = self
-        def _create_node(self, data_model, pl_node=None):
+        def _create_node(self, data_model, pl_node=None, skip_association=False):
             nonlocal self_alias
             if pl_node is None:
                 msg = CreateNodeDialog(data_model)
@@ -156,11 +160,12 @@ class QT_Graph_edit(QWidget):
                 ngo = NodeGraphicsObject(self, node)
                 node.graphics_object = ngo
 
-                node.model.set_node_association(pl_node)
-                node.model.set_flow_scene(self)
-                node._graphics_obj = attatch_click_cb(
-                    node._graphics_obj,
-                    partial(self_alias.node_selected.emit, pl_node))
+                if not skip_association:
+                    node.model.set_node_association(pl_node)
+                    node.model.set_flow_scene(self)
+                    node._graphics_obj = attatch_click_cb(
+                        node._graphics_obj,
+                        partial(self_alias.node_selected.emit, pl_node))
     
             return node
 
@@ -356,11 +361,10 @@ class QT_Graph_edit(QWidget):
                 # Additionally, these new classes may not use ports that aren't already registered (which should be the case for pipelines executed by macros anyway)
                 self._register_node(n)
                 if name in layout_nodes:
-                    # lets' hope the interface hasn't changed in between
-                    # TODO: actually check if it has
+                    # if the interface has changed in between saving the node/graph and loading it here the connection will log an error and be discarded
                     s_nodes[name] = self.scene.restore_node(layout_nodes[self._get_serialize_name(n)])
                 else:
-                    s_nodes[name] = self.scene.create_node(self.known_classes[n.__class__.__name__], pl_node=n)
+                    s_nodes[name] = self.scene.create_node(self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
 
             # 2. pass: create all connections
             for name, itm in dct.items():
@@ -385,8 +389,7 @@ class QT_Graph_edit(QWidget):
                         logger.exception(err)
                         
             # 3. pass: connect gui nodes to pipeline nodes
-            # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
-            # check if this is still necessary, as we now have overwritten the create_node function above -> yes it's still necessary for restored nodes
+            # this should be done after step 2 as otherwise the connections will be created twice
             for name, itm in dct.items():
                 s_nodes[name]._model.set_node_association(p_nodes[name])
                 s_nodes[name]._model.set_flow_scene(self.scene)
