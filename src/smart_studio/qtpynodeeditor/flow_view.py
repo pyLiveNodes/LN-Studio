@@ -128,7 +128,7 @@ class FlowView(QGraphicsView):
                 pos = item.scenePos()
                 # since we have overwritten the scene.create_node function in edit_graph, we do not need to set any associations etc here
                 s_node = self._scene.create_node(item._node._model, pl_node) 
-                s_node.graphics_object.setPos(QPointF(pos.x() + 10, pos.y() + 10))
+                s_node.graphics_object.setPos(QPointF(pos.x() + 30, pos.y() + 30))
                 id_map[id(item._node)] = s_node
 
         # then create connections where possible (ie the connection might be between a newly created and an existing node which might lead to duplicate inputs in the existing which would not be allowed atm)
