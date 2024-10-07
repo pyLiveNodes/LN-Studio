@@ -147,12 +147,21 @@ class QT_Graph_edit(QWidget):
         def _create_node(self, data_model, pl_node=None, skip_association=False):
             nonlocal self_alias
             if pl_node is None:
-                msg = CreateNodeDialog(data_model)
-                if msg.exec():
-                    pl_node = data_model.constructor(**msg.edit_dict)
-                else:
+                try:
+                    msg = CreateNodeDialog(data_model)
+                    if msg.exec():
+                        pl_node = data_model.constructor(**msg.edit_dict)
+                    else:
+                        # if the dialog was canceled, we don't want to create a node
+                        logger.exception(f'Could not create node: {data_model.name}. Dialog was canceled.')
+                        return None
+                except Exception as err:
+                    # if there is any error in the dialog, we don't want to create a node
+                    # e.g. a file not found error in case of macros or similar
+                    logger.error(err)
                     logger.exception(f'Could not create node: {data_model.name}. Dialog was canceled.')
                     return None
+
                 
             new_data_model = self_alias._register_node(pl_node)
 
