@@ -47,7 +47,11 @@ class Run(Page):
 
         for widget, node in zip(self.draw_widgets, self.nodes):
             # dock_widget = QtAds.CDockWidget(node.name)
-            dock_widget = DockWidget(node.name)
+            name = node.name
+            if hasattr(node, "_macro_parent"):
+                # in case of macro
+                name = name.replace(node._macro_parent.node_macro_id_suffix, f"({str(node._macro_parent)})")
+            dock_widget = DockWidget(name)
             self.widgets.append(dock_widget)
             dock_widget.view_toggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
             dock_widget.set_widget(widget)

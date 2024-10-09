@@ -136,7 +136,6 @@ class QT_Graph_edit(QWidget):
         self._create_paths(pipeline_path)
 
         self.known_classes = {}
-        self.known_ports = {}
 
         self._create_known_classes(node_registry)
 
@@ -162,7 +161,6 @@ class QT_Graph_edit(QWidget):
                     logger.exception(f'Could not create node: {data_model.name}. Dialog was canceled.')
                     return None
 
-                
             new_data_model = self_alias._register_node(pl_node)
 
             with self._new_node_context(new_data_model.name) as node:
@@ -264,10 +262,6 @@ class QT_Graph_edit(QWidget):
             if not new_key in self.known_dtypes:
                 # register new datatype
                 self.known_dtypes[new_key] = NodeDataType(id=new_key, name=port.label, port=port.__class__)
-
-            if not new_key in self.known_ports:
-                # register new stream type
-                self.known_ports[new_key] = port
                 
 
         # register node
@@ -287,7 +281,8 @@ class QT_Graph_edit(QWidget):
             })
         self.known_classes[cls_name] = cls
         self.registry.register_model(cls, category=getattr(node_or_cls, "category", "Unknown"))
-
+        
+        logger.info(f'Registered Node: {cls_name}')
         return cls
     
     def _create_known_classes(self, node_registry):
@@ -302,7 +297,6 @@ class QT_Graph_edit(QWidget):
             raise Exception('Registry is Required') 
 
         self.known_dtypes = {}
-        self.known_ports = {}
 
         for node_cls in node_registry.nodes.reg.values():
             self._register_node(node_cls)
@@ -351,6 +345,8 @@ class QT_Graph_edit(QWidget):
 
         ### Add nodes
         dct = self._load_compact_yml(pipeline_path)
+        logger.info(f'Loaded pipeline from {pipeline_path}')
+        logger.info(f'Graph: {dct}')
 
         if dct is not None:
             reg = get_registry()
