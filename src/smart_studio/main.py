@@ -7,9 +7,6 @@ import qdarktheme
 from qdarktheme._main import _sync_theme_with_system, _apply_style
 from functools import partial
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 from smart_studio.pages.home import Home
 from smart_studio.pages.config import Config
 from smart_studio.pages.run import Run

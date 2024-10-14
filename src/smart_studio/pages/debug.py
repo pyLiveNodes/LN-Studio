@@ -23,6 +23,9 @@ class Debug(Page):
     def __init__(self, pipeline_path, pipeline, parent=None):
         super().__init__(parent=parent)
 
+        if hasattr(pipeline, 'get_non_macro_node'):
+            pipeline = pipeline.get_non_macro_node()
+
         self.pipeline = pipeline
         self.graph = Graph(start_node=pipeline)
         self._create_paths(pipeline_path)
@@ -66,7 +69,7 @@ class Debug(Page):
         self.widgets = []
 
         def toggle(dock_widget, state):
-            dock_widget.toggleView(state == QtCore.Qt.Checked)
+            dock_widget.toggle_view(state == QtCore.Qt.Checked)
 
         def debug_partial(logger, *text):
             logger.debug(' '.join(map(str, text)))

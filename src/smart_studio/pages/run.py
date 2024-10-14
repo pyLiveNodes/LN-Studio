@@ -1,7 +1,6 @@
 from functools import partial
 from livenodes import viewer
 import os
-import json
 import logging
 import threading as th
 from logging.handlers import QueueHandler
@@ -25,6 +24,9 @@ class Run(Page):
 
     def __init__(self, pipeline_path, pipeline, parent=None):
         super().__init__(parent=parent)
+
+        if hasattr(pipeline, 'get_non_macro_node'):
+            pipeline = pipeline.get_non_macro_node()
 
         self.pipeline = pipeline
         self.graph = Graph(start_node=pipeline)
@@ -50,7 +52,8 @@ class Run(Page):
             name = node.name
             if hasattr(node, "_macro_parent"):
                 # in case of macro
-                name = name.replace(node._macro_parent.node_macro_id_suffix, f"({str(node._macro_parent)})")
+                for m in node._macro_parent:
+                    name = name.replace(m.node_macro_id_suffix, f"({str(m)})")
             dock_widget = DockWidget(name)
             self.widgets.append(dock_widget)
             dock_widget.view_toggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
