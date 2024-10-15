@@ -160,17 +160,24 @@ class InstalledPackages(QWidget):
         l2.addWidget(self.progress_bar)
         
         # Create the button
-        self.reload_button = QPushButton('Reload Modules')
+        self.reload_button = QPushButton('Fetch New')
         # Connect the button's clicked signal to the reload method
         self.reload_button.clicked.connect(self.reload_and_enable)
         # Add the button to the layout
         l2.addWidget(self.reload_button)
-
+        
+        # Create the second button
+        self.reload_button_with_cache = QPushButton('Reload Modules')
+        # Connect the button's clicked signal to the reload method with cache invalidation
+        self.reload_button_with_cache.clicked.connect(self.reload_and_invalidate_cache)
+        # Add the second button to the layout
+        l2.addWidget(self.reload_button_with_cache)
+        
     def _get_packages_html(self):
         packages = REGISTRY.installed_packages()
         item_list_str = '</li><li>'.join(packages)
         return f"<html><ul><li>{item_list_str}</li></ul></html>"
-
+    
     def reload_and_enable(self):
         self.reload_button.setDisabled(True)
         self.progress_bar.setVisible(True)
@@ -178,6 +185,14 @@ class InstalledPackages(QWidget):
         self.packages_label.setText(self._get_packages_html())
         self.progress_bar.setVisible(False)
         self.reload_button.setDisabled(False)
+    
+    def reload_and_invalidate_cache(self):
+        self.reload_button_with_cache.setDisabled(True)
+        self.progress_bar.setVisible(True)
+        REGISTRY.reload(invalidate_caches=True)
+        self.packages_label.setText(self._get_packages_html())
+        self.progress_bar.setVisible(False)
+        self.reload_button_with_cache.setDisabled(False)
 
 
 class Project_Selection(QWidget):
