@@ -142,23 +142,22 @@ class FlowView(QGraphicsView):
                 self._scene.create_connection(out_port, in_port)
 
     def delete_selected(self):
-        # Delete the selected connections first, ensuring that they won't be
-        # automatically deleted when selected nodes are deleted (deleting a node
-        # deletes some connections as well)
-        for item in self._scene.selectedItems():
-            if isinstance(item, ConnectionGraphicsObject):
-                self._scene.delete_connection(item.connection)
+        if self._scene.allow_edge_deletion:
+            # Delete the selected connections first, ensuring that they won't be
+            # automatically deleted when selected nodes are deleted (deleting a node
+            # deletes some connections as well)
+            for item in self._scene.selectedItems():
+                if isinstance(item, ConnectionGraphicsObject):
+                    self._scene.delete_connection(item.connection)
 
-        if not self._scene.allow_node_deletion:
-            return
-
-        # Delete the nodes; self will delete many of the connections.
-        # Selected connections were already deleted prior to self loop, otherwise
-        # qgraphicsitem_cast<NodeGraphicsObject*>(item) could be a use-after-free
-        # when a selected connection is deleted by deleting the node.
-        for item in self._scene.selectedItems():
-            if isinstance(item, NodeGraphicsObject):
-                self._scene.remove_node(item.node)
+        if self._scene.allow_node_deletion:
+            # Delete the nodes; self will delete many of the connections.
+            # Selected connections were already deleted prior to self loop, otherwise
+            # qgraphicsitem_cast<NodeGraphicsObject*>(item) could be a use-after-free
+            # when a selected connection is deleted by deleting the node.
+            for item in self._scene.selectedItems():
+                if isinstance(item, NodeGraphicsObject):
+                    self._scene.remove_node(item.node)
 
     def generate_context_menu(self, pos: QPoint):
         """

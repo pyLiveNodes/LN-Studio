@@ -12,12 +12,10 @@ import graphviz
 from livenodes import Node, Connection, get_registry
 from livenodes.components.node_connector import Connectionist
 
-import smart_studio.qtpynodeeditor as qtpynodeeditor
-from smart_studio.qtpynodeeditor import (NodeDataModel, NodeDataType, PortType)
+from smart_studio.qtpynodeeditor import FlowScene, FlowView, DataModelRegistry, NodeDataModel, NodeDataType, PortType
 from smart_studio.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
 
 from .edit_node import CreateNodeDialog
-from .utils import noop
 
 import logging
 logger = logging.getLogger('smart-studio')
@@ -127,7 +125,7 @@ def attatch_click_cb(node_graphic_ob, cb):
 class QT_Graph_edit(QWidget):
     node_selected = Signal(Node)
 
-    def __init__(self, pipeline_path, node_registry=None, parent=None):
+    def __init__(self, pipeline_path, node_registry, parent=None, read_only=False):
         super().__init__(parent)
         # There are two use cases: 
         # 1. The pipeline is newly created and thus empty
@@ -136,6 +134,7 @@ class QT_Graph_edit(QWidget):
         self._create_paths(pipeline_path)
 
         self.known_classes = {}
+        self.read_only = read_only
 
         self._create_known_classes(node_registry)
 
@@ -177,7 +176,11 @@ class QT_Graph_edit(QWidget):
             return node
 
         ### Setup scene
-        self.scene = qtpynodeeditor.FlowScene(registry=self.registry)
+        self.scene = FlowScene(registry=self.registry, 
+                            allow_node_creation = not self.read_only, 
+                            allow_node_deletion = not self.read_only,
+                            allow_edge_creation = not self.read_only,
+                            allow_edge_deletion = not self.read_only)
         self.scene.create_node = _create_node.__get__(self.scene, self.scene.__class__)
 
         self.scene.node_deleted.connect(self._remove_pl_node)
@@ -189,7 +192,7 @@ class QT_Graph_edit(QWidget):
         # Configure the style collection to use colors based on data types:
         connection_style.use_data_defined_colors = True
 
-        view_nodes = qtpynodeeditor.FlowView(self.scene)
+        view_nodes = FlowView(self.scene)
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(view_nodes)
@@ -289,7 +292,7 @@ class QT_Graph_edit(QWidget):
         ### Setup Datastructures
         # style = StyleCollection.from_json(style_json)
 
-        self.registry = qtpynodeeditor.DataModelRegistry()
+        self.registry = DataModelRegistry()
         # TODO: figure out how to allow multiple connections to a single input!
         # Not relevant yet, but will be when there are sync nodes (ie sync 1-x sensor nodes) etc
 

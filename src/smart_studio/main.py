@@ -156,7 +156,8 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
             # TODO: make these logs project dependent as well
-            widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path),
+            widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path, 
+                                            node_registry=get_registry()),
                                 name=f"Debuging: {pipeline_path}",
                                 back_fn=self.return_home)
             self.central_widget.addWidget(widget_run)

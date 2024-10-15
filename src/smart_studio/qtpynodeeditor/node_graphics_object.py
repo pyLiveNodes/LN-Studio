@@ -171,11 +171,11 @@ class NodeGraphicsObject(QGraphicsObject):
             connections = port.connections
 
             # start dragging existing connection
-            if connections and port_to_check == PortType.input:
+            if connections and port_to_check == PortType.input and self._scene.allow_edge_deletion:
                 conn, = connections
                 interaction = NodeConnectionInteraction(self._node, conn, self._scene)
                 interaction.disconnect(port_to_check)
-            elif port_to_check == PortType.output:
+            elif port_to_check == PortType.output and self._scene.allow_edge_creation:
                 # initialize new Connection
                 out_policy = port.connection_policy
                 if connections and out_policy == ConnectionPolicy.one:

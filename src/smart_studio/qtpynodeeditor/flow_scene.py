@@ -386,7 +386,8 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
     node_dragging = Signal(bool)
 
     def __init__(self, registry=None, style=None, parent=None,
-                 allow_node_creation=True, allow_node_deletion=True):
+                 allow_node_creation=True, allow_node_deletion=True,
+                 allow_edge_creation=True, allow_edge_deletion=True):
         '''
         Create a new flow scene
 
@@ -405,6 +406,8 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         self._style = style
         self.allow_node_deletion = allow_node_creation
         self.allow_node_creation = allow_node_deletion
+        self.allow_edge_creation = allow_edge_creation
+        self.allow_edge_deletion = allow_edge_deletion
         self.node_dragging.connect(self._redraw_post_drag)
 
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
@@ -442,6 +445,22 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
     @allow_node_deletion.setter
     def allow_node_deletion(self, allow):
         self._allow_node_deletion = bool(allow)
+
+    @property
+    def allow_edge_creation(self):
+        return self._allow_edge_creation
+
+    @allow_edge_creation.setter
+    def allow_edge_creation(self, allow):
+        self._allow_edge_creation = bool(allow)
+
+    @property
+    def allow_edge_deletion(self):
+        return self._allow_edge_deletion
+
+    @allow_edge_deletion.setter
+    def allow_edge_deletion(self, allow):
+        self._allow_edge_deletion = bool(allow)
 
     @property
     def style_collection(self) -> style_module.StyleCollection:

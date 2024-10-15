@@ -1,14 +1,14 @@
-from functools import partial
 import logging
 from logging.handlers import QueueHandler
 import os
 
 from qtpy.QtWidgets import QHBoxLayout
-from qtpy import QtCore
-from qtpy.QtWidgets import QCheckBox, QPushButton, QVBoxLayout, QHBoxLayout
+from qtpy import QtCore, QtWidgets
+from qtpy.QtWidgets import QPushButton, QVBoxLayout, QHBoxLayout
 
 # from PyQtAds import QtAds
-from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
+from smart_studio.qtpydocking import DockManager, DockWidget, DockWidgetArea
+from smart_studio.qtpydocking.enums import DockWidgetFeature
 
 import multiprocessing as mp
 import threading as th
@@ -18,9 +18,15 @@ from livenodes.components.utils.log import drain_log_queue
 from smart_studio.components.node_views import node_view_mapper, Debug_View
 from smart_studio.components.page import Page, Action, ActionKind
 
+from qtpy.QtWidgets import QSplitter, QHBoxLayout
+
+from smart_studio.components.edit_graph import QT_Graph_edit
+from smart_studio.components.page import ActionKind, Page, Action
+
+
 class Debug(Page):
 
-    def __init__(self, pipeline_path, pipeline, parent=None):
+    def __init__(self, pipeline_path, pipeline, node_registry, parent=None):
         super().__init__(parent=parent)
 
         if hasattr(pipeline, 'get_non_macro_node'):
@@ -28,9 +34,11 @@ class Debug(Page):
 
         self.pipeline = pipeline
         self.graph = Graph(start_node=pipeline)
-        self._create_paths(pipeline_path)
+        self.pipeline_path = pipeline_path
+        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock_debug.xml')
 
-        # === Setup buttons =================================================
+
+        # === Setup Start/Stop =================================================
         def toggle():
             nonlocal self
             if self.worker is None:
@@ -46,67 +54,50 @@ class Debug(Page):
         buttons = QHBoxLayout()
         buttons.addWidget(self.toggle)
 
-        # === Setup item list =================================================
-        sidebar_items = QVBoxLayout()
-        sidebar_items.addLayout(buttons)
-        sidebar_items.spacerItem()
-
-
-        # === Create overall layout =================================================
-        # self.dock_manager = QtAds.CDockManager(self)
-        self.dock_manager = DockManager(self)
-
-        self.layout = QHBoxLayout(self)
-        self.layout.addLayout(sidebar_items, stretch=0)
-        self.layout.addWidget(self.dock_manager, stretch=1)
-
+        # === Setup Edit Side =================================================
+        self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, node_registry=node_registry, parent=self, read_only=True)
+        self.edit_graph.setMinimumWidth(300)
+        self.edit_graph.node_selected.connect(self.focus_node_view)
 
         # === Setup draw canvases and add items to views =================================================
+        self.dock_manager = DockManager(self)
         self.nodes = Node.discover_graph(pipeline)
         self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None, parent=self) for n in self.nodes]
-        
-        # QtAds.CDockManager.setConfigFlag(QtAds.CDockManager.XmlCompressionEnabled, False)
-        self.widgets = []
-
-        def toggle(dock_widget, state):
-            dock_widget.toggle_view(state == QtCore.Qt.Checked)
-
-        def debug_partial(logger, *text):
-            logger.debug(' '.join(map(str, text)))
 
         for widget, node in zip(self.draw_widgets, self.nodes):
-            # dock_widget = QtAds.CDockWidget(node.name)
             dock_widget = DockWidget(node.name)
-            self.widgets.append(dock_widget)
-            dock_widget.view_toggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
             dock_widget.set_widget(widget)
-            # dock_widget.setFeature(QtAds.CDockWidget.DockWidgetClosable, False)
-
-            # self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock_widget)
-            self.dock_manager.add_dock_widget(DockWidgetArea.right, dock_widget)
+            dock_widget.set_feature(DockWidgetFeature.closable, False)
+            self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, dock_widget)
 
         if os.path.exists(self.pipeline_gui_path):
-            with open(self.pipeline_gui_path, 'r') as f:
-                self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
+            try:
+                with open(self.pipeline_gui_path, 'r') as f:
+                    self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
+            except Exception as e:
+                self.logger.error(f"Failed to load gui layout: {e}")
 
-        # # restore might remove some of the newly added widgets -> add it back in here
-        for dock_widget, node in zip(self.widgets, self.nodes):
-            # sidebar_items.addWidget(dock_widget.toggleViewAction())
-            box = QCheckBox(str(node))
-            box.setChecked(not dock_widget.is_closed())
-            sidebar_items.addWidget(box, stretch=0)
-            # dock_widget.closed.connect()
-            box.stateChanged.connect(partial(toggle, dock_widget))
+        # === Create overall layout =================================================
+        grid = QSplitter()
+        grid.addWidget(self.edit_graph)
+        grid.addWidget(self.dock_manager)
+        width = QtWidgets.qApp.desktop().availableGeometry(self).width()
+        grid.setSizes([width // 2, width // 2])
 
-            # if widget.isClosed():
-            #     # print('----', str(node))
-            #     widget.setClosedState(False)
-            #     self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, widget)
-
+        layout = QVBoxLayout(self)
+        layout.addLayout(buttons)
+        layout.addWidget(grid)
 
         # === Start pipeline =================================================
         self.worker_term_lock = mp.Lock()
         self.worker = None
+
+    def focus_node_view(self, node):
+        dock_widget = self.dock_manager.find_dock_widget(node.name)
+        dock_area = dock_widget.dock_area_widget()
+        dock_area.set_current_index(dock_area.index(dock_widget))
+
+    # TODO: check if we really need to re-implement _start stop etc from run page... -yh
 
     def _start_pipeline(self):
         self.worker_term_lock.acquire()
@@ -139,7 +130,6 @@ class Debug(Page):
     def worker_start(self, subprocess_log_queue, logger_name):
         logger = logging.getLogger(logger_name)
         logger.addHandler(QueueHandler(subprocess_log_queue))
-        # logger = logging.getLogger('smart-studio')
 
         logger.info(f"Starting Worker")
         self.graph.start_all()
@@ -168,13 +158,9 @@ class Debug(Page):
     def get_actions(self):
         return [ \
             Action(label="Back", fn=self.save, kind=ActionKind.BACK),
-            # Action(label="Cancel", kind=ActionKind.BACK),
         ]
 
     def save(self):
         with open(self.pipeline_gui_path, 'w') as f:
             f.write(self.dock_manager.save_state().data().decode())
-
-    def _create_paths(self, pipeline_path):
-        self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock_debug.xml')
+        self.edit_graph.save()

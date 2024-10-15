@@ -10,6 +10,7 @@ from qtpy import QtCore
 
 # from PyQtAds import QtAds
 from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
+from smart_studio.qtpydocking.enums import DockWidgetFeature
 
 import multiprocessing as mp
 
@@ -55,6 +56,7 @@ class Run(Page):
                 for m in node._macro_parent:
                     name = name.replace(m.node_macro_id_suffix, f"({str(m)})")
             dock_widget = DockWidget(name)
+            dock_widget.set_feature(DockWidgetFeature.closable, False)
             self.widgets.append(dock_widget)
             dock_widget.view_toggled.connect(partial(debug_partial, self.logger, '=======', str(node), "qt emitted signal"))
             dock_widget.set_widget(widget)

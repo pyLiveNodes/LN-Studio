@@ -6,7 +6,7 @@ from smart_studio.components.page import ActionKind, Page, Action
 
 class Config(Page):
 
-    def __init__(self, pipeline_path, node_registry=None, parent=None):
+    def __init__(self, pipeline_path, node_registry, parent=None):
         super().__init__(parent)
 
         self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, node_registry=node_registry, parent=self)

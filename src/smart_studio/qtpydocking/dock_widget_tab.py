@@ -389,6 +389,10 @@ class DockWidgetTab(QFrame):
         self.style().polish(self)
         self.d.title_label.style().unpolish(self.d.title_label)
         self.d.title_label.style().polish(self.d.title_label)
+        if active:
+            self.d.title_label.setStyleSheet("color: black;")
+        else:
+            self.d.title_label.setStyleSheet("color: grey;")
         self.update()
 
         self.active_tab_changed.emit()
