@@ -50,11 +50,8 @@ class Run(Page):
 
         for widget, node in zip(self.draw_widgets, self.nodes):
             # dock_widget = QtAds.CDockWidget(node.name)
-            name = node.name
-            if hasattr(node, "_macro_parent"):
-                # in case of macro
-                for m in node._macro_parent:
-                    name = name.replace(m.node_macro_id_suffix, f"({str(m)})")
+            # in case of macro node
+            name = node.get_name_resolve_macro() if hasattr(node, "get_name_resolve_macro") else node.name
             dock_widget = DockWidget(name)
             dock_widget.set_feature(DockWidgetFeature.closable, False)
             self.widgets.append(dock_widget)

@@ -14,6 +14,7 @@ from livenodes.components.node_connector import Connectionist
 
 from smart_studio.qtpynodeeditor import FlowScene, FlowView, DataModelRegistry, NodeDataModel, NodeDataType, PortType
 from smart_studio.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
+from smart_studio.qtpynodeeditor.exceptions import ConnectionDataTypeFailure
 
 from .edit_node import CreateNodeDialog
 
@@ -125,16 +126,22 @@ def attatch_click_cb(node_graphic_ob, cb):
 class QT_Graph_edit(QWidget):
     node_selected = Signal(Node)
 
-    def __init__(self, pipeline_path, node_registry, parent=None, read_only=False):
+    def __init__(self, pipeline_path, node_registry, parent=None, read_only=False, resolve_macros=False):
         super().__init__(parent)
         # There are two use cases: 
         # 1. The pipeline is newly created and thus empty
         # 2. The pipeline is loaded from a file and thus has nodes
 
-        self._create_paths(pipeline_path)
+        self.pipeline_path = pipeline_path
 
         self.known_classes = {}
         self.read_only = read_only
+        self.resolve_macros = resolve_macros
+        
+        if self.resolve_macros:
+            self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_debug.json', 1)
+        else:
+            self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui.json', 1)
 
         self._create_known_classes(node_registry)
 
@@ -234,9 +241,6 @@ class QT_Graph_edit(QWidget):
             smart_node.remove_all_inputs()
 
 
-    def _create_paths(self, pipeline_path):
-        self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui.json', 1)
 
 
 
@@ -323,29 +327,8 @@ class QT_Graph_edit(QWidget):
             dct[con['recv_node']]['inputs'].append(con)
         
         return dct
-
-    def _add_pipeline(self, layout, pipeline_path):
-        # TODO: implement the switch from getting a pipeline here, to getting the path
-        # -> this is done to avoid the difference between visual representation and running graph of a pipeline (e.g. with macros, where the macro node should be shown and the loaded nodes not, vs running where the macro node should not be present, but only the sub-graph nodes)
-        ### Reformat Layout for easier use
-
-        # also collect x and y min for repositioning
-        layout_nodes = {}
-        if layout is not None:
-            min_x, min_y = 2**15, 2**15
-            # first pass, collect mins and add to dict for quicker lookup
-            for l_node in layout['nodes']:
-                layout_nodes[l_node['model']['association_to_node']] = l_node
-                min_x = min(min_x, l_node["position"]['x'])
-                min_y = min(min_y, l_node["position"]['y'])
-
-            min_x, min_y = min_x - 50, min_y - 50
-
-            # second pass, update x and y
-            for l_node in layout['nodes']:
-                l_node["position"]['x'] = l_node["position"]['x'] - min_x
-                l_node["position"]['y'] = l_node["position"]['y'] - min_y
-
+    
+    def _load_pipeline_keep_macro(self, pipeline_path, layout_nodes):
         ### Add nodes
         dct = self._load_compact_yml(pipeline_path)
         logger.info(f'Loaded pipeline from {pipeline_path}')
@@ -407,7 +390,89 @@ class QT_Graph_edit(QWidget):
                     s_nodes[name]._graphics_obj,
                     partial(self.node_selected.emit, p_nodes[name]))
                     # partial(self.view_configure.set_pl_node, n))
-            print('Added pipeline')
+
+    def _load_pipeline_resolve_macro(self, pipeline_path, layout_nodes):
+        ### Add nodes
+        pipeline = Node.load(pipeline_path)
+        if hasattr(pipeline, 'get_non_macro_node'):
+            pipeline = pipeline.get_non_macro_node()
+
+        logger.info(f'Loaded pipeline from {pipeline_path}')
+
+        if pipeline is not None:
+            ### Add nodes
+            p_nodes = [(str(n), n) for n in pipeline.discover_graph(pipeline)]
+            logger.info(f'Graph: {p_nodes}')
+            # first pass: create all nodes
+            s_nodes = {}
+            # print([str(n) for n in p_nodes])
+            for name, n in p_nodes:
+                if name in layout_nodes:
+                    # lets' hope the interface hasn't changed in between
+                    # TODO: actually check if it has
+                    s_nodes[name] = self.scene.restore_node(layout_nodes[str(n)])
+                else:
+                    s_nodes[name] = self.scene.create_node(
+                        self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
+
+            # second pass: create all connectins
+            for name, n in p_nodes:
+                # node_output refers to the node in which n is inputing data, ie n's output
+                # for node_output, output_id, emit_port, recv_port in n.output_classes:
+                for con in n.output_connections:
+                    # print('=====')
+                    out_idx = list(n.ports_out).index(con._emit_port)
+                    in_idx = list(con._recv_node.ports_in).index(con._recv_port)
+                    # print(out_idx, in_idx)
+                    n_out = s_nodes[name][PortType.output][out_idx]
+                    n_in = s_nodes[str(
+                        con._recv_node)][PortType.input][in_idx]
+                    try:
+                        self.scene.create_connection(n_out, n_in)
+                    except ConnectionDataTypeFailure:
+                        logger.exception("ERROR ConnectionDataTypeFailure: Could not connect nodes, please check.", n_out, n_in, con)
+
+            # third pass: connect gui nodes to pipeline nodes
+            # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
+            for name, n in p_nodes:
+                s_nodes[name]._model.set_node_association(n)
+                s_nodes[name]._model.set_flow_scene(self.scene)
+
+                # COMMENT: ouch, this feels very wrong...
+                s_nodes[name]._graphics_obj = attatch_click_cb(
+                    s_nodes[name]._graphics_obj,
+                    partial(self.node_selected.emit, n))
+                    # partial(self.view_configure.set_pl_node, n))
+
+
+    def _add_pipeline(self, layout, pipeline_path):
+        # TODO: implement the switch from getting a pipeline here, to getting the path
+        # -> this is done to avoid the difference between visual representation and running graph of a pipeline (e.g. with macros, where the macro node should be shown and the loaded nodes not, vs running where the macro node should not be present, but only the sub-graph nodes)
+        ### Reformat Layout for easier use
+
+        # also collect x and y min for repositioning
+        layout_nodes = {}
+        if layout is not None:
+            min_x, min_y = 2**15, 2**15
+            # first pass, collect mins and add to dict for quicker lookup
+            for l_node in layout['nodes']:
+                layout_nodes[l_node['model']['association_to_node']] = l_node
+                min_x = min(min_x, l_node["position"]['x'])
+                min_y = min(min_y, l_node["position"]['y'])
+
+            min_x, min_y = min_x - 50, min_y - 50
+
+            # second pass, update x and y
+            for l_node in layout['nodes']:
+                l_node["position"]['x'] = l_node["position"]['x'] - min_x
+                l_node["position"]['y'] = l_node["position"]['y'] - min_y
+
+        if self.resolve_macros:
+            self._load_pipeline_resolve_macro(pipeline_path, layout_nodes)
+        else:
+            self._load_pipeline_keep_macro(pipeline_path, layout_nodes)
+
+        print('Added pipeline')
 
     def _find_initial_pl(self, pl_nodes):
         # initial node: assume the first node we come across, that doesn't have any inputs is our initial node

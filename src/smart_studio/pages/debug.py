@@ -55,7 +55,7 @@ class Debug(Page):
         buttons.addWidget(self.toggle)
 
         # === Setup Edit Side =================================================
-        self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, node_registry=node_registry, parent=self, read_only=True)
+        self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, node_registry=node_registry, parent=self, read_only=True, resolve_macros=True)
         self.edit_graph.setMinimumWidth(300)
         self.edit_graph.node_selected.connect(self.focus_node_view)
 
@@ -65,7 +65,8 @@ class Debug(Page):
         self.draw_widgets = [Debug_View(n, view=node_view_mapper(self, n) if isinstance(n, viewer.View) else None, parent=self) for n in self.nodes]
 
         for widget, node in zip(self.draw_widgets, self.nodes):
-            dock_widget = DockWidget(node.name)
+            name = node.get_name_resolve_macro() if hasattr(node, "get_name_resolve_macro") else node.name
+            dock_widget = DockWidget(name)
             dock_widget.set_widget(widget)
             dock_widget.set_feature(DockWidgetFeature.closable, False)
             self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, dock_widget)
@@ -93,7 +94,8 @@ class Debug(Page):
         self.worker = None
 
     def focus_node_view(self, node):
-        dock_widget = self.dock_manager.find_dock_widget(node.name)
+        name = node.get_name_resolve_macro() if hasattr(node, "get_name_resolve_macro") else node.name
+        dock_widget = self.dock_manager.find_dock_widget(name)
         dock_area = dock_widget.dock_area_widget()
         dock_area.set_current_index(dock_area.index(dock_widget))
 
