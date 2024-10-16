@@ -14,7 +14,7 @@ from livenodes.components.node_connector import Connectionist
 
 from smart_studio.qtpynodeeditor import FlowScene, FlowView, DataModelRegistry, NodeDataModel, NodeDataType, PortType
 from smart_studio.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
-from smart_studio.qtpynodeeditor.exceptions import ConnectionDataTypeFailure
+from smart_studio.qtpynodeeditor.exceptions import ConnectionDataTypeFailure, MultipleInputConnectionError
 
 from .edit_node import CreateNodeDialog
 
@@ -407,10 +407,10 @@ class QT_Graph_edit(QWidget):
             s_nodes = {}
             # print([str(n) for n in p_nodes])
             for name, n in p_nodes:
-                if name in layout_nodes:
+                if self._get_serialize_name(n) in layout_nodes:
                     # lets' hope the interface hasn't changed in between
                     # TODO: actually check if it has
-                    s_nodes[name] = self.scene.restore_node(layout_nodes[str(n)])
+                    s_nodes[name] = self.scene.restore_node(layout_nodes[self._get_serialize_name(n)])
                 else:
                     s_nodes[name] = self.scene.create_node(
                         self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
@@ -425,12 +425,13 @@ class QT_Graph_edit(QWidget):
                     in_idx = list(con._recv_node.ports_in).index(con._recv_port)
                     # print(out_idx, in_idx)
                     n_out = s_nodes[name][PortType.output][out_idx]
-                    n_in = s_nodes[str(
-                        con._recv_node)][PortType.input][in_idx]
+                    n_in = s_nodes[str(con._recv_node)][PortType.input][in_idx]
                     try:
                         self.scene.create_connection(n_out, n_in)
                     except ConnectionDataTypeFailure:
                         logger.exception("ERROR ConnectionDataTypeFailure: Could not connect nodes, please check.", n_out, n_in, con)
+                    except MultipleInputConnectionError as err:
+                        logger.exception(err)
 
             # third pass: connect gui nodes to pipeline nodes
             # TODO: this is kinda a hack so that we do not create connections twice (see custom model above)
@@ -498,10 +499,15 @@ class QT_Graph_edit(QWidget):
     
     @staticmethod
     def _get_serialize_name(node):
+        name = str(node)
         if hasattr(node, '_serialize_name'):
-            return node._serialize_name()
-        return str(node)
+            name = node._serialize_name()
 
+        if hasattr(node, "get_name_resolve_macro"):
+            return name.replace(node.name, node.get_name_resolve_macro())
+        else:
+            return name
+    
     def get_state(self):
         state = self.scene.__getstate__()
         vis_state = {'connections': state['connections'], 'nodes': []}
@@ -527,7 +533,8 @@ class QT_Graph_edit(QWidget):
 
         # loadable file format
         pipeline_base = self.pipeline_path.replace('.yml', '', 1)
-        pipeline.save(pipeline_base, extension='yml')
+        if not self.read_only:
+            pipeline.save(pipeline_base, extension='yml')
 
         try:
             pipeline.dot_graph_full(transparent_bg=True, edge_labels=False, filename=pipeline_base, file_type='png')
