@@ -22,12 +22,12 @@ from qtpy.QtWidgets import QSplitter, QHBoxLayout
 
 from smart_studio.components.edit_graph import QT_Graph_edit
 from smart_studio.components.page import ActionKind, Page, Action
+from .run import Run
 
-
-class Debug(Page):
+class Debug(Run, Page):
 
     def __init__(self, pipeline_path, pipeline, node_registry, parent=None):
-        super().__init__(parent=parent)
+        super(Page, self).__init__(parent=parent)
 
         if hasattr(pipeline, 'get_non_macro_node'):
             pipeline = pipeline.get_non_macro_node()
@@ -37,6 +37,8 @@ class Debug(Page):
         self.pipeline_path = pipeline_path
         self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock_debug.xml')
 
+        self.worker = None
+        self.logger = logging.getLogger("smart-studio")
 
         # === Setup Start/Stop =================================================
         def toggle():
@@ -94,63 +96,33 @@ class Debug(Page):
         self.worker = None
 
     def focus_node_view(self, node):
+        print('focusing node', node)
         name = node.get_name_resolve_macro() if hasattr(node, "get_name_resolve_macro") else node.name
         dock_widget = self.dock_manager.find_dock_widget(name)
         dock_area = dock_widget.dock_area_widget()
         dock_area.set_current_index(dock_area.index(dock_widget))
 
-    # TODO: check if we really need to re-implement _start stop etc from run page... -yh
 
-    def _start_pipeline(self):
-        self.worker_term_lock.acquire()
-
-        parent_log_queue = mp.Queue()
-        logger_name = 'smart-studio'
-        
-        self.worker_log_handler_termi_sig = th.Event()
-
-        self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
-        self.worker_log_handler.deamon = True
-        self.worker_log_handler.name = f"LogDrain-{self.worker_log_handler.name.split('-')[-1]}"
-        self.worker_log_handler.start()
-
-        self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,), name="LN-Executor")
-        # self.worker.daemon = True
-        self.worker.start()
-
-    def _stop_pipeline(self):
-        if self.worker is not None:
-            self.worker_term_lock.release()
-            print('Termination time in view!')
-            self.worker_term_lock.acquire()
-            self.worker_term_lock.release()
-            print('View terminated')
-            self.worker = None
+    # def _stop_pipeline(self):
+    #     if self.worker is not None:
+    #         super(Run, self)._stop_pipeline()
+    #         # self.worker_term_lock.release()
+    #         # print('Termination time in view!')
+    #         # self.worker_term_lock.acquire()
+    #         # self.worker_term_lock.release()
+    #         # print('View terminated')
+    #         # self.worker = None
             
-            self.worker_log_handler_termi_sig.set()
+            # self.worker_log_handler_termi_sig.set()
         
-    def worker_start(self, subprocess_log_queue, logger_name):
-        logger = logging.getLogger(logger_name)
-        logger.addHandler(QueueHandler(subprocess_log_queue))
-
-        logger.info(f"Starting Worker")
-        self.graph.start_all()
-        self.worker_term_lock.acquire()
-
-        logger.info(f"Stopping Worker")
-        # timeout to make sure potential non-returning nodes do not block until eternity
-        self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
-        self.worker_term_lock.release()
-        logger.info(f"Worker Stopped")
-
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
-    def stop(self, *args, **kwargs):
-        self._stop_pipeline()
+    # def stop(self, *args, **kwargs):
+    #     self._stop_pipeline()
 
-        print('Terminating draw widgets')
-        for widget in self.draw_widgets:
-            widget.stop()
+    #     print('Terminating draw widgets')
+    #     for widget in self.draw_widgets:
+    #         widget.stop()
 
         # self.nodes = None
         # self.graph = None

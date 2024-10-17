@@ -31,7 +31,10 @@ class Run(Page):
 
         self.pipeline = pipeline
         self.graph = Graph(start_node=pipeline)
-        self._create_paths(pipeline_path)
+        self.pipeline_path = pipeline_path
+        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock.xml')
+        self.worker = None
+        self.logger = logging.getLogger("smart-studio")
 
         # === Setup draw canvases =================================================
         self.nodes = [n for n in Node.discover_graph(pipeline) if isinstance(n, viewer.View)]
@@ -76,7 +79,6 @@ class Run(Page):
 
 
         # === Start pipeline =================================================
-        self.logger = logging.getLogger("smart-studio")
         self.worker_term_lock = mp.Lock()
         self._start_pipeline()
 
@@ -118,24 +120,26 @@ class Run(Page):
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
     def _stop_pipeline(self):
-        # Tell the process to terminate, then wait until it returns
-        self.worker_term_lock.release()
-        
-        self.logger.info(f"Stopping Worker")
-        # Block until graph finished all it's nodes
-        self.worker_term_lock.acquire()
-        self.worker_term_lock.release()
-        self.logger.info('View terminated')
+        if self.worker is not None:
+            # Tell the process to terminate, then wait until it returns
+            self.worker_term_lock.release()
+            
+            self.logger.info(f"Stopping Worker")
+            # Block until graph finished all it's nodes
+            self.worker_term_lock.acquire()
+            self.worker_term_lock.release()
+            self.logger.info('View terminated')
 
-        self.logger.info('Terminating draw widgets')
-        self.logger.info(f"Stopping Widgets")
-        for widget in self.draw_widgets:
-            widget.stop()
+            self.logger.info('Terminating draw widgets')
+            self.logger.info(f"Stopping Widgets")
+            for widget in self.draw_widgets:
+                widget.stop()
 
-        self.logger.info(f"Killing Worker")
-        self.worker.terminate()
+            self.logger.info(f"Killing Worker")
+            self.worker.terminate()
 
-        self.worker_log_handler_termi_sig.set()
+            self.worker_log_handler_termi_sig.set()
+            self.worker = None
 
     def get_actions(self):
         return [ \
@@ -146,7 +150,3 @@ class Run(Page):
     def save(self):
         with open(self.pipeline_gui_path, 'w') as f:
             f.write(self.dock_manager.save_state().data().decode())
-
-    def _create_paths(self, pipeline_path):
-        self.pipeline_path = pipeline_path
-        self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock.xml')
