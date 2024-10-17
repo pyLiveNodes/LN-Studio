@@ -393,6 +393,10 @@ class DockWidgetTab(QFrame):
             self.d.title_label.setStyleSheet("color: black;")
         else:
             self.d.title_label.setStyleSheet("color: grey;")
+        
+        if hasattr(self.dock_widget().widget(), 'sleep'):
+            self.dock_widget().widget().sleep(not active)
+
         self.update()
 
         self.active_tab_changed.emit()

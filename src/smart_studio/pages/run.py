@@ -83,22 +83,22 @@ class Run(Page):
         self._start_pipeline()
 
     def _start_pipeline(self):
-        self.worker_term_lock.acquire()
+        if self.worker is None:
+            self.worker_term_lock.acquire()
 
-        parent_log_queue = mp.Queue()
-        logger_name = 'smart-studio'
-        
-        self.worker_log_handler_termi_sig = th.Event()
+            parent_log_queue = mp.Queue()
+            logger_name = 'smart-studio'
+            
+            self.worker_log_handler_termi_sig = th.Event()
 
-        self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
-        self.worker_log_handler.deamon = True
-        self.worker_log_handler.name = f"LogDrain-{self.worker_log_handler.name.split('-')[-1]}"
-        self.worker_log_handler.start()
+            self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
+            self.worker_log_handler.deamon = True
+            self.worker_log_handler.name = f"LogDrain-{self.worker_log_handler.name.split('-')[-1]}"
+            self.worker_log_handler.start()
 
-        self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,), name="LN-Executor")
-        # self.worker.daemon = True
-        self.worker.start()
-
+            self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,), name="LN-Executor")
+            # self.worker.daemon = True
+            self.worker.start()
 
     def worker_start(self, subprocess_log_queue, logger_name):
         logger = logging.getLogger(logger_name)
@@ -115,11 +115,16 @@ class Run(Page):
         logger.info(f"Worker Stopped")
 
     def stop(self, *args, **kwargs):
+        self.logger.info('Stopping pipeline')
         self._stop_pipeline()
 
     # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
     # will be called in parent view, but also called on exiting the canvas
     def _stop_pipeline(self):
+        self.logger.info(f"Stopping Widgets")
+        for widget in self.draw_widgets:
+            widget.stop()
+            
         if self.worker is not None:
             # Tell the process to terminate, then wait until it returns
             self.worker_term_lock.release()
@@ -131,15 +136,12 @@ class Run(Page):
             self.logger.info('View terminated')
 
             self.logger.info('Terminating draw widgets')
-            self.logger.info(f"Stopping Widgets")
-            for widget in self.draw_widgets:
-                widget.stop()
-
             self.logger.info(f"Killing Worker")
             self.worker.terminate()
 
             self.worker_log_handler_termi_sig.set()
             self.worker = None
+           
 
     def get_actions(self):
         return [ \

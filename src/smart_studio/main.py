@@ -15,7 +15,6 @@ from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry
 
-
 import os
 
 import logging
@@ -26,7 +25,11 @@ from smart_studio.utils.state import STATE, write_state
 def noop(*args, **kwargs):
     pass
 
+class Pipeline_Loading_Error(Exception):
+    pass
 
+class View_Creation_Error(Exception):
+    pass
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -124,6 +127,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'Ref count old view (Home) {sys.getrefcount(cur)}')
         self.logger.info(f'Nr of views: {self.central_widget.count()}')
 
+    def _call_stop(self, obj=None):
+        if obj is not None and hasattr(obj, 'stop'):
+            obj.stop()
+
     def onstart(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
@@ -131,18 +138,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            # TODO: open dialog on connection errors
-            pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
-            # TODO: make these logs project dependent as well
-            widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
-                                name=f"Running: {pipeline_path}",
-                                back_fn=self.return_home)
+            try:
+                # TODO: open dialog/show textbox showing all connection errors as list
+                pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
+            except:
+                self.logger.exception('Could not load pipeline.')
+                raise Pipeline_Loading_Error()
+
+            child, widget_run = None, None
+            try:
+                # TODO: make these logs project dependent as well
+                child = Run(pipeline=pipeline, pipeline_path=pipeline_path)
+                widget_run = Parent(child=child,
+                                    name=f"Running: {pipeline_path}",
+                                    back_fn=self.return_home)
+            except:
+                self._call_stop(child)
+                self._call_stop(widget_run)
+                self.logger.exception('Could not create view.')
+                raise View_Creation_Error()
+            
             self.central_widget.addWidget(widget_run)
             self.central_widget.setCurrentWidget(widget_run)
 
             self._set_state(widget_run)
         except Exception as err:
-            self.logger.exception('Could not load pipeline. Staying home')
+            self.logger.error(err)
+            self.logger.exception('Staying home')
             self.stop()
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
@@ -154,18 +176,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
-            # TODO: make these logs project dependent as well
-            widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path, 
-                                            node_registry=get_registry()),
+            try:
+                # TODO: open dialog/show textbox showing all connection errors as list
+                pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
+            except:
+                self.logger.exception('Could not load pipeline.')
+                raise Pipeline_Loading_Error()
+
+            child, widget_run = None, None
+            try:
+                # TODO: make these logs project dependent as well
+                child = Debug(pipeline=pipeline, pipeline_path=pipeline_path, 
+                                            node_registry=get_registry())
+                widget_run = Parent(child=child,
                                 name=f"Debuging: {pipeline_path}",
                                 back_fn=self.return_home)
+            except:
+                self._call_stop(child)
+                self._call_stop(widget_run)
+                self.logger.exception('Could not create view.')
+                raise View_Creation_Error()
+            
             self.central_widget.addWidget(widget_run)
             self.central_widget.setCurrentWidget(widget_run)
 
             self._set_state(widget_run)
         except Exception as err:
-            self.logger.exception('Could not load pipeline. Staying home')
+            self.logger.error(err)
+            self.logger.exception('Staying home')
             self.stop()
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
@@ -178,16 +216,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            widget_run = Parent(child=Config(node_registry=get_registry(),
-                                            pipeline_path=pipeline_path),
-                                name=f"Configuring: {pipeline_path}",
-                                back_fn=self.return_home)
+            child, widget_run = None, None
+            try:
+                child = Config(node_registry=get_registry(), pipeline_path=pipeline_path)
+                widget_run = Parent(child=child,
+                                    name=f"Configuring: {pipeline_path}",
+                                    back_fn=self.return_home)
+            except:
+                self._call_stop(child)
+                self._call_stop(widget_run)
+                self.logger.exception('Could not create view.')
+                raise View_Creation_Error()
+            
             self.central_widget.addWidget(widget_run)
             self.central_widget.setCurrentWidget(widget_run)
 
             self._set_state(widget_run)
         except Exception as err:
-            self.logger.exception('Could not load pipeline. Staying home')
+            self.logger.error(err)
+            self.logger.exception('Staying home')
             self.stop()
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
@@ -276,6 +323,10 @@ def main():
             write_state()
         except:
             logger.error('Could not gracfully write application state')
+        # print('-----------------')
+        # profiler.disable()
+        # stats = pstats.Stats(profiler)
+        # stats.sort_stats('cumulative').print_stats(20)
 
     # Global error handler
     def handle_exception(exc_type, exc_value, exc_traceback):
@@ -302,8 +353,13 @@ def main():
     # from qss_debugger.debugger import VisualTreeDebugger
     # debugger = VisualTreeDebugger(window)
 
+    # import cProfile
+    # import pstats
+    # profiler = cProfile.Profile()
+    # profiler.enable()
     window.show()
     sys.exit(app.exec())
+    
 
 if __name__ == '__main__':
     main()

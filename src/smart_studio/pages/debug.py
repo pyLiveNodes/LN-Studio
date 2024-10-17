@@ -41,20 +41,15 @@ class Debug(Run, Page):
         self.logger = logging.getLogger("smart-studio")
 
         # === Setup Start/Stop =================================================
-        def toggle():
-            nonlocal self
-            if self.worker is None:
-                self._start_pipeline()
-                self.toggle.setText("Stop")
-            else:
-                self._stop_pipeline()
-                self.toggle.setText("Start")
-
-        self.toggle = QPushButton("Start")
-        self.toggle.clicked.connect(toggle)
+        self.start_btn = QPushButton("Start")
+        self.start_btn.clicked.connect(self._start_pipeline)
+        self.stop_btn = QPushButton("Stop")
+        self.stop_btn.clicked.connect(self._stop_pipeline)
+        self.stop_btn.setDisabled(True)
 
         buttons = QHBoxLayout()
-        buttons.addWidget(self.toggle)
+        buttons.addWidget(self.start_btn)
+        buttons.addWidget(self.stop_btn)
 
         # === Setup Edit Side =================================================
         self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, node_registry=node_registry, parent=self, read_only=True, resolve_macros=True)
@@ -95,39 +90,21 @@ class Debug(Run, Page):
         self.worker_term_lock = mp.Lock()
         self.worker = None
 
+    def _start_pipeline(self):
+        self.stop_btn.setDisabled(False)
+        self.start_btn.setDisabled(True)
+        return super()._start_pipeline()
+
+    def _stop_pipeline(self):
+        self.stop_btn.setDisabled(True)
+        self.start_btn.setDisabled(False)
+        return super()._stop_pipeline()
+
     def focus_node_view(self, node):
-        print('focusing node', node)
         name = node.get_name_resolve_macro() if hasattr(node, "get_name_resolve_macro") else node.name
         dock_widget = self.dock_manager.find_dock_widget(name)
         dock_area = dock_widget.dock_area_widget()
         dock_area.set_current_index(dock_area.index(dock_widget))
-
-
-    # def _stop_pipeline(self):
-    #     if self.worker is not None:
-    #         super(Run, self)._stop_pipeline()
-    #         # self.worker_term_lock.release()
-    #         # print('Termination time in view!')
-    #         # self.worker_term_lock.acquire()
-    #         # self.worker_term_lock.release()
-    #         # print('View terminated')
-    #         # self.worker = None
-            
-            # self.worker_log_handler_termi_sig.set()
-        
-    # i would have assumed __del__ would be the better fit, but that doesn't seem to be called when using del... for some reason
-    # will be called in parent view, but also called on exiting the canvas
-    # def stop(self, *args, **kwargs):
-    #     self._stop_pipeline()
-
-    #     print('Terminating draw widgets')
-    #     for widget in self.draw_widgets:
-    #         widget.stop()
-
-        # self.nodes = None
-        # self.graph = None
-        # print('Ref count debug during stoppage', sys.getrefcount(self))
-        
 
     def get_actions(self):
         return [ \

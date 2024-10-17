@@ -14,11 +14,13 @@ import darkdetect
 
 class MPL_View(FigureCanvasQTAgg):
 
-    def __init__(self, node, figsize=(4, 4), font = {'size': 10}, interval=10):
+    def __init__(self, node, figsize=(4, 4), font = {'size': 10}, interval=33):
         super().__init__(Figure(figsize=figsize))
 
         if not isinstance(node, viewer.View_MPL):
             raise ValueError('Node must be of Type (MPL) View')
+
+        self.node = node
 
         self.figure.patch.set_facecolor("None")
         self.figure.set_facecolor("None")
@@ -33,25 +35,37 @@ class MPL_View(FigureCanvasQTAgg):
         # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subfigures.html
         # subfigs = self.figure.subfigures(rows, cols)  #, wspace=1, hspace=0.07)
         # we might create subfigs, but if each node has it's own qwidget, we do not need to and can instead just pass the entire figure
-        artist_update_fn = node.init_draw(self.figure)
-
-        def draw_update(i, **kwargs):
-            try:
-                return artist_update_fn(i, **kwargs)
-            except Exception as err:
-                logger.exception('Exception in drawing on canvas')
-            return []
-
-        self.animation = animation.FuncAnimation(fig=self.figure,
-                                                 func=draw_update,
-                                                 interval=interval,
-                                                 blit=True)
-
+        # https://www.pythonguis.com/tutorials/plotting-matplotlib/
+        # https://matplotlib.org/stable/gallery/user_interfaces/embedding_in_qt_sgskip.html
+        self.artist_update_fn = node.init_draw(self.figure)
+        self.renderer = self.figure.canvas.get_renderer()
+        
         self.setFocusPolicy(QtCore.Qt.ClickFocus)
         self.setFocus()
         
         self.show()
+        
+        self.i = 0 # TODO: check if this is really necessary? -> no it's not, but needs to be remove upstream in livenodes core
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(interval)
+        self.timer.timeout.connect(self.draw_update)
+        self.timer.start()
 
+
+    def draw_update(self):
+        self.i += 1
+        try:
+            #TODO artists don't need to be returned anymeor
+            self.artist_update_fn(self.i)
+        except Exception as err:
+            logger.exception('Exception in drawing on canvas')
+        self.draw()
+
+    def pause(self):
+        self.timer.stop()
+    def resume(self):
+        self.timer.start()
+    
     def stop(self):
-        self.animation.pause()
+        self.timer.stop()
 
