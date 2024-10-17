@@ -45,7 +45,6 @@ class MPL_View(FigureCanvasQTAgg):
         
         self.show()
         
-        self.i = 0 # TODO: check if this is really necessary? -> no it's not, but needs to be remove upstream in livenodes core
         self.timer = QtCore.QTimer()
         self.timer.setInterval(interval)
         self.timer.timeout.connect(self.draw_update)
@@ -53,13 +52,11 @@ class MPL_View(FigureCanvasQTAgg):
 
 
     def draw_update(self):
-        self.i += 1
         try:
-            #TODO artists don't need to be returned anymeor
-            self.artist_update_fn(self.i)
+            self.artist_update_fn(0)
+            self.draw()
         except Exception as err:
             logger.exception('Exception in drawing on canvas')
-        self.draw()
 
     def pause(self):
         self.timer.stop()
