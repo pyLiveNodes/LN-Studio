@@ -353,7 +353,12 @@ class QT_Graph_edit(QWidget):
                 self._register_node(n)
                 if name in layout_nodes:
                     # if the interface has changed in between saving the node/graph and loading it here the connection will log an error and be discarded
-                    s_nodes[name] = self.scene.restore_node(layout_nodes[self._get_serialize_name(n)])
+                    try:
+                        s_nodes[name] = self.scene.restore_node(layout_nodes[self._get_serialize_name(n)])
+                    except Exception as err:
+                        layout_nodes.pop(self._get_serialize_name(n))
+                        logger.exception(err)
+                        logger.info(f'Node ({self._get_serialize_name(n)}) was removed from layout as it could not be resored.')
                 else:
                     s_nodes[name] = self.scene.create_node(self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
 
@@ -410,7 +415,12 @@ class QT_Graph_edit(QWidget):
                 if self._get_serialize_name(n) in layout_nodes:
                     # lets' hope the interface hasn't changed in between
                     # TODO: actually check if it has
-                    s_nodes[name] = self.scene.restore_node(layout_nodes[self._get_serialize_name(n)])
+                    try:
+                        s_nodes[name] = self.scene.restore_node(layout_nodes[self._get_serialize_name(n)])
+                    except Exception as err:
+                        layout_nodes.pop(self._get_serialize_name(n))
+                        logger.exception(err)
+                        logger.info(f'Node ({self._get_serialize_name(n)}) was removed from layout as it could not be resored.')
                 else:
                     s_nodes[name] = self.scene.create_node(
                         self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
@@ -457,9 +467,12 @@ class QT_Graph_edit(QWidget):
             min_x, min_y = 2**15, 2**15
             # first pass, collect mins and add to dict for quicker lookup
             for l_node in layout['nodes']:
-                layout_nodes[l_node['model']['association_to_node']] = l_node
-                min_x = min(min_x, l_node["position"]['x'])
-                min_y = min(min_y, l_node["position"]['y'])
+                if not l_node['model']['association_to_node'] in layout_nodes:
+                    layout_nodes[l_node['model']['association_to_node']] = l_node
+                    min_x = min(min_x, l_node["position"]['x'])
+                    min_y = min(min_y, l_node["position"]['y'])
+                else:
+                    logger.error(f'Duplicate node in layout: {l_node["model"]["association_to_node"]}')
 
             min_x, min_y = min_x - 50, min_y - 50
 
