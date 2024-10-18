@@ -67,11 +67,18 @@ class Debug(Run, Page):
             dock_widget.set_widget(widget)
             dock_widget.set_feature(DockWidgetFeature.closable, False)
             self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, dock_widget)
+            self.logger.info('Added dock widget for node: ' + name)
 
         if os.path.exists(self.pipeline_gui_path):
             try:
                 with open(self.pipeline_gui_path, 'r') as f:
                     self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
+                    self.logger.info('Restored gui layout')
+                    
+                    for w in self.dock_manager.dock_widgets_map().values():
+                        if w.is_closed():
+                            self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, w)
+                    self.logger.info('Added back all closed widgets')
             except Exception as e:
                 self.logger.error(f"Failed to load gui layout: {e}")
 
