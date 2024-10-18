@@ -106,7 +106,10 @@ class Run(Page):
 
         logger.info(f"Starting Worker")
         self.graph.start_all()
-        self.worker_term_lock.acquire()
+        while not self.worker_term_lock.acquire(timeout=1, block=True):
+            if self.graph.is_finished():
+                logger.info(f"Worker finished. Waiting for termination.")
+                # TODO: pop up in qt/gui process?
 
         logger.info(f"Stopping Worker")
         # timeout to make sure potential non-returning nodes do not block until eternity

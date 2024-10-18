@@ -74,10 +74,11 @@ class Debug(Run, Page):
                 with open(self.pipeline_gui_path, 'r') as f:
                     self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
                     self.logger.info('Restored gui layout')
-                    
+
                     for w in self.dock_manager.dock_widgets_map().values():
                         if w.is_closed():
                             self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, w)
+                            w.setClosedState(False)
                     self.logger.info('Added back all closed widgets')
             except Exception as e:
                 self.logger.error(f"Failed to load gui layout: {e}")

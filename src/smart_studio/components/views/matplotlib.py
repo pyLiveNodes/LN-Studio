@@ -13,9 +13,10 @@ import seaborn as sns
 import darkdetect
 
 class MPL_View(FigureCanvasQTAgg):
-
-    def __init__(self, node, figsize=(4, 4), font = {'size': 10}, interval=33):
-        super().__init__(Figure(figsize=figsize))
+    
+    # max 30 fps and 50 dpi (high could be 100 and 100)
+    def __init__(self, node, figsize=(4, 4), font = {'size': 10}, interval=33, dpi=100):
+        super().__init__(Figure(figsize=figsize, dpi=dpi))
 
         if not isinstance(node, viewer.View_MPL):
             raise ValueError('Node must be of Type (MPL) View')
