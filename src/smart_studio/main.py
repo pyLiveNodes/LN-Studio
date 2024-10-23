@@ -1,7 +1,7 @@
 import sys
 import multiprocessing as mp
 import platform
-from qtpy import QtWidgets
+from qtpy import QtWidgets, QtCore
 import darkdetect
 import qdarktheme
 from qdarktheme._main import _sync_theme_with_system, _apply_style
@@ -13,13 +13,15 @@ from smart_studio.pages.run import Run
 from smart_studio.pages.debug import Debug
 from smart_studio.components.page_parent import Parent
 from livenodes.node import Node
-from livenodes import get_registry
+from livenodes import get_registry, REGISTRY
 
 import os
+import click
 
 import logging
 
 from smart_studio.utils.state import STATE, write_state
+from smart_studio.loading import LoadingWindow
 # from smart_studio.components.notification import QToast_Logger
 
 def noop(*args, **kwargs):
@@ -269,7 +271,30 @@ def dark_mode_callback(app):
         default_theme=theme
     )
 
-def main():
+class RegistryLoader(QtCore.QObject):
+    finished = QtCore.Signal()
+    progress = QtCore.Signal(int)
+    status = QtCore.Signal(str)
+
+    def run(self):
+        def cb(context, node, i=None, l=None):
+            if i is None:
+                self.status.emit(f"{context} -- {node}")
+            else:
+                self.status.emit(f"{context} ({i}/{l}) -- {node}")
+        REGISTRY.register_callback(cb)
+        get_registry()
+        # Simulate loading the registry with progress updates
+        # import time
+        # time.sleep(5)
+        REGISTRY.deregister_callback(cb)
+        self.status.emit("Done")
+        self.finished.emit()
+
+@click.command()
+@click.option('--profile', is_flag=True, help='Enable profiling')
+@click.option('--qss-debug', is_flag=True, help='Enable QSS debugging')
+def main(profile=False, qss_debug=False):
     # === Load environment variables ========================================================================
     import os
 
@@ -297,10 +322,6 @@ def main():
     # -> however, fork is not present on windows and more generally the python community seems to shift towards making spawn the default/expected behaviour
     # -> resulting in the TODO: check and then separate qt views from the actuall running pipeline such that we can safely switch to spawn for all subprocesses.
 
-    # === Load modules ========================================================================
-    # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
-    get_registry()
-
     # === Setup application ========================================================================
     qdarktheme.enable_hi_dpi() # must be set before the application is created
     app = QtWidgets.QApplication([])
@@ -314,6 +335,7 @@ def main():
     # print(smart_state)
     # print(smart_state.space_get('views'))
     window_state = STATE['Window']
+    window = None
 
     def onclose():
         nonlocal window, window_state
@@ -323,10 +345,12 @@ def main():
             write_state()
         except:
             logger.error('Could not gracfully write application state')
-        # print('-----------------')
-        # profiler.disable()
-        # stats = pstats.Stats(profiler)
-        # stats.sort_stats('cumulative').print_stats(20)
+        
+        if profile:
+            print('-----------------')
+            profiler.disable()
+            stats = pstats.Stats(profiler)
+            stats.sort_stats('cumulative').print_stats(20)
 
     # Global error handler
     def handle_exception(exc_type, exc_value, exc_traceback):
@@ -344,20 +368,50 @@ def main():
         sys.exit(1)
 
     sys.excepthook = handle_exception
+
+
+    # === Load modules ========================================================================
+    # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
+    loading_window = LoadingWindow()
+    loading_window.show()
+
+    def on_thread_finished():
+        nonlocal window
+        loading_window.close()
+
+        window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
+        window.resize(*window_state.get('size', (1400, 820)))
+        window.setWindowTitle("Smart Studio")
+        
+        if qss_debug:
+            # uncomment to have a debugger for qss on the side
+            from qss_debugger.debugger import VisualTreeDebugger
+            debugger = VisualTreeDebugger(window)
+        
+        window.show()
+
     
-    window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
-    window.resize(*window_state.get('size', (1400, 820)))
-    window.setWindowTitle("Smart Studio")
+    # Create a QThread object
+    thread = QtCore.QThread()
+    # Create a RegistryLoader object
+    worker = RegistryLoader()
+    # Move the worker to the thread
+    worker.moveToThread(thread)
+    # Connect signals and slots
+    thread.started.connect(worker.run)
+    worker.finished.connect(thread.quit)
+    worker.finished.connect(worker.deleteLater)
+    thread.finished.connect(thread.deleteLater)
+    worker.status.connect(loading_window.update_status)
+    worker.finished.connect(on_thread_finished)
+    # Start the thread
+    thread.start()
 
-    # uncomment to have a debugger for qss on the side
-    # from qss_debugger.debugger import VisualTreeDebugger
-    # debugger = VisualTreeDebugger(window)
-
-    # import cProfile
-    # import pstats
-    # profiler = cProfile.Profile()
-    # profiler.enable()
-    window.show()
+    if profile:
+        import cProfile
+        import pstats
+        profiler = cProfile.Profile()
+        profiler.enable()
     sys.exit(app.exec())
     
 

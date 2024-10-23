@@ -10,7 +10,7 @@ from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QC
 from qtpy.QtCore import Qt, QSize, Signal
 from smart_studio.utils.state import STATE
 
-from livenodes import REGISTRY
+from livenodes import REGISTRY, get_registry
 
 # TODO: clean this whole thing up, the different selectors etc feels messy atm
 # specifically or because the config and init are not working well together atm
@@ -146,6 +146,7 @@ class InstalledPackages(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        get_registry()
         self.packages = REGISTRY.installed_packages()
 
         l2 = QVBoxLayout(self)
