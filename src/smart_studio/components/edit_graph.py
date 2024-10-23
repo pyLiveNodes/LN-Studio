@@ -359,6 +359,7 @@ class QT_Graph_edit(QWidget):
                         layout_nodes.pop(self._get_serialize_name(n))
                         logger.exception(err)
                         logger.info(f'Node ({self._get_serialize_name(n)}) was removed from layout as it could not be resored.')
+                        s_nodes[name] = self.scene.create_node(self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
                 else:
                     s_nodes[name] = self.scene.create_node(self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
 
@@ -421,6 +422,7 @@ class QT_Graph_edit(QWidget):
                         layout_nodes.pop(self._get_serialize_name(n))
                         logger.exception(err)
                         logger.info(f'Node ({self._get_serialize_name(n)}) was removed from layout as it could not be resored.')
+                        s_nodes[name] = self.scene.create_node(self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
                 else:
                     s_nodes[name] = self.scene.create_node(
                         self.known_classes[n.__class__.__name__], pl_node=n, skip_association=True)
