@@ -25,6 +25,7 @@ dependencies = [
 
 [project.scripts]
 smart_studio = "smart_studio.main:main"
+lns = "smart_studio.main:main"
 smart_studio_migrate = "smart_studio.migrate:migrate"
 
 [project.optional-dependencies]
