@@ -11,6 +11,22 @@ Have fun and good coding!
 
 Yale
 
+## Citation
+
+If you use LN-Studio in your research, please cite it as follows:
+
+As of 2024 there is no dedicated paper to LiveNodes yet. I'm working on it. But for now, please cite the following paper:
+```
+@inproceedings{hartmann2022demo,
+  title = {Interactive and Interpretable Online Human Activity Recognition},
+  author = {Hartmann, Yale and Liu, Hui and Schultz, Tanja},
+  booktitle = {PERCOM 2022 - 20th IEEE International Conference on Pervasive Computing and Communications Workshops and other Affiliated Events (PerCom Workshops)},
+  year = {2022},
+  pages = {109--111},
+  doi = {10.1109/PerComWorkshops53856.2022.9767207},
+  url = {https://www.csl.uni-bremen.de/cms/images/documents/publications/HartmannLiuSchultz_PERCOM2022.pdf},
+}
+```
 
 ## Quickstart
 
