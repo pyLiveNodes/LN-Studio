@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from qtpy import QtCore
 
 import logging
-logger = logging.getLogger('smart-studio')
+logger = logging.getLogger('LN-Studio')
 
 import seaborn as sns
 import darkdetect

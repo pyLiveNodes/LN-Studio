@@ -1,7 +1,7 @@
-smart_studio
+lns
 ============
 
 .. toctree::
    :maxdepth: 4
 
-   smart_studio
+   lns

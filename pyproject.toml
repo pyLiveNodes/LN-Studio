@@ -1,7 +1,7 @@
 [project]
-name = "Smart-Studio"
+name = "LN-Studio"
 dynamic = ['version']
-description = "Smart-Studio: QT based GUI for livenodes projects."
+description = "LN-Studio: QT based GUI for livenodes projects."
 authors = [
     { name = "Yale Hartmann", email = "yale.hartmann@uni-bremen.de" }
 ]
@@ -24,9 +24,9 @@ dependencies = [
 ]
 
 [project.scripts]
-smart_studio = "smart_studio.main:main"
-lns = "smart_studio.main:main"
-smart_studio_migrate = "smart_studio.migrate:migrate"
+ln_studio = "lns.main:main"
+lns = "lns.main:main"
+lns_migrate = "lns.migrate:migrate"
 
 [project.optional-dependencies]
 dev = [

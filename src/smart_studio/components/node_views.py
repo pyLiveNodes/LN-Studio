@@ -15,7 +15,7 @@ from .views.pyqt import QT_View
 from .utils import is_installed
 
 import logging
-logger = logging.getLogger('smart-studio')
+logger = logging.getLogger('LN-Studio')
 
 # TODO: make each subplot their own animation and use user customizable panels
 # TODO: allow nodes to use qt directly -> also consider how to make this understandable to user (ie some nodes will not run everywhere then)

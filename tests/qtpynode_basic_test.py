@@ -5,8 +5,8 @@
 # import pytest
 # import qtpy.QtCore
 
-# import smart_studio.qtpynodeeditor as nodeeditor
-# from smart_studio.qtpynodeeditor import PortType
+# import lns.qtpynodeeditor as nodeeditor
+# from lns.qtpynodeeditor import PortType
 
 
 # class MyNodeData(nodeeditor.NodeData):

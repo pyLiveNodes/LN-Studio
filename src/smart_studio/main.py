@@ -7,11 +7,11 @@ import qdarktheme
 from qdarktheme._main import _sync_theme_with_system, _apply_style
 from functools import partial
 
-from smart_studio.pages.home import Home
-from smart_studio.pages.config import Config
-from smart_studio.pages.run import Run
-from smart_studio.pages.debug import Debug
-from smart_studio.components.page_parent import Parent
+from lns.pages.home import Home
+from lns.pages.config import Config
+from lns.pages.run import Run
+from lns.pages.debug import Debug
+from lns.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry, REGISTRY
 
@@ -20,9 +20,9 @@ import click
 
 import logging
 
-from smart_studio.utils.state import STATE, write_state
-from smart_studio.loading import LoadingWindow
-# from smart_studio.components.notification import QToast_Logger
+from lns.utils.state import STATE, write_state
+from lns.loading import LoadingWindow
+# from lns.components.notification import QToast_Logger
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
 
@@ -40,7 +40,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, state_handler, parent=None, home_dir=os.getcwd(), _on_close_cb=noop):
         super(MainWindow, self).__init__(parent)
 
-        self.logger = logging.getLogger('smart-studio')
+        self.logger = logging.getLogger('LN-Studio')
         # frm = QFrame()
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
@@ -308,7 +308,7 @@ def main(profile=False, qss_debug=False):
     logger_stdout_handler.setFormatter(formatter)
     logger_root.addHandler(logger_stdout_handler)
 
-    logger = logging.getLogger('smart-studio')
+    logger = logging.getLogger('LN-Studio')
     home_dir = os.getcwd()
 
     logger.info(f"Projects folders: {STATE['View.Home']['folders']}")
@@ -326,7 +326,7 @@ def main(profile=False, qss_debug=False):
     # === Setup application ========================================================================
     qdarktheme.enable_hi_dpi() # must be set before the application is created
     app = QtWidgets.QApplication([])
-    app.setApplicationName("Smart Studio")
+    app.setApplicationName("LN-Studio")
     app.setWindowIcon(QtGui.QIcon(f"{STATIC_DIR}/logo.png"))
 
 
@@ -335,8 +335,6 @@ def main(profile=False, qss_debug=False):
     dark_mode_callback(app)
     _sync_theme_with_system(app, partial(dark_mode_callback, app))
 
-    # print(smart_state)
-    # print(smart_state.space_get('views'))
     window_state = STATE['Window']
     window = None
 
@@ -384,7 +382,7 @@ def main(profile=False, qss_debug=False):
 
         window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
         window.resize(*window_state.get('size', (1400, 820)))
-        window.setWindowTitle("Smart Studio")
+        window.setWindowTitle("LN-Studio")
 
         if qss_debug:
             # uncomment to have a debugger for qss on the side

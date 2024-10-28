@@ -8,7 +8,7 @@ import shutil
 from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel, QFileDialog, QProgressBar
 from qtpy.QtCore import Qt, QSize, Signal
-from smart_studio.utils.state import STATE
+from lns.utils.state import STATE
 
 from livenodes import REGISTRY, get_registry
 

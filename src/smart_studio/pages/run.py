@@ -9,16 +9,16 @@ from qtpy.QtWidgets import QHBoxLayout
 from qtpy import QtCore
 
 # from PyQtAds import QtAds
-from smart_studio.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
-from smart_studio.qtpydocking.enums import DockWidgetFeature
+from lns.qtpydocking import (DockManager, DockWidget, DockWidgetArea)
+from lns.qtpydocking.enums import DockWidgetFeature
 
 import multiprocessing as mp
 
 from livenodes import Node, Graph
 from livenodes.components.utils.log import drain_log_queue
 
-from smart_studio.components.node_views import node_view_mapper
-from smart_studio.components.page import Page, Action, ActionKind
+from lns.components.node_views import node_view_mapper
+from lns.components.page import Page, Action, ActionKind
 
 # adapted from: https://stackoverflow.com/questions/39835300/python-qt-and-matplotlib-scatter-plots-with-blitting
 class Run(Page):
@@ -34,7 +34,7 @@ class Run(Page):
         self.pipeline_path = pipeline_path
         self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_dock.xml')
         self.worker = None
-        self.logger = logging.getLogger("smart-studio")
+        self.logger = logging.getLogger("LN-Studio")
 
         # === Setup draw canvases =================================================
         self.nodes = [n for n in Node.discover_graph(pipeline) if isinstance(n, viewer.View)]
@@ -87,7 +87,7 @@ class Run(Page):
             self.worker_term_lock.acquire()
 
             parent_log_queue = mp.Queue()
-            logger_name = 'smart-studio'
+            logger_name = 'LN-Studio'
             
             self.worker_log_handler_termi_sig = th.Event()
 
