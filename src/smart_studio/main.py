@@ -1,42 +1,46 @@
 import sys
 import multiprocessing as mp
 import platform
-from qtpy import QtWidgets
+from qtpy import QtWidgets, QtCore, QtGui
 import darkdetect
 import qdarktheme
 from qdarktheme._main import _sync_theme_with_system, _apply_style
 from functools import partial
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-from smart_studio.pages.home import Home
-from smart_studio.pages.config import Config
-from smart_studio.pages.run import Run
-from smart_studio.pages.debug import Debug
-from smart_studio.components.page_parent import Parent
+from lns.pages.home import Home
+from lns.pages.config import Config
+from lns.pages.run import Run
+from lns.pages.debug import Debug
+from lns.components.page_parent import Parent
 from livenodes.node import Node
-from livenodes import get_registry
-
+from livenodes import get_registry, REGISTRY
 
 import os
+import click
 
 import logging
 
-from smart_studio.utils.state import STATE, write_state
-# from smart_studio.components.notification import QToast_Logger
+from lns.utils.state import STATE, write_state
+from lns.loading import LoadingWindow
+# from lns.components.notification import QToast_Logger
+
+STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
 
 def noop(*args, **kwargs):
     pass
 
+class Pipeline_Loading_Error(Exception):
+    pass
 
+class View_Creation_Error(Exception):
+    pass
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, state_handler, parent=None, home_dir=os.getcwd(), _on_close_cb=noop):
         super(MainWindow, self).__init__(parent)
 
-        self.logger = logging.getLogger('smart-studio')
+        self.logger = logging.getLogger('LN-Studio')
         # frm = QFrame()
         # self.setCentralWidget(frm)
         # self.layout = QHBoxLayout(self)
@@ -77,6 +81,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._set_state(self.widget_home)
 
     def stop(self):
+        self.logger.info('Stopping Current Widget and Pipeline')
         cur = self.central_widget.currentWidget()
         if hasattr(cur, 'stop'):
             cur.stop()
@@ -126,6 +131,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'Ref count old view (Home) {sys.getrefcount(cur)}')
         self.logger.info(f'Nr of views: {self.central_widget.count()}')
 
+    def _call_stop(self, obj=None):
+        if obj is not None and hasattr(obj, 'stop'):
+            obj.stop()
+
     def onstart(self, project_path, pipeline_path):
         self._save_state(self.widget_home)
         os.chdir(project_path)
@@ -133,18 +142,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            # TODO: open dialog on connection errors
-            pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
-            # TODO: make these logs project dependent as well
-            widget_run = Parent(child=Run(pipeline=pipeline, pipeline_path=pipeline_path),
-                                name=f"Running: {pipeline_path}",
-                                back_fn=self.return_home)
+            try:
+                # TODO: open dialog/show textbox showing all connection errors as list
+                pipeline = Node.load(pipeline_path, ignore_connection_errors=False)
+            except:
+                self.logger.exception('Could not load pipeline.')
+                raise Pipeline_Loading_Error()
+
+            child, widget_run = None, None
+            try:
+                # TODO: make these logs project dependent as well
+                child = Run(pipeline=pipeline, pipeline_path=pipeline_path)
+                widget_run = Parent(child=child,
+                                    name=f"Running: {pipeline_path}",
+                                    back_fn=self.return_home)
+            except:
+                self._call_stop(child)
+                self._call_stop(widget_run)
+                self.logger.exception('Could not create view.')
+                raise View_Creation_Error()
+            
             self.central_widget.addWidget(widget_run)
             self.central_widget.setCurrentWidget(widget_run)
 
             self._set_state(widget_run)
         except Exception as err:
-            self.logger.exception('Could not load pipeline. Staying home')
+            self.logger.error(err)
+            self.logger.exception('Staying home')
             self.stop()
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
@@ -156,17 +180,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
-            # TODO: make these logs project dependent as well
-            widget_run = Parent(child=Debug(pipeline=pipeline, pipeline_path=pipeline_path),
+            try:
+                # TODO: open dialog/show textbox showing all connection errors as list
+                pipeline = Node.load(pipeline_path, ignore_connection_errors=False, should_time=True)
+            except:
+                self.logger.exception('Could not load pipeline.')
+                raise Pipeline_Loading_Error()
+
+            child, widget_run = None, None
+            try:
+                # TODO: make these logs project dependent as well
+                child = Debug(pipeline=pipeline, pipeline_path=pipeline_path, 
+                                            node_registry=get_registry())
+                widget_run = Parent(child=child,
                                 name=f"Debuging: {pipeline_path}",
                                 back_fn=self.return_home)
+            except:
+                self._call_stop(child)
+                self._call_stop(widget_run)
+                self.logger.exception('Could not create view.')
+                raise View_Creation_Error()
+            
             self.central_widget.addWidget(widget_run)
             self.central_widget.setCurrentWidget(widget_run)
 
             self._set_state(widget_run)
         except Exception as err:
-            self.logger.exception('Could not load pipeline. Staying home')
+            self.logger.error(err)
+            self.logger.exception('Staying home')
             self.stop()
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
@@ -179,32 +220,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger.info(f'CWD: {os.getcwd()}')
 
         try:
-            if os.stat(pipeline_path).st_size == 0:
-                # the pipeline was just created and no nodes were added yet
-                pipeline = None
-            else:
-                # this is an existing pipeline we should try to load
-                pipeline = Node.load(pipeline_path, ignore_connection_errors=True)
-            widget_run = Parent(child=Config(pipeline=pipeline,
-                                            node_registry=get_registry(),
-                                            pipeline_path=pipeline_path),
-                                name=f"Configuring: {pipeline_path}",
-                                back_fn=self.return_home)
+            child, widget_run = None, None
+            try:
+                child = Config(node_registry=get_registry(), pipeline_path=pipeline_path)
+                widget_run = Parent(child=child,
+                                    name=f"Configuring: {pipeline_path}",
+                                    back_fn=self.return_home)
+            except:
+                self._call_stop(child)
+                self._call_stop(widget_run)
+                self.logger.exception('Could not create view.')
+                raise View_Creation_Error()
+            
             self.central_widget.addWidget(widget_run)
             self.central_widget.setCurrentWidget(widget_run)
 
             self._set_state(widget_run)
         except Exception as err:
-            self.logger.exception('Could not load pipeline. Staying home')
+            self.logger.error(err)
+            self.logger.exception('Staying home')
             self.stop()
             os.chdir(self.home_dir)
             self.logger.info(f'CWD: {os.getcwd()}')
 
 def create_stylesheet(theme):
-    image_dir = os.path.join(os.path.dirname(__file__), 'static')
     return f"""
             MainWindow {{
-                background-image: url('{image_dir}/connected_human_{theme}.jpg');
+                background-image: url('{STATIC_DIR}/connected_human_{theme}.jpg');
                 background-repeat: no-repeat; 
                 background-position: center top;
             }}
@@ -230,7 +272,30 @@ def dark_mode_callback(app):
         default_theme=theme
     )
 
-def main():
+class RegistryLoader(QtCore.QObject):
+    finished = QtCore.Signal()
+    progress = QtCore.Signal(int)
+    status = QtCore.Signal(str)
+
+    def run(self):
+        def cb(context, node, i=None, l=None):
+            if i is None:
+                self.status.emit(f"{context} -- {node}")
+            else:
+                self.status.emit(f"{context} ({i}/{l}) -- {node}")
+        REGISTRY.register_callback(cb)
+        get_registry()
+        # Simulate loading the registry with progress updates
+        # import time
+        # time.sleep(5)
+        REGISTRY.deregister_callback(cb)
+        self.status.emit("Done")
+        self.finished.emit()
+
+@click.command()
+@click.option('--profile', is_flag=True, help='Enable profiling')
+@click.option('--qss-debug', is_flag=True, help='Enable QSS debugging')
+def main(profile=False, qss_debug=False):
     # === Load environment variables ========================================================================
     import os
 
@@ -243,7 +308,7 @@ def main():
     logger_stdout_handler.setFormatter(formatter)
     logger_root.addHandler(logger_stdout_handler)
 
-    logger = logging.getLogger('smart-studio')
+    logger = logging.getLogger('LN-Studio')
     home_dir = os.getcwd()
 
     logger.info(f"Projects folders: {STATE['View.Home']['folders']}")
@@ -258,38 +323,98 @@ def main():
     # -> however, fork is not present on windows and more generally the python community seems to shift towards making spawn the default/expected behaviour
     # -> resulting in the TODO: check and then separate qt views from the actuall running pipeline such that we can safely switch to spawn for all subprocesses.
 
-    # === Load modules ========================================================================
-    # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
-    get_registry()
-
     # === Setup application ========================================================================
     qdarktheme.enable_hi_dpi() # must be set before the application is created
     app = QtWidgets.QApplication([])
-    app.setApplicationName("Smart Studio")
+    app.setApplicationName("LN-Studio")
+    app.setWindowIcon(QtGui.QIcon(f"{STATIC_DIR}/logo.png"))
+
 
     # app.setStyleSheet(create_stylesheet(darkdetect.theme().lower()))
     # qdarktheme.setup_theme("auto", additional_qss=create_stylesheet(darkdetect.theme().lower())) #, custom_colors={"background": "#0f0f0f00"})
     dark_mode_callback(app)
     _sync_theme_with_system(app, partial(dark_mode_callback, app))
 
-    # print(smart_state)
-    # print(smart_state.space_get('views'))
     window_state = STATE['Window']
+    window = None
 
     def onclose():
-        window_state['size'] = [window.size().width(), window.size().height()]
-        write_state()
+        nonlocal window, window_state
+        logger.info('Writing Application State')
+        try:
+            window_state['size'] = [window.size().width(), window.size().height()]
+            write_state()
+        except:
+            logger.error('Could not gracfully write application state')
+        
+        if profile:
+            print('-----------------')
+            profiler.disable()
+            stats = pstats.Stats(profiler)
+            stats.sort_stats('cumulative').print_stats(20)
 
-    window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
-    window.resize(*window_state.get('size', (1400, 820)))
-    window.setWindowTitle("Smart Studio")
+    # Global error handler
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            logger.error("KeyboardInterrupt, exiting")
+        else:
+            logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+            QtWidgets.QMessageBox.critical(None, "Uncaught Exception", str(exc_value), QtWidgets.QMessageBox.Ok)
+        try:
+            onclose()
+            window.stop()
+        except:
+            logger.error('Could not gracfully close application')
+        sys.exit(1)
 
-    # uncomment to have a debugger for qss on the side
-    # from qss_debugger.debugger import VisualTreeDebugger
-    # debugger = VisualTreeDebugger(window)
+    sys.excepthook = handle_exception
 
-    window.show()
+
+    # === Load modules ========================================================================
+    # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
+    loading_window = LoadingWindow()
+    loading_window.show()
+
+    def on_thread_finished():
+        nonlocal window
+        loading_window.close()
+
+        window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
+        window.resize(*window_state.get('size', (1400, 820)))
+        window.setWindowTitle("LN-Studio")
+
+        if qss_debug:
+            # uncomment to have a debugger for qss on the side
+            from qss_debugger.debugger import VisualTreeDebugger
+            debugger = VisualTreeDebugger(window)
+        
+        window.show()
+
+    
+    # Create a QThread object
+    thread = QtCore.QThread()
+    # Create a RegistryLoader object
+    worker = RegistryLoader()
+    # Move the worker to the thread
+    worker.moveToThread(thread)
+    # Connect signals and slots
+    thread.started.connect(worker.run)
+    worker.finished.connect(thread.quit)
+    worker.finished.connect(worker.deleteLater)
+    thread.finished.connect(thread.deleteLater)
+    worker.status.connect(loading_window.update_status)
+    worker.finished.connect(on_thread_finished)
+    # Start the thread
+    thread.start()
+
+    if profile:
+        import cProfile
+        import pstats
+        profiler = cProfile.Profile()
+        profiler.enable()
     sys.exit(app.exec())
+    
 
 if __name__ == '__main__':
     main()

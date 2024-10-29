@@ -1,4 +1,4 @@
-smart\_studio package
+lns package
 =====================
 
 Subpackages
@@ -7,18 +7,18 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   smart_studio.components
-   smart_studio.pages
-   smart_studio.qtpynodeeditor_patches
-   smart_studio.utils
+   lns.components
+   lns.pages
+   lns.qtpynodeeditor_patches
+   lns.utils
 
 Submodules
 ----------
 
-smart\_studio.main\_qt module
+lns.main\_qt module
 -----------------------------
 
-.. automodule:: smart_studio.main
+.. automodule:: lns.main
    :members:
    :undoc-members:
    :show-inheritance:
@@ -26,7 +26,7 @@ smart\_studio.main\_qt module
 Module contents
 ---------------
 
-.. automodule:: smart_studio
+.. automodule:: lns
    :members:
    :undoc-members:
    :show-inheritance:
