@@ -19,7 +19,7 @@ class Page(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.logger = logging.getLogger('smart-studio')
+        self.logger = logging.getLogger('LN-Studio')
 
     def get_actions(self):
         return [ \

@@ -11,7 +11,7 @@ appname = "SmartStudio"
 appauthor = "Yale Hartmann"
 path_to_settings = os.path.join(user_data_dir(appname, appauthor), 'settings.ini')
 path_to_state = os.path.join(user_data_dir(appname, appauthor), 'state.yml')
-path_to_log_smart = os.path.join(user_data_dir(appname, appauthor), 'smart_studio.log')
+path_to_log_smart = os.path.join(user_data_dir(appname, appauthor), 'lns.log')
 path_to_log_ln = os.path.join(user_data_dir(appname, appauthor), 'livenodes.log')
 
 os.makedirs(user_data_dir(appname, appauthor), exist_ok=True)
@@ -57,12 +57,12 @@ def write_state():
 # === LOG ==============================================================================
 import logging 
 
-logger_smart = logging.getLogger("smart-studio")
-logger_smart_file_handler = logging.FileHandler(path_to_log_smart, mode='w')
-logger_smart_file_handler.setLevel(logging.DEBUG)
+logger_smart = logging.getLogger("LN-Studio")
+logger_lns_file_handler = logging.FileHandler(path_to_log_smart, mode='w')
+logger_lns_file_handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(processName)s | %(threadName)s | %(message)s')
-logger_smart_file_handler.setFormatter(formatter)
-logger_smart.addHandler(logger_smart_file_handler)
+logger_lns_file_handler.setFormatter(formatter)
+logger_smart.addHandler(logger_lns_file_handler)
 
 logger_ln = logging.getLogger("livenodes")
 logger_ln_file_handler = logging.FileHandler(path_to_log_ln, mode='w')

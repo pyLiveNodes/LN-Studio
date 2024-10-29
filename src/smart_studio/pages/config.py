@@ -1,15 +1,15 @@
 from qtpy.QtWidgets import QSplitter, QHBoxLayout
 
-from smart_studio.components.edit_node import NodeConfigureContainer
-from smart_studio.components.edit_graph import QT_Graph_edit
-from smart_studio.components.page import ActionKind, Page, Action
+from lns.components.edit_node import NodeConfigureContainer
+from lns.components.edit_graph import QT_Graph_edit
+from lns.components.page import ActionKind, Page, Action
 
 class Config(Page):
 
-    def __init__(self, pipeline_path, pipeline=None, node_registry=None, parent=None):
+    def __init__(self, pipeline_path, node_registry, parent=None):
         super().__init__(parent)
 
-        self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, pipeline=pipeline, node_registry=node_registry, parent=self)
+        self.edit_graph = QT_Graph_edit(pipeline_path=pipeline_path, node_registry=node_registry, parent=self)
         self.edit_node = NodeConfigureContainer(parent=self)
         self.edit_node.setMinimumWidth(300)
 

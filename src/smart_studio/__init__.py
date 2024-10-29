@@ -1,1 +1,0 @@
-from .qtpynodeeditor_patches import *

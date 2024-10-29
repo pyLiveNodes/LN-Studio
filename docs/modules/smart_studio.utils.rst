@@ -1,13 +1,13 @@
-smart\_studio.utils package
+lns.utils package
 ===========================
 
 Submodules
 ----------
 
-smart\_studio.utils.state module
+lns.utils.state module
 --------------------------------
 
-.. automodule:: smart_studio.utils.state
+.. automodule:: lns.utils.state
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ smart\_studio.utils.state module
 Module contents
 ---------------
 
-.. automodule:: smart_studio.utils
+.. automodule:: lns.utils
    :members:
    :undoc-members:
    :show-inheritance:

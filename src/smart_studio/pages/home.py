@@ -6,11 +6,11 @@ import os
 import shutil
 
 from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel, QFileDialog
+from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel, QFileDialog, QProgressBar
 from qtpy.QtCore import Qt, QSize, Signal
-from smart_studio.utils.state import STATE
+from lns.utils.state import STATE
 
-from livenodes import REGISTRY
+from livenodes import REGISTRY, get_registry
 
 # TODO: clean this whole thing up, the different selectors etc feels messy atm
 # specifically or because the config and init are not working well together atm
@@ -143,18 +143,57 @@ class Home(QWidget):
 
 
 class InstalledPackages(QWidget):
-
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        get_registry()
         self.packages = REGISTRY.installed_packages()
 
         l2 = QVBoxLayout(self)
-        l2.addWidget(QLabel('Installed Packages:'))
-        item_list_str = '</li><li>'.join(self.packages)
-        # print(f"<html><ul><li>{item_list_str}</li></ul></html>")
-        packages_str = QLabel(f"<html><ul><li>{item_list_str}</li></ul></html>")
-        l2.addWidget(packages_str)
+        l2.addWidget(QLabel('Installed Packages'))
+        self.packages_label = QLabel(self._get_packages_html())
+        l2.addWidget(self.packages_label)
+
+        # Create the progress bar
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 0)  # Indeterminate mode
+        self.progress_bar.setVisible(False)  # Initially hidden
+        l2.addWidget(self.progress_bar)
+        
+        # Create the button
+        self.reload_button = QPushButton('Fetch New')
+        # Connect the button's clicked signal to the reload method
+        self.reload_button.clicked.connect(self.reload_and_enable)
+        # Add the button to the layout
+        l2.addWidget(self.reload_button)
+        
+        # Create the second button
+        self.reload_button_with_cache = QPushButton('Reload Modules')
+        # Connect the button's clicked signal to the reload method with cache invalidation
+        self.reload_button_with_cache.clicked.connect(self.reload_and_invalidate_cache)
+        # Add the second button to the layout
+        l2.addWidget(self.reload_button_with_cache)
+        
+    def _get_packages_html(self):
+        packages = REGISTRY.installed_packages()
+        item_list_str = '</li><li>'.join(packages)
+        return f"<html><ul><li>{item_list_str}</li></ul></html>"
+    
+    def reload_and_enable(self):
+        self.reload_button.setDisabled(True)
+        self.progress_bar.setVisible(True)
+        REGISTRY.reload()
+        self.packages_label.setText(self._get_packages_html())
+        self.progress_bar.setVisible(False)
+        self.reload_button.setDisabled(False)
+    
+    def reload_and_invalidate_cache(self):
+        self.reload_button_with_cache.setDisabled(True)
+        self.progress_bar.setVisible(True)
+        REGISTRY.reload(invalidate_caches=True)
+        self.packages_label.setText(self._get_packages_html())
+        self.progress_bar.setVisible(False)
+        self.reload_button_with_cache.setDisabled(False)
 
 
 class Project_Selection(QWidget):
