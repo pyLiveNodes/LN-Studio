@@ -327,7 +327,7 @@ class DockContainerWidgetPrivate:
 
 
             if adjust_splitter_sizes:
-                size = (target_area_size-target_area_splitter.handleWidth()) / 2
+                size = (target_area_size-target_area_splitter.handleWidth()) // 2
                 sizes[area_index] = size
                 sizes.insert(area_index, size)
                 target_area_splitter.setSizes(sizes)
@@ -351,7 +351,7 @@ class DockContainerWidgetPrivate:
             sizes = target_area_splitter.sizes()
             insert_widget_into_splitter(new_splitter, target_area, not insert_param.append)
             if adjust_splitter_sizes:
-                size = target_area_size/2
+                size = target_area_size//2
                 new_splitter.setSizes((size, size))
 
             target_area_splitter.insertWidget(area_index, new_splitter)

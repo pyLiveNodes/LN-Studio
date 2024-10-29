@@ -1,4 +1,4 @@
-name: smart_studio
+name: lns
 channels:
   - defaults
   - conda-forge
@@ -8,4 +8,4 @@ dependencies:
   - pip
   # - pip:
   #   - git+https://{access_token_name}:{access_token}@gitlab.com/{your_gitlab_username}/{repository_name}.git
-prefix: /Users/yale/miniconda3/envs/smart_studio
+prefix: /Users/yale/miniconda3/envs/lns

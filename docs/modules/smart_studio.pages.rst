@@ -1,37 +1,37 @@
-smart\_studio.pages package
+lns.pages package
 ===========================
 
 Submodules
 ----------
 
-smart\_studio.pages.config module
+lns.pages.config module
 ---------------------------------
 
-.. automodule:: smart_studio.pages.config
+.. automodule:: lns.pages.config
    :members:
    :undoc-members:
    :show-inheritance:
 
-smart\_studio.pages.debug module
+lns.pages.debug module
 --------------------------------
 
-.. automodule:: smart_studio.pages.debug
+.. automodule:: lns.pages.debug
    :members:
    :undoc-members:
    :show-inheritance:
 
-smart\_studio.pages.home module
+lns.pages.home module
 -------------------------------
 
-.. automodule:: smart_studio.pages.home
+.. automodule:: lns.pages.home
    :members:
    :undoc-members:
    :show-inheritance:
 
-smart\_studio.pages.run module
+lns.pages.run module
 ------------------------------
 
-.. automodule:: smart_studio.pages.run
+.. automodule:: lns.pages.run
    :members:
    :undoc-members:
    :show-inheritance:
@@ -39,7 +39,7 @@ smart\_studio.pages.run module
 Module contents
 ---------------
 
-.. automodule:: smart_studio.pages
+.. automodule:: lns.pages
    :members:
    :undoc-members:
    :show-inheritance:

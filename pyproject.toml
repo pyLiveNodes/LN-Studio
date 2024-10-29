@@ -1,7 +1,7 @@
 [project]
-name = "Smart-Studio"
+name = "LN-Studio"
 dynamic = ['version']
-description = "Smart-Studio: QT based GUI for livenodes projects."
+description = "LN-Studio: QT based GUI for livenodes projects."
 authors = [
     { name = "Yale Hartmann", email = "yale.hartmann@uni-bremen.de" }
 ]
@@ -9,38 +9,36 @@ authors = [
 # pip install . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple
 # pip install -e . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple
 dependencies = [
-    "livenodes>=0.10.0",
+    "livenodes>=0.12.1b16",
     "seaborn>=0.11.2",
     "networkx>2.6.3",
     "numpy>=1.22.1",
     "matplotlib>=3.5.1",
     "QtPy>=2.4.1",
     "PyQt5>=5.12.3",
-    "qtpynodeeditor>=0.2.0",
     "python_qnotifications>=2.0.6",
     "appdirs>=1.4.4",
     "darkdetect",
-    "pyqtdarktheme~=2.1.0"
+    "pyqtdarktheme-fork>=2.1.0",
+    "click"
 ]
 
 [project.scripts]
-smart_studio = "smart_studio.main:main"
-smart_studio_migrate = "smart_studio.migrate:migrate"
+ln_studio = "lns.main:main"
+lns = "lns.main:main"
+lns_migrate = "lns.migrate:migrate"
 
 [project.optional-dependencies]
 dev = [
     "tox",
     "pytest>=7.0.1"
 ]
-vispy = [
-    "vispy>=0.10.0"
-]
 
 [build-system]
 requires = [
-    "setuptools>=48",
+    "setuptools>=60",
     "wheel",
-    "setuptools_scm >= 2.0.0, <3",
+    "setuptools_scm >= 3.0.0",
     "setuptools-git-versioning"
 ]
 build-backend = 'setuptools.build_meta'
@@ -49,6 +47,6 @@ build-backend = 'setuptools.build_meta'
 enabled = true
 
 [tool.black]
-line-length = 140
-target-version = ['py36']
+line-length = 180
+target-version = ['py312']
 skip-string-normalization = true

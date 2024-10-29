@@ -42,7 +42,7 @@ class QToast_Logger(QtWidgets.QWidget):
         logger_toast_handler_mp_queue.setLevel(logging.WARNING)
         formatter = logging.Formatter('%(name)s | %(message)s')
         logger_toast_handler_mp_queue.setFormatter(formatter)
-        logger_toast = logging.getLogger('smart-studio')
+        logger_toast = logging.getLogger('LN-Studio')
         logger_toast.addHandler(logger_toast_handler_mp_queue)
         logger_toast = logging.getLogger('livenodes')
         logger_toast.addHandler(logger_toast_handler_mp_queue)
