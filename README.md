@@ -36,13 +36,13 @@ As of 2024 there is no dedicated paper to LiveNodes yet. I'm working on it. But 
 I recommend basing your code on the [example project repo](https://gitlab.csl.uni-bremen.de/livenodes/example-project) and adjusting what you need. The project also includes a guide on how to setup LN-Studio.
 
 To install LN-Studio:
-1. Install LN-Studio via pip (or conda if you like): `pip install lns --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
+1. Install LN-Studio via pip (or conda if you like): `pip install lns `.
 2. Run `lns`.
 3. Select your livenodes folder (or create a new one).
 4. Have fun!
 
 For Development:
-1. install LN-Studio via pip (or conda if you like): `pip install -e . --extra-index-url https://package_puller:8qYs4hBAsmAHJ5AdS_y9@gitlab.csl.uni-bremen.de/api/v4/groups/368/-/packages/pypi/simple`.
+1. install LN-Studio via pip (or conda if you like): `pip install -e . `.
 
 ## Migration from 0.9.4
 
