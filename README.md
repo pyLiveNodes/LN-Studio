@@ -1,3 +1,6 @@
+[![Format and Test](https://github.com/pyLiveNodes/LN-Studio/actions/workflows/format_test.yml/badge.svg)](https://github.com/pyLiveNodes/LN-Studio/actions/workflows/format_test.yml)
+[![Publish](https://github.com/pyLiveNodes/LN-Studio/actions/workflows/publish.yml/badge.svg)](https://github.com/pyLiveNodes/LN-Studio/actions/workflows/publish.yml)
+
 # LN-Studio
 
 LN-Studio is a GUI Application to create, run and debug [LiveNode graphs](https://livenodes.pages.csl.uni-bremen.de/livenodes/).
