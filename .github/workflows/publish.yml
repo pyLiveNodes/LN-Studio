@@ -62,10 +62,6 @@ jobs:
       - name: Check long description
         run: twine check dist/*
 
-      - uses: fawazahmed0/action-debug-vscode@main
-        with:
-            token: "rootootoot"
-
       - name: Publish dists to PyPI
         uses: pypa/gh-action-pypi-publish@v1.10.3
         with:
