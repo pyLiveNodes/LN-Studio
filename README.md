@@ -37,7 +37,7 @@ I recommend basing your code on the [example project repo](https://gitlab.csl.un
 
 To install LN-Studio:
 1. Install LN-Studio via pip (or conda if you like): `pip install ln_studio `.
-2. Run `ln_studio`.
+2. Run `ln_studio` or `lns` in your terminal to start the application.
 3. Select your livenodes folder (or create a new one).
 4. Have fun!
 
