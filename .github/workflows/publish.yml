@@ -59,24 +59,6 @@ jobs:
           echo "→ $W"
           unzip -p "$W" '*.dist-info/METADATA' | head -n20
 
-      # debug: what version setuptools-git-versioning actually computed
-      - name: Dump git-versioning version
-        run: |
-          pip install setuptools-git-versioning
-          python3 - <<'PYCODE'
-            import setuptools_git_versioning
-            print("git-versioning →", setuptools_git_versioning.get_version())
-          PYCODE
-
-      # debug: install the wheel and check ln_studio.__version__
-      - name: Smoke-test wheel install
-        run: |
-          python3 -m pip install dist/*.whl
-          python3 - <<'PYCODE'
-            import ln_studio
-            print("ln_studio.__version__ →", ln_studio.__version__)
-          PYCODE
-
       - name: Check long description
         run: twine check dist/*
 

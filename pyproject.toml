@@ -6,7 +6,8 @@ authors = [
     { name = "Yale Hartmann", email = "yale.hartmann@uni-bremen.de" }
 ]
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 dependencies = [
     "livenodes>=0.12.1b16",
     "seaborn>=0.11.2",
