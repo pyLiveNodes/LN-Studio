@@ -66,6 +66,49 @@ jobs:
       - name: Build package
         run: python3 -m build
 
+      - name: Show package metadata
+        run: |
+          echo "Built packages:"
+          ls -la dist/
+          echo "Package metadata:"
+          python -c "import glob,pkginfo; f=glob.glob('dist/*.whl')[0]; w=pkginfo.Wheel(f); print(f'Name: {w.name}\nVersion: {w.version}\nSummary: {w.summary}\nAuthor: {w.author}')"
+
+      # debug: show exactly what ended up in dist/
+      - name: List dist/ artifacts
+        run: ls -l dist/
+
+      # debug: inspect sdist metadata
+      - name: Show sdist PKG-INFO
+        run: |
+          S=$(ls dist/*.tar.gz)
+          echo "→ $S"
+          tar -xOzf "$S" --wildcards '*/PKG-INFO' | head -n20
+
+      # debug: inspect wheel metadata
+      - name: Show wheel METADATA
+        run: |
+          W=$(ls dist/*.whl)
+          echo "→ $W"
+          unzip -p "$W" '*.dist-info/METADATA' | head -n20
+
+      # debug: what version setuptools-git-versioning actually computed
+      - name: Dump git-versioning version
+        run: |
+          pip install setuptools-git-versioning
+          python3 - <<'PYCODE'
+            import setuptools_git_versioning
+            print("git-versioning →", setuptools_git_versioning.get_version())
+            PYCODE
+
+      # debug: install the wheel and check ln_studio.__version__
+      - name: Smoke-test wheel install
+        run: |
+          python3 -m pip install dist/*.whl
+          python3 - <<'PYCODE'
+            import ln_studio
+            print("ln_studio.__version__ →", ln_studio.__version__)
+            PYCODE
+
       - name: Check long description
         run: twine check dist/*
 
