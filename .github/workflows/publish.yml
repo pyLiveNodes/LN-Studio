@@ -55,7 +55,13 @@ jobs:
           python-version: 3.12
 
       - name: Install build tools
-        run: pip install -U pip twine build setuptools wheel
+        run: pip install -U pip twine build setuptools wheel pkginfo
+
+      - name: Log Versions
+        run: |
+          python --version
+          pip --version
+          pip list
 
       - name: Build package
         run: python3 -m build
