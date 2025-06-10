@@ -6,38 +6,6 @@ on:
       - '*.*.*'
 
 jobs:
-  # pages:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: 3.12
-
-  #     - name: Cache tox environment
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: .tox
-  #         key: ${{ runner.os }}-tox-${{ hashFiles('**/tox.ini') }}
-
-  #     - name: Install dependencies
-  #       run: pip install -r requirements_setup.txt
-
-  #     - name: Build documentation
-  #       run: tox -e docs
-
-  #     - name: Move documentation to public
-  #       run: mv dist/docs/ public/
-
-  #     - name: Upload documentation
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: documentation
-  #         path: public
-
   build-package:
     runs-on: ubuntu-latest
     environment:
@@ -98,7 +66,7 @@ jobs:
           python3 - <<'PYCODE'
             import setuptools_git_versioning
             print("git-versioning →", setuptools_git_versioning.get_version())
-            PYCODE
+          PYCODE
 
       # debug: install the wheel and check ln_studio.__version__
       - name: Smoke-test wheel install
@@ -107,10 +75,12 @@ jobs:
           python3 - <<'PYCODE'
             import ln_studio
             print("ln_studio.__version__ →", ln_studio.__version__)
-            PYCODE
+          PYCODE
 
       - name: Check long description
         run: twine check dist/*
 
       - name: Publish dists to PyPI
         uses: pypa/gh-action-pypi-publish@v1.10.3
+        with:
+          verbose: true
