@@ -55,7 +55,7 @@ jobs:
           python-version: 3.12
 
       - name: Install build tools
-        run: pip install twine build
+        run: pip install -U pip twine build setuptools wheel
 
       - name: Build package
         run: python3 -m build
