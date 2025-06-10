@@ -1,85 +1,85 @@
-lns.components package
+ln_studio.components package
 ================================
 
 Submodules
 ----------
 
-lns.components.collabsible module
+ln_studio.components.collabsible module
 -------------------------------------------
 
-.. automodule:: lns.components.collabsible
+.. automodule:: ln_studio.components.collabsible
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.edit module
+ln_studio.components.edit module
 ------------------------------------
 
-.. automodule:: lns.components.edit
+.. automodule:: ln_studio.components.edit
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.edit\_graph module
+ln_studio.components.edit\_graph module
 -------------------------------------------
 
-.. automodule:: lns.components.edit_graph
+.. automodule:: ln_studio.components.edit_graph
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.edit\_node module
+ln_studio.components.edit\_node module
 ------------------------------------------
 
-.. automodule:: lns.components.edit_node
+.. automodule:: ln_studio.components.edit_node
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.node\_views module
+ln_studio.components.node\_views module
 -------------------------------------------
 
-.. automodule:: lns.components.node_views
+.. automodule:: ln_studio.components.node_views
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.notification module
+ln_studio.components.notification module
 --------------------------------------------
 
-.. automodule:: lns.components.notification
+.. automodule:: ln_studio.components.notification
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.page module
+ln_studio.components.page module
 ------------------------------------
 
-.. automodule:: lns.components.page
+.. automodule:: ln_studio.components.page
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.page\_parent module
+ln_studio.components.page\_parent module
 --------------------------------------------
 
-.. automodule:: lns.components.page_parent
+.. automodule:: ln_studio.components.page_parent
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.scroll\_label module
+ln_studio.components.scroll\_label module
 ---------------------------------------------
 
-.. automodule:: lns.components.scroll_label
+.. automodule:: ln_studio.components.scroll_label
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.components.utils module
+ln_studio.components.utils module
 -------------------------------------
 
-.. automodule:: lns.components.utils
+.. automodule:: ln_studio.components.utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -87,7 +87,7 @@ lns.components.utils module
 Module contents
 ---------------
 
-.. automodule:: lns.components
+.. automodule:: ln_studio.components
    :members:
    :undoc-members:
    :show-inheritance:

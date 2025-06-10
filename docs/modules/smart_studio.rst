@@ -1,4 +1,4 @@
-lns package
+ln_studio package
 =====================
 
 Subpackages
@@ -7,18 +7,18 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   lns.components
-   lns.pages
-   lns.qtpynodeeditor_patches
-   lns.utils
+   ln_studio.components
+   ln_studio.pages
+   ln_studio.qtpynodeeditor_patches
+   ln_studio.utils
 
 Submodules
 ----------
 
-lns.main\_qt module
+ln_studio.main\_qt module
 -----------------------------
 
-.. automodule:: lns.main
+.. automodule:: ln_studio.main
    :members:
    :undoc-members:
    :show-inheritance:
@@ -26,7 +26,7 @@ lns.main\_qt module
 Module contents
 ---------------
 
-.. automodule:: lns
+.. automodule:: ln_studio
    :members:
    :undoc-members:
    :show-inheritance:

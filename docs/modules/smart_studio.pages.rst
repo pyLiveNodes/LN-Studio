@@ -1,37 +1,37 @@
-lns.pages package
+ln_studio.pages package
 ===========================
 
 Submodules
 ----------
 
-lns.pages.config module
+ln_studio.pages.config module
 ---------------------------------
 
-.. automodule:: lns.pages.config
+.. automodule:: ln_studio.pages.config
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.pages.debug module
+ln_studio.pages.debug module
 --------------------------------
 
-.. automodule:: lns.pages.debug
+.. automodule:: ln_studio.pages.debug
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.pages.home module
+ln_studio.pages.home module
 -------------------------------
 
-.. automodule:: lns.pages.home
+.. automodule:: ln_studio.pages.home
    :members:
    :undoc-members:
    :show-inheritance:
 
-lns.pages.run module
+ln_studio.pages.run module
 ------------------------------
 
-.. automodule:: lns.pages.run
+.. automodule:: ln_studio.pages.run
    :members:
    :undoc-members:
    :show-inheritance:
@@ -39,7 +39,7 @@ lns.pages.run module
 Module contents
 ---------------
 
-.. automodule:: lns.pages
+.. automodule:: ln_studio.pages
    :members:
    :undoc-members:
    :show-inheritance:

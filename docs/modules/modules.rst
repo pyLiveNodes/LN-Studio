@@ -1,7 +1,7 @@
-lns
+ln_studio
 ============
 
 .. toctree::
    :maxdepth: 4
 
-   lns
+   ln_studio

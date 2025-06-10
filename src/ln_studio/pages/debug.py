@@ -7,21 +7,21 @@ from qtpy import QtCore, QtWidgets
 from qtpy.QtWidgets import QPushButton, QVBoxLayout, QHBoxLayout
 
 # from PyQtAds import QtAds
-from lns.qtpydocking import DockManager, DockWidget, DockWidgetArea
-from lns.qtpydocking.enums import DockWidgetFeature
+from ln_studio.qtpydocking import DockManager, DockWidget, DockWidgetArea
+from ln_studio.qtpydocking.enums import DockWidgetFeature
 
 import multiprocessing as mp
 import threading as th
 
 from livenodes import Node, Graph, viewer
 from livenodes.components.utils.log import drain_log_queue
-from lns.components.node_views import node_view_mapper, Debug_View
-from lns.components.page import Page, Action, ActionKind
+from ln_studio.components.node_views import node_view_mapper, Debug_View
+from ln_studio.components.page import Page, Action, ActionKind
 
 from qtpy.QtWidgets import QSplitter, QHBoxLayout
 
-from lns.components.edit_graph import QT_Graph_edit
-from lns.components.page import ActionKind, Page, Action
+from ln_studio.components.edit_graph import QT_Graph_edit
+from ln_studio.components.page import ActionKind, Page, Action
 from .run import Run
 
 class Debug(Run, Page):

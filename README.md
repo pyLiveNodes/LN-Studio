@@ -36,8 +36,8 @@ As of 2024 there is no dedicated paper to LiveNodes yet. I'm working on it. But 
 I recommend basing your code on the [example project repo](https://gitlab.csl.uni-bremen.de/livenodes/example-project) and adjusting what you need. The project also includes a guide on how to setup LN-Studio.
 
 To install LN-Studio:
-1. Install LN-Studio via pip (or conda if you like): `pip install lns `.
-2. Run `lns`.
+1. Install LN-Studio via pip (or conda if you like): `pip install ln_studio `.
+2. Run `ln_studio`.
 3. Select your livenodes folder (or create a new one).
 4. Have fun!
 
@@ -47,7 +47,7 @@ For Development:
 ## Migration from 0.9.4
 
 Moving from 0.9 to 0.10 includes refactoring of the project structure. The following steps are necessary to migrate your project:
-In your **project folder (the one where lns_state.json is located)**, run `lns_migrate` to migrate your project to the new structure.`
+In your **project folder (the one where ln_studio_state.json is located)**, run `ln_studio_migrate` to migrate your project to the new structure.`
 
 ### Docs
 
@@ -55,4 +55,4 @@ You can find the docs [here](https://livenodes.pages.csl.uni-bremen.de/LN-Studio
 
 ### Restrictions
 
-None, I switched the conda forge PyQtAds bindings to the [pure python implementation](https://github.com/klauer/qtpydocking/tree/master) of Ken Lauer so that we can use lns with pure pip. 
+None, I switched the conda forge PyQtAds bindings to the [pure python implementation](https://github.com/klauer/qtpydocking/tree/master) of Ken Lauer so that we can use ln_studio with pure pip. 

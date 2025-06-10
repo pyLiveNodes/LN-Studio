@@ -1,8 +1,8 @@
 from qtpy.QtWidgets import QSplitter, QHBoxLayout
 
-from lns.components.edit_node import NodeConfigureContainer
-from lns.components.edit_graph import QT_Graph_edit
-from lns.components.page import ActionKind, Page, Action
+from ln_studio.components.edit_node import NodeConfigureContainer
+from ln_studio.components.edit_graph import QT_Graph_edit
+from ln_studio.components.page import ActionKind, Page, Action
 
 class Config(Page):
 

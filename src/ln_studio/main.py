@@ -7,11 +7,11 @@ import qdarktheme
 from qdarktheme._main import _sync_theme_with_system, _apply_style
 from functools import partial
 
-from lns.pages.home import Home
-from lns.pages.config import Config
-from lns.pages.run import Run
-from lns.pages.debug import Debug
-from lns.components.page_parent import Parent
+from ln_studio.pages.home import Home
+from ln_studio.pages.config import Config
+from ln_studio.pages.run import Run
+from ln_studio.pages.debug import Debug
+from ln_studio.components.page_parent import Parent
 from livenodes.node import Node
 from livenodes import get_registry, REGISTRY
 
@@ -20,9 +20,9 @@ import click
 
 import logging
 
-from lns.utils.state import STATE, write_state
-from lns.loading import LoadingWindow
-# from lns.components.notification import QToast_Logger
+from ln_studio.utils.state import STATE, write_state
+from ln_studio.loading import LoadingWindow
+# from ln_studio.components.notification import QToast_Logger
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
 

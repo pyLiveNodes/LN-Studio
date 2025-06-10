@@ -8,7 +8,7 @@ from livenodes import Node
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-from lns.utils.state import write_state, STATE
+from ln_studio.utils.state import write_state, STATE
 
 def migrate():
     logger_stdout_handler = logging.StreamHandler(sys.stdout)
@@ -96,11 +96,11 @@ def migrate():
         # === Clean old files ================================================================
         logger.info(f'Removing: smart-state.json')
         os.remove(os.path.join(home_dir, 'smart-state.json'))
-        if os.path.exists(os.path.join(home_dir, 'lns.log')):
-            logger.info(f'Removing: lns.log')
-            os.remove(os.path.join(home_dir, 'lns.log'))
-        if os.path.exists(os.path.join(home_dir, 'lns.full.log')):
-            logger.info(f'Removing: lns.full.log')
-            os.remove(os.path.join(home_dir, 'lns.full.log'))
+        if os.path.exists(os.path.join(home_dir, 'ln_studio.log')):
+            logger.info(f'Removing: ln_studio.log')
+            os.remove(os.path.join(home_dir, 'ln_studio.log'))
+        if os.path.exists(os.path.join(home_dir, 'ln_studio.full.log')):
+            logger.info(f'Removing: ln_studio.full.log')
+            os.remove(os.path.join(home_dir, 'ln_studio.full.log'))
 
         logger.info(f'Finished')

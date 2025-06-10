@@ -1,13 +1,13 @@
-lns.utils package
+ln_studio.utils package
 ===========================
 
 Submodules
 ----------
 
-lns.utils.state module
+ln_studio.utils.state module
 --------------------------------
 
-.. automodule:: lns.utils.state
+.. automodule:: ln_studio.utils.state
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ lns.utils.state module
 Module contents
 ---------------
 
-.. automodule:: lns.utils
+.. automodule:: ln_studio.utils
    :members:
    :undoc-members:
    :show-inheritance:

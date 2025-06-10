@@ -12,9 +12,9 @@ import graphviz
 from livenodes import Node, Connection, get_registry
 from livenodes.components.node_connector import Connectionist
 
-from lns.qtpynodeeditor import FlowScene, FlowView, DataModelRegistry, NodeDataModel, NodeDataType, PortType
-from lns.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
-from lns.qtpynodeeditor.exceptions import ConnectionDataTypeFailure, MultipleInputConnectionError
+from ln_studio.qtpynodeeditor import FlowScene, FlowView, DataModelRegistry, NodeDataModel, NodeDataType, PortType
+from ln_studio.qtpynodeeditor.node_graphics_object import NodeGraphicsObject
+from ln_studio.qtpynodeeditor.exceptions import ConnectionDataTypeFailure, MultipleInputConnectionError
 
 from .edit_node import CreateNodeDialog
 
@@ -59,10 +59,10 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         emit_port_label = out_port.model.data_type[out_port.port_type][out_port.index].name
         recv_port_label = in_port.model.data_type[in_port.port_type][in_port.index].name
 
-        lns_receiving_node = in_port.model.association_to_node
-        lns_emit_node = out_port.model.association_to_node
+        ln_studio_receiving_node = in_port.model.association_to_node
+        ln_studio_emit_node = out_port.model.association_to_node
 
-        return lns_emit_node, lns_receiving_node, emit_port_label, recv_port_label
+        return ln_studio_emit_node, ln_studio_receiving_node, emit_port_label, recv_port_label
 
     # TODO: do the same for the input connections!
     # Comment: make sure to not then have duplicates in the connections -yh
@@ -75,15 +75,15 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
         # HACK: this currently works because of the three passes below (ie create node, create conneciton, associate pl node)
         # TODO: fix this by checking if the connection already exists and if so ignore the call
         if self.association_to_node is not None:
-            lns_emit_node, lns_receiving_node, emit_port_label, recv_port_label = self._get_port_infos(connection)
+            ln_studio_emit_node, ln_studio_receiving_node, emit_port_label, recv_port_label = self._get_port_infos(connection)
 
-            if lns_emit_node is not None and lns_receiving_node is not None:
+            if ln_studio_emit_node is not None and ln_studio_receiving_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
                 try:
-                    lns_receiving_node.add_input(
-                        lns_emit_node,
-                        emit_port=lns_emit_node.get_port_out_by_label(emit_port_label),
-                        recv_port=lns_receiving_node.get_port_in_by_label(recv_port_label)
+                    ln_studio_receiving_node.add_input(
+                        ln_studio_emit_node,
+                        emit_port=ln_studio_emit_node.get_port_out_by_label(emit_port_label),
+                        recv_port=ln_studio_receiving_node.get_port_in_by_label(recv_port_label)
                     )
                 except ValueError as err:
                     if 'Connection already exists' in str(err):
@@ -96,15 +96,15 @@ class CustomNodeDataModel(NodeDataModel, verify=False):
 
     def output_connection_deleted(self, connection):
         if self.association_to_node is not None:
-            lns_emit_node, lns_receiving_node, emit_port_label, recv_port_label = self._get_port_infos(connection)
+            ln_studio_emit_node, ln_studio_receiving_node, emit_port_label, recv_port_label = self._get_port_infos(connection)
 
-            if lns_emit_node is not None and lns_receiving_node is not None:
+            if ln_studio_emit_node is not None and ln_studio_receiving_node is not None:
                 # occours when a node was deleted, in which case this is not important anyway
                 try:
-                    lns_receiving_node.remove_input(
-                        lns_emit_node,
-                        emit_port=lns_emit_node.get_port_out_by_label(emit_port_label),
-                        recv_port=lns_receiving_node.get_port_in_by_label(recv_port_label)
+                    ln_studio_receiving_node.remove_input(
+                        ln_studio_emit_node,
+                        emit_port=ln_studio_emit_node.get_port_out_by_label(emit_port_label),
+                        recv_port=ln_studio_receiving_node.get_port_in_by_label(recv_port_label)
                     )
                 except ValueError as err:
                     logger.exception('Error in removing connection.')
@@ -236,9 +236,9 @@ class QT_Graph_edit(QWidget):
         logger.info(f'Autolayout: Could not apply layout. Collapsing.')
 
     def _remove_pl_node(self, node):
-        lns_node = node.model.association_to_node
-        if lns_node is not None:
-            lns_node.remove_all_inputs()
+        ln_studio_node = node.model.association_to_node
+        if ln_studio_node is not None:
+            ln_studio_node.remove_all_inputs()
 
 
 

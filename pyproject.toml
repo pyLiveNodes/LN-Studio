@@ -23,9 +23,9 @@ dependencies = [
 ]
 
 [project.scripts]
-ln_studio = "lns.main:main"
-lns = "lns.main:main"
-lns_migrate = "lns.migrate:migrate"
+lns = "ln_studio.main:main"
+ln_studio = "ln_studio.main:main"
+ln_studio_migrate = "ln_studio.migrate:migrate"
 
 [project.optional-dependencies]
 dev = [
