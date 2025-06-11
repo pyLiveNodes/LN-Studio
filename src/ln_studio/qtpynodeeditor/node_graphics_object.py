@@ -153,6 +153,16 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         if self._locked:
             return
+        
+        # if the ctrl key is pressed (MetaModifier on macOS),
+        # one node is selected and the other clicked, connect them on all possible ports
+        if event.modifiers() & Qt.MetaModifier:
+            selected_items = self.scene().selected_nodes()
+            if len(selected_items) == 1 and selected_items[0] is not self._node:
+                try:
+                    self._auto_connect_matching_ports(selected_items[0], self._node)
+                except Exception as e:
+                    print(f"Error auto-connecting nodes: {e}")
 
         # deselect all other items after self one is selected
         if not self.isSelected() and not (event.modifiers() & Qt.ControlModifier):
@@ -244,6 +254,7 @@ class NodeGraphicsObject(QGraphicsObject):
         # position connections precisely after fast node move
         self.move_connections()
 
+
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent):
         """
         hoverEnterEvent
@@ -319,6 +330,56 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         self._scene.node_context_menu.emit(
             self._node, event.scenePos(), event.screenPos())
+
+    def _auto_connect_matching_ports(self, source_node, target_node):
+        """
+        Automatically connect matching ports between two nodes.
+        
+        Parameters
+        ----------
+        source_node : Node
+            The node with output ports to connect from
+        target_node : Node  
+            The node with input ports to connect to
+        """
+        from .exceptions import NodeConnectionFailure
+        
+        # Get the data types for output ports of source node
+        source_outputs = source_node.model.data_type.get('output', {})
+        # Get the data types for input ports of target node  
+        target_inputs = target_node.model.data_type.get('input', {})
+        
+        connections_made = 0
+        
+        # Try to match output ports from source to input ports of target
+        for source_port_idx, source_data_type in source_outputs.items():
+            for target_port_idx, target_data_type in target_inputs.items():
+                # Check if the data types match by ID
+                if source_data_type.id == target_data_type.id:
+                    try:
+                        # Get the actual port objects
+                        source_port = source_node[PortType.output][source_port_idx]
+                        target_port = target_node[PortType.input][target_port_idx]
+                        
+                        # Check if ports can be connected (not already connected)
+                        if source_port.can_connect and target_port.can_connect:
+                            # Create the connection
+                            self._scene.create_connection(source_port, target_port)
+                            connections_made += 1
+                            print(f"Connected {source_data_type.id}: {getattr(source_node.model, 'name', 'Unknown')} -> {getattr(target_node.model, 'name', 'Unknown')}")
+                            # Break to avoid multiple connections to the same target port
+                            break
+                    except NodeConnectionFailure as e:
+                        print(f"Could not connect {source_data_type.id}: {e}")
+                        continue
+                    except Exception as e:
+                        print(f"Unexpected error connecting {source_data_type.id}: {e}")
+                        continue
+        
+        if connections_made == 0:
+            print("No matching ports found to connect")
+        else:
+            print(f"Successfully created {connections_made} connection(s)")
 
     def embed_q_widget(self):
         geom = self._node.geometry

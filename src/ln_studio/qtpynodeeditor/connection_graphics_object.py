@@ -10,6 +10,7 @@ from qtpy.QtWidgets import (QGraphicsBlurEffect, QGraphicsItem,
 from .connection_painter import ConnectionPainter
 from .node_connection_interaction import NodeConnectionInteraction
 from .port import PortType, opposite_port
+from qtpy.QtCore import Qt
 
 if typing.TYPE_CHECKING:
     from .connection import Connection  # noqa
@@ -194,6 +195,12 @@ class ConnectionGraphicsObject(QGraphicsObject):
         """
         self.ungrabMouse()
         event.accept()
+        
+        # Check if Ctrl key is pressed
+        if event.modifiers() & Qt.MetaModifier:
+            self._scene.delete_connection(self._connection)
+            return
+            
         node = self._scene.locate_node_at(event.scenePos(), self._scene.views()[0].transform())
 
         interaction = NodeConnectionInteraction(node, self._connection, self._scene)
