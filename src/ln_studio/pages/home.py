@@ -218,8 +218,8 @@ class Project_Selection(QWidget):
 
         l2 = QHBoxLayout(self)
         # l2.addWidget(QLabel('S-MART'))
-        l2.addWidget(remove)
         l2.addWidget(self.combo)
+        l2.addWidget(remove)
         l2.addWidget(add)
         l2.addStretch(2)
         # for project in projects:
