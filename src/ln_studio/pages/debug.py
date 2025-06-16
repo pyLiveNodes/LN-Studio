@@ -1,5 +1,4 @@
 import logging
-from logging.handlers import QueueHandler
 import os
 
 from qtpy.QtWidgets import QHBoxLayout
@@ -11,10 +10,8 @@ from ln_studio.qtpydocking import DockManager, DockWidget, DockWidgetArea
 from ln_studio.qtpydocking.enums import DockWidgetFeature
 
 import multiprocessing as mp
-import threading as th
 
 from livenodes import Node, Graph, viewer
-from livenodes.components.utils.log import drain_log_queue
 from ln_studio.components.node_views import node_view_mapper, Debug_View
 from ln_studio.components.page import Page, Action, ActionKind
 
@@ -69,20 +66,8 @@ class Debug(Run, Page):
             self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, dock_widget)
             self.logger.info('Added dock widget for node: ' + name)
 
-        if os.path.exists(self.pipeline_gui_path):
-            try:
-                with open(self.pipeline_gui_path, 'r') as f:
-                    self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
-                    self.logger.info('Restored gui layout')
-
-                    for w in self.dock_manager.dock_widgets_map().values():
-                        if w.is_closed():
-                            self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, w)
-                            w.setClosedState(False)
-                    self.logger.info('Added back all closed widgets')
-            except Exception as e:
-                self.logger.error(f"Failed to load gui layout: {e}")
-
+        self._load_layout_dock(self.pipeline_gui_path)
+        
         # === Create overall layout =================================================
         grid = QSplitter()
         grid.addWidget(self.edit_graph)
@@ -97,6 +82,19 @@ class Debug(Run, Page):
         # === Start pipeline =================================================
         self.worker_term_lock = mp.Lock()
         self.worker = None
+
+    def _load_layout_dock(self, path):
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                self.dock_manager.restore_state(QtCore.QByteArray(f.read().encode()))
+                self.logger.info('Restored gui layout from: ' + path)
+                for w in self.dock_manager.dock_widgets_map().values():
+                    if w.is_closed():
+                        self.dock_manager.add_dock_widget_tab(DockWidgetArea.center, w)
+                        w.setClosedState(False)
+                self.logger.info('Added back all closed widgets')
+        else:
+            self.logger.warning('No saved layout found at: ' + path)
 
     def _start_pipeline(self):
         self.stop_btn.setDisabled(False)

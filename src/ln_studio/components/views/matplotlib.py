@@ -2,7 +2,6 @@ from livenodes import viewer
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
 from matplotlib.figure import Figure
-from matplotlib import animation
 import matplotlib.pyplot as plt
 from qtpy import QtCore
 
@@ -61,6 +60,7 @@ class MPL_View(FigureCanvasQTAgg):
 
     def pause(self):
         self.timer.stop()
+
     def resume(self):
         self.timer.start()
     

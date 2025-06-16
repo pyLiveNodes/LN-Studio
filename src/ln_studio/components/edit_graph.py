@@ -138,10 +138,12 @@ class QT_Graph_edit(QWidget):
         self.read_only = read_only
         self.resolve_macros = resolve_macros
         
+        self.pipeline_gui_path_debug = pipeline_path.replace('.yml', '_gui_debug.json', 1)
+        self.pipeline_gui_path_non_debug = pipeline_path.replace('.yml', '_gui.json', 1)
         if self.resolve_macros:
-            self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui_debug.json', 1)
+            self.pipeline_gui_path = self.pipeline_gui_path_debug
         else:
-            self.pipeline_gui_path = pipeline_path.replace('.yml', '_gui.json', 1)
+            self.pipeline_gui_path = self.pipeline_gui_path_non_debug
 
         self._create_known_classes(node_registry)
 
@@ -205,20 +207,31 @@ class QT_Graph_edit(QWidget):
         self.layout.addWidget(view_nodes)
 
         ### Add nodes and layout
-        layout = None
-        if os.path.exists(self.pipeline_gui_path):
-            try:
-                with open(self.pipeline_gui_path, 'r') as f:
-                    layout = json.load(f)
-            except Exception:
-                logger.exception('Could not load layout. Creating new.')    
-        # print(self.pipeline_gui_path)
+        logger.info(f'Loading pipeline from {pipeline_path}')
+        layout = self._load_layout(self.pipeline_gui_path)
+        # if the layout is None, we try to load the non-debug version before creating a new one
+        if layout is None and self.resolve_macros:
+            logger.info(f'Loading pipeline from {self.pipeline_gui_path_non_debug}')
+            layout = self._load_layout(self.pipeline_gui_path_non_debug)
+
         self._add_pipeline(layout, pipeline_path)
 
         if layout is None:
+            logger.exception('Could not load layout. Creating new.')    
             self.auto_layout()
         # self.scene.auto_arrange('graphviz_layout', prog='dot', scale=1)
         # self.scene.auto_arrange('graphviz_layout', scale=3)
+
+    def _load_layout(self, path):
+        try:
+            with open(path, 'r') as f:
+                layout = json.load(f)
+                logger.info(f'Loaded layout from {path}')
+                return layout
+        except Exception:
+            pass
+        return None
+    
 
     def auto_layout(self):
         # bipartite', 'circular', 'kamada_kawai', 'random',
