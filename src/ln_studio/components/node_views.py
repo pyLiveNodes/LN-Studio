@@ -156,29 +156,6 @@ class Debug_View(QWidget):
             self.val_queue.put(kwargs)
 
 
-    def sleep(self, sleep):
-        # print('Setting to sleep', str(self.node), sleep)
-        # change visibility hoping that makes qts rendering faster
-        # TODO: check if that's actually the case
-        self.setVisible(not sleep)
-
-        # if there is no timer, ie the pipeline is not running -> do nothing
-        if self.timer is None:
-            return
-        
-        # if the pipeline is running and we want to sleep, stop the timer
-        # otherwise (re-)start it 
-        if sleep:
-            self.timer.stop()
-            self.forward_report.clear()
-            if self.view is not None:
-                self.view.pause()
-        elif not self.timer.isActive():
-            if self.view is not None:
-                self.view.resume()
-            self.forward_report.set()
-            self.timer.start()
-
     def stop(self):
         if self.view is not None:
             self.view.stop()
