@@ -29,5 +29,8 @@ class Config(Page):
             Action(label="Auto-layout", fn=self.edit_graph.auto_layout, kind=ActionKind.OTHER),
         ]
 
+    def stop(self):
+        self.edit_graph.stop()
+
     def save(self):
         self.edit_graph.save()

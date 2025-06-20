@@ -9,7 +9,7 @@ from qtpy.QtWidgets import QHBoxLayout, QWidget
 from qtpy.QtCore import Signal
 import graphviz
 
-from livenodes import Node, Connection, get_registry
+from livenodes import Node, Connection, REGISTRY
 from livenodes.components.node_connector import Connectionist
 
 from ln_studio.qtpynodeeditor import FlowScene, FlowView, DataModelRegistry, NodeDataModel, NodeDataType, PortType
@@ -318,7 +318,7 @@ class QT_Graph_edit(QWidget):
 
         self.known_dtypes = {}
 
-        for node_cls in node_registry.nodes.reg.values():
+        for node_cls in node_registry.nodes.values():
             self._register_node(node_cls)
             # self._register_node(node(**node.example_init))
 
@@ -348,7 +348,7 @@ class QT_Graph_edit(QWidget):
         logger.info(f'Graph: {dct}')
 
         if dct is not None:
-            reg = get_registry()
+            reg = REGISTRY
 
             # 1. pass: create all nodes
             p_nodes = {}
@@ -569,5 +569,16 @@ class QT_Graph_edit(QWidget):
             pipeline.dot_graph_full(transparent_bg=True, filename=pipeline_base, file_type='pdf')
         except graphviz.backend.execute.ExecutableNotFound as err:
             logger.exception('Could not create dot graph. Executable not found.')
+
+    
+    def stop(self):
+        _, pipeline = self.get_state()
+        nodes = pipeline.discover_graph(pipeline)
+        for node in pipeline.discover_graph(pipeline):
+            try:
+                logger.info(f'Stopping in case they created ressources on __init__. Node: {node}')
+                node.stop()
+            except Exception as e:
+                logger.exception(e)
 
 

@@ -9,7 +9,7 @@ readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 dependencies = [
-    "livenodes>=0.12.1b16",
+    "livenodes>=1.1.0",
     "seaborn>=0.11.2",
     "networkx>2.6.3",
     "numpy>=1.22.1",

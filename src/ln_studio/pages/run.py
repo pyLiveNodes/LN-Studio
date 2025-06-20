@@ -3,8 +3,7 @@ from livenodes import viewer
 import os
 import logging
 import threading as th
-from logging.handlers import QueueHandler
-
+from logging.handlers import QueueHandler, QueueListener
 from qtpy.QtWidgets import QHBoxLayout
 from qtpy import QtCore
 
@@ -15,7 +14,6 @@ from ln_studio.qtpydocking.enums import DockWidgetFeature
 import multiprocessing as mp
 
 from livenodes import Node, Graph
-from livenodes.components.utils.log import drain_log_queue
 
 from ln_studio.components.node_views import node_view_mapper
 from ln_studio.components.page import Page, Action, ActionKind
@@ -89,26 +87,29 @@ class Run(Page):
             parent_log_queue = mp.Queue()
             logger_name = 'LN-Studio'
             
-            self.worker_log_handler_termi_sig = th.Event()
+            # self.worker_log_handler_termi_sig = th.Event()
 
-            self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
-            self.worker_log_handler.deamon = True
-            self.worker_log_handler.name = f"LogDrain-{self.worker_log_handler.name.split('-')[-1]}"
-            self.worker_log_handler.start()
+            # self.worker_log_handler = th.Thread(target=drain_log_queue, args=(parent_log_queue, logger_name, self.worker_log_handler_termi_sig))
+            # self.worker_log_handler.deamon = True
+            # self.worker_log_handler.name = f"LogDrain-{self.worker_log_handler.name.split('-')[-1]}"
+            # self.worker_log_handler.start()
+            self.queue_listener = QueueListener(parent_log_queue)
+            self.queue_listener.start()
 
             self.worker = mp.Process(target=self.worker_start, args=(parent_log_queue, logger_name,), name="LN-Executor")
-            # self.worker.daemon = True
+            # self.worker.daemon = True # not possible since the node graph might create it's own threads and processes
             self.worker.start()
 
     def worker_start(self, subprocess_log_queue, logger_name):
         logger = logging.getLogger(logger_name)
         logger.addHandler(QueueHandler(subprocess_log_queue))
+        logger.propagate = False
 
         logger.info(f"Starting Worker")
         self.graph.start_all()
         while not self.worker_term_lock.acquire(timeout=1, block=True):
             if self.graph.is_finished():
-                logger.info(f"Worker finished. Waiting for termination.")
+                logger.info(f"Worker finished. Waiting for user to return to home screen.")
                 # TODO: pop up in qt/gui process?
 
         logger.info(f"Stopping Worker")
@@ -125,9 +126,6 @@ class Run(Page):
     # will be called in parent view, but also called on exiting the canvas
     def _stop_pipeline(self):
         self.logger.info(f"Stopping Widgets")
-        for widget in self.draw_widgets:
-            widget.stop()
-            
         if self.worker is not None:
             # Tell the process to terminate, then wait until it returns
             self.worker_term_lock.release()
@@ -142,8 +140,15 @@ class Run(Page):
             self.logger.info(f"Killing Worker")
             self.worker.terminate()
 
-            self.worker_log_handler_termi_sig.set()
+            # self.worker_log_handler_termi_sig.set()
             self.worker = None
+
+        for widget in self.draw_widgets:
+            widget.stop()
+
+        if hasattr(self, "queue_listener") and self.queue_listener is not None:
+            self.queue_listener.stop()
+            self.queue_listener = None
            
 
     def get_actions(self):

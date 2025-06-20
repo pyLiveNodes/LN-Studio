@@ -13,7 +13,7 @@ from ln_studio.pages.run import Run
 from ln_studio.pages.debug import Debug
 from ln_studio.components.page_parent import Parent
 from livenodes.node import Node
-from livenodes import get_registry, REGISTRY
+from livenodes import REGISTRY
 
 import os
 import click
@@ -21,7 +21,6 @@ import click
 import logging
 
 from ln_studio.utils.state import STATE, write_state
-from ln_studio.loading import LoadingWindow
 # from ln_studio.components.notification import QToast_Logger
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
@@ -191,7 +190,7 @@ class MainWindow(QtWidgets.QMainWindow):
             try:
                 # TODO: make these logs project dependent as well
                 child = Debug(pipeline=pipeline, pipeline_path=pipeline_path, 
-                                            node_registry=get_registry())
+                                            node_registry=REGISTRY)
                 widget_run = Parent(child=child,
                                 name=f"Debuging: {pipeline_path}",
                                 back_fn=self.return_home)
@@ -222,7 +221,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             child, widget_run = None, None
             try:
-                child = Config(node_registry=get_registry(), pipeline_path=pipeline_path)
+                child = Config(node_registry=REGISTRY, pipeline_path=pipeline_path)
                 widget_run = Parent(child=child,
                                     name=f"Configuring: {pipeline_path}",
                                     back_fn=self.return_home)
@@ -272,25 +271,6 @@ def dark_mode_callback(app):
         default_theme=theme
     )
 
-class RegistryLoader(QtCore.QObject):
-    finished = QtCore.Signal()
-    progress = QtCore.Signal(int)
-    status = QtCore.Signal(str)
-
-    def run(self):
-        def cb(context, node, i=None, l=None):
-            if i is None:
-                self.status.emit(f"{context} -- {node}")
-            else:
-                self.status.emit(f"{context} ({i}/{l}) -- {node}")
-        REGISTRY.register_callback(cb)
-        get_registry()
-        # Simulate loading the registry with progress updates
-        # import time
-        # time.sleep(5)
-        REGISTRY.deregister_callback(cb)
-        self.status.emit("Done")
-        self.finished.emit()
 
 @click.command()
 @click.option('--profile', is_flag=True, help='Enable profiling')
@@ -352,6 +332,7 @@ def main(profile=False, qss_debug=False):
             profiler.disable()
             stats = pstats.Stats(profiler)
             stats.sort_stats('cumulative').print_stats(20)
+        logger.info('Wrote Application State')
 
     # Global error handler
     def handle_exception(exc_type, exc_value, exc_traceback):
@@ -370,43 +351,17 @@ def main(profile=False, qss_debug=False):
 
     sys.excepthook = handle_exception
 
+    # === Create main window ========================================================================
+    window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
+    window.resize(*window_state.get('size', (1400, 820)))
+    window.setWindowTitle("LN-Studio")
 
-    # === Load modules ========================================================================
-    # i'd rather spent time in booting up, than on switching views, so we'll prefetch everything here
-    loading_window = LoadingWindow()
-    loading_window.show()
-
-    def on_thread_finished():
-        nonlocal window
-        loading_window.close()
-
-        window = MainWindow(state_handler=STATE, home_dir=home_dir, _on_close_cb=onclose)
-        window.resize(*window_state.get('size', (1400, 820)))
-        window.setWindowTitle("LN-Studio")
-
-        if qss_debug:
-            # uncomment to have a debugger for qss on the side
-            from qss_debugger.debugger import VisualTreeDebugger
-            debugger = VisualTreeDebugger(window)
-        
-        window.show()
-
+    if qss_debug:
+        # uncomment to have a debugger for qss on the side
+        from qss_debugger.debugger import VisualTreeDebugger
+        debugger = VisualTreeDebugger(window)
     
-    # Create a QThread object
-    thread = QtCore.QThread()
-    # Create a RegistryLoader object
-    worker = RegistryLoader()
-    # Move the worker to the thread
-    worker.moveToThread(thread)
-    # Connect signals and slots
-    thread.started.connect(worker.run)
-    worker.finished.connect(thread.quit)
-    worker.finished.connect(worker.deleteLater)
-    thread.finished.connect(thread.deleteLater)
-    worker.status.connect(loading_window.update_status)
-    worker.finished.connect(on_thread_finished)
-    # Start the thread
-    thread.start()
+    window.show()
 
     if profile:
         import cProfile

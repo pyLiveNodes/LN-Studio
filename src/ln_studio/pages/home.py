@@ -4,13 +4,14 @@ from qtpy import QtWidgets
 from glob import glob
 import os
 import shutil
+import threading as th
 
 from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import QInputDialog, QMessageBox, QToolButton, QComboBox, QComboBox, QPushButton, QVBoxLayout, QWidget, QGridLayout, QHBoxLayout, QScrollArea, QLabel, QFileDialog, QProgressBar
-from qtpy.QtCore import Qt, QSize, Signal
+from qtpy.QtCore import Qt, QSize, Signal, QTimer
 from ln_studio.utils.state import STATE
 
-from livenodes import REGISTRY, get_registry
+from livenodes import REGISTRY
 
 # TODO: clean this whole thing up, the different selectors etc feels messy atm
 # specifically or because the config and init are not working well together atm
@@ -44,7 +45,8 @@ class Home(QWidget):
         self.update_projects(self.projects)
 
         self.header_layout = QHBoxLayout()
-        self.header_layout.addWidget(InstalledPackages())
+        self.installed_packages_view = InstalledPackages()
+        self.header_layout.addWidget(self.installed_packages_view)
         self.header_layout.addStretch(1)
 
         self.qt_grid = QVBoxLayout(self)
@@ -145,8 +147,6 @@ class Home(QWidget):
 class InstalledPackages(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-
-        get_registry()
         self.packages = REGISTRY.installed_packages()
 
         l2 = QVBoxLayout(self)
@@ -174,26 +174,63 @@ class InstalledPackages(QWidget):
         # Add the second button to the layout
         l2.addWidget(self.reload_button_with_cache)
         
+        # Setup timer for monitoring package loading
+        self._timer = QTimer(self)
+        self._timer.setInterval(1000)
+        self._timer.timeout.connect(self._on_timer_tick)
+        self._elapsed = 0
+        self._stop_timer_called = False
+        # Auto-start reload loop so timer begins firing
+        self.reload_and_start(False, prefetch=True)
+
     def _get_packages_html(self):
         packages = REGISTRY.installed_packages()
         item_list_str = '</li><li>'.join(packages)
         return f"<html><ul><li>{item_list_str}</li></ul></html>"
     
-    def reload_and_enable(self):
-        self.reload_button.setDisabled(True)
-        self.progress_bar.setVisible(True)
-        REGISTRY.reload()
+    def update_packages_view(self):
+        """Update the packages view with the current installed packages."""
         self.packages_label.setText(self._get_packages_html())
-        self.progress_bar.setVisible(False)
-        self.reload_button.setDisabled(False)
-    
-    def reload_and_invalidate_cache(self):
+
+    def reload_and_start(self, invalidate_caches=False, prefetch=False):
+        """Start reload and update loop with spinner until importlib gone or timeout."""
+        self.reload_button.setDisabled(True)
         self.reload_button_with_cache.setDisabled(True)
         self.progress_bar.setVisible(True)
-        REGISTRY.reload(invalidate_caches=True)
-        self.packages_label.setText(self._get_packages_html())
-        self.progress_bar.setVisible(False)
-        self.reload_button_with_cache.setDisabled(False)
+        if prefetch:
+            th.Thread(target=self._prefetch_reg_cb, daemon=True).start()
+            self._elapsed = 0
+            self._timer.start()
+        else:
+            REGISTRY.reload(invalidate_caches=invalidate_caches)
+            self.progress_bar.setVisible(False)
+
+    def _prefetch_reg_cb(self):
+        REGISTRY.prefetch()
+        self._stop_timer_called = True
+
+    def _on_timer_tick(self):
+        """Timer tick: update view and stop when importlib is gone or timeout."""
+        self.update_packages_view()
+        self._elapsed += 1
+        if self._elapsed >= 15 or self._stop_timer_called:
+            self._timer.stop()
+            self.progress_bar.setVisible(False)
+            self.reload_button.setDisabled(False)
+            self.reload_button_with_cache.setDisabled(False)
+            self._stop_timer_called = False
+
+    def prefetch_nodes(self):
+        self.reload_and_enable(invalidate_caches=False, prefetch=True)
+
+    def reload_and_enable(self):
+        # Trigger reload without cache invalidation and start update loop
+        self.reload_and_start(False)
+    
+    def reload_and_invalidate_cache(self):
+        # Trigger reload with cache invalidation and start update loop
+        self.reload_and_start(True)
+
 
 
 class Project_Selection(QWidget):

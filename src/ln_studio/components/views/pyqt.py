@@ -27,9 +27,9 @@ class QT_View(QWidget):
 
     def pause(self):
         self.timer.stop()
+        
     def resume(self):
         self.timer.start()
     
     def stop(self):
-        # self.timer.stop()
-        pass
+        self.timer.stop()

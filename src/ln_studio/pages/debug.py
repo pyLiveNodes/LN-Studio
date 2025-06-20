@@ -104,7 +104,11 @@ class Debug(Run, Page):
     def _stop_pipeline(self):
         self.stop_btn.setDisabled(True)
         self.start_btn.setDisabled(False)
-        return super()._stop_pipeline()
+        super()._stop_pipeline()
+        
+        # copy the current pipeline so we can actually re-run it
+        self.pipeline = self.pipeline.copy()
+        self.graph = Graph(start_node=self.pipeline)
 
     def focus_node_view(self, node):
         name = node.get_name_resolve_macro() if hasattr(node, "get_name_resolve_macro") else node.name
