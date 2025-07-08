@@ -78,6 +78,7 @@ class Run(Page):
 
         # === Start pipeline =================================================
         self.worker_term_lock = mp.Lock()
+        self.worker_stopped_lock = mp.Lock()
         self._start_pipeline()
 
     def _start_pipeline(self):
@@ -106,16 +107,19 @@ class Run(Page):
         logger.propagate = False
 
         logger.info(f"Starting Worker")
+        self.worker_stopped_lock.acquire()
+
         self.graph.start_all()
         while not self.worker_term_lock.acquire(timeout=1, block=True):
             if self.graph.is_finished():
                 logger.info(f"Worker finished. Waiting for user to return to home screen.")
                 # TODO: pop up in qt/gui process?
 
+        self.worker_term_lock.release()
         logger.info(f"Stopping Worker")
         # timeout to make sure potential non-returning nodes do not block until eternity
-        self.graph.stop_all(stop_timeout=2.0, close_timeout=2.0)
-        self.worker_term_lock.release()
+        self.graph.stop_all()
+        self.worker_stopped_lock.release()
         logger.info(f"Worker Stopped")
 
     def stop(self, *args, **kwargs):
@@ -132,8 +136,8 @@ class Run(Page):
             
             self.logger.info(f"Stopping Worker")
             # Block until graph finished all it's nodes
-            self.worker_term_lock.acquire()
-            self.worker_term_lock.release()
+            self.worker_stopped_lock.acquire()
+            self.worker_stopped_lock.release()
             self.logger.info('View terminated')
 
             self.logger.info('Terminating draw widgets')
